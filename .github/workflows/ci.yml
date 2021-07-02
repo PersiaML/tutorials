@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    container: persiaml/persia-ci:latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: mdbook build
+      - run: ./ci/deploy.sh
+  build:
+    runs-on: ubuntu-latest
+    container: persiaml/persia-ci:latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: mdbook test
+      - run: mdbook build
