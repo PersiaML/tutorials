@@ -7,7 +7,7 @@ git init
 git config user.name "PersiaML GitHub Action"
 git config user.email "no-reply@fake.com"
 
-git remote add upstream "https://$GH_TOKEN@github.com/PersiaML/tutorials.git"
+git remote add upstream "https://$GITHUB_TOKEN@github.com/PersiaML/tutorials.git"
 git fetch upstream
 git reset upstream/gh-pages
 
