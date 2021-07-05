@@ -153,7 +153,177 @@
 <footer id="open-on-gh">Found a bug? <a href="https://github.com/PersiaML/tutorials/edit/main/src/introduction.md">Edit this file on GitHub.</a></footer><div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
 <footer id="open-on-gh">Found a bug? <a href="https://github.com/PersiaML/tutorials/edit/main/src/installation.md">Edit this file on GitHub.</a></footer><div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
-<h1 id="getting-started"><a class="header" href="#getting-started">Getting Started</a></h1>
+<h1 id="getting-started"><a class="header" href="#getting-started">Getting started</a></h1>
+<p>According to DLRM example to make you construct machine learning application based on Persia swiftly</p>
+<h2 id="setup"><a class="header" href="#setup">Setup</a></h2>
+<ol>
+<li>Download the Kaggle Display Advertising Challenge dataset for DLRM example
+<pre><code class="language-bash">cd examples/DLRM/data  
+curl -L -o data.tar.gz https://ndownloader.figshare.com/files/10082655
+# wget https://ndownloader.figshare.com/files/10082655 -o data.tar.gz
+tar -zxvf data.tar.gz &amp;&amp; rm -rf data.tar.gz
+</code></pre>
+</li>
+<li>Initialize the persia-core git submodule <code>git submodule init --udpate</code></li>
+<li>Prepare for runtime docker image
+<pre><code class="language-bash">make build_all 
+</code></pre>
+</li>
+</ol>
+<h2 id="process-training-data"><a class="header" href="#process-training-data">Process training data</a></h2>
+<p>Kaggle Display Advertising Challenge dataset contain two parts of data that calls <code>dense</code> and <code>sparse</code>.  <code>Dense data</code> is represent by a 1D vector that come from a set of statistics data or extract by <code>DNN model</code> extract from image, video, audio or etc. Dense data should have same dimension for each sample. <code>Sparse data</code> also represents by a 1D vector but the dimension could be various for each sample. <code>Sparse data</code> is a list of category data, for example age, gender, user_id, book_id or etc.PerisaML framework converted <code>sparse data</code> to fixed size <code>dense tensor(1d or 2d)</code> by the process called <code>embedding lookup</code>. </p>
+<h3 id="data-preprocess"><a class="header" href="#data-preprocess">Data preprocess</a></h3>
+<p>Process Kaggle Display Advertising Challenge raw dataset to <code>numpy.ndarray</code> by <code>numpy</code></p>
+<pre><code class="language-python">import numpy as np
+
+&quot;&quot;&quot;
+sample of train.txt
+0       1       1       5       0       1382    4       15      2       181     1       2               2       68fd1e64      80e26c9b        fb936136        7b4723c4        25c83c98        7e0ccccf        de7995b8        1f89b562     a73ee510 a8cd5504        b2cb9c98        37c9c164        2824a5f6        1adce6ef        8ba8b39a        891b62e7     e5ba7672 f54016b9        21ddcdc9        b1252a9d        07b5194c                3a171ecb        c5c50484        e8b83407        9727dd16
+
+&quot;&quot;&quot;
+source_data = &quot;train.txt&quot;
+batch_size = 5
+batch_data = []
+
+with open(source_data, &quot;r&quot;) as file:
+    for line in file:
+        splitter = denseline.split(&quot;\t&quot;)
+        target = np.int32(line[0])
+        dense_sample = np.array(splitter[1:14], dtype=np.float32)
+        sparse_sample = np.array(
+            list(map(lambda x: int(x, 16), line[14:])), dtype=np.uint64
+        ) 
+        batch_data.append((dense_sample, sample_sample, target))
+        if len(batch_data) == batch_size:
+            # process the below
+            ...
+</code></pre>
+<h3 id="persia-data-structure-to-store-training-data"><a class="header" href="#persia-data-structure-to-store-training-data">Persia data structure to store training data</a></h3>
+<p>PersiaML provide specific data structure for sparse training scence. The structure can add multiple dense, sparse and target data. </p>
+<pre><code class="language-python">from persia.prelude import PyPersiaBatchData
+
+persia_batch_data = PyPersiaBatchData()
+batch_dense_data, batch_all_sparse_data, batch_target_data = zip(*batch_data)
+</code></pre>
+<h3 id="add-dense-data"><a class="header" href="#add-dense-data">Add dense data</a></h3>
+<p><code>PyPersiaBatchData</code> provide the <code>add_dense</code> function to add a list of 2d float32 numpy array. It also provide some specific functions to add dense data in various datatype such as <code>add_dense_f32</code>, <code>add_dense_i32</code>, <code>add_dense_f64</code>, <code>add_dense_i64</code>. </p>
+<pre><code class="language-python">persia_batch_data = PyPersiaBatchData()
+batch_dense_data = np.stack(batch_dense_data)
+
+# add single dense
+persia_batch_data.add_dense_f32(batch_dense_data)
+
+# add a dense list
+# dense_array_list = []
+# dense_array_list.append(batch_dense_data)
+# persia_batch_data.add_dense(dense_array_list)
+</code></pre>
+<h3 id="add-sparse-data"><a class="header" href="#add-sparse-data">Add sparse data</a></h3>
+<p>Add multiple categories sparse data into <code>PyPersiaBatchData</code>, each category data should have the same batch size and a unique namespace to share feature space. </p>
+<pre><code class="language-python">&quot;&quot;&quot;
+    In Kaggle Display Advertising Challenge dataset, every categories only lookup one sparse id in each sample. 
+    sample below:
+
+    batch_size = 5
+    sparse_feature1 = [
+        np.array([0]),
+        np.array([1]),
+        np.array([2]),
+        np.array([3])
+        np.array([5])
+    ]
+
+    sparse_feature2 = [
+        np.array([2]),
+        np.array([3]),
+        np.array([4]),
+        np.array([2])
+        np.array([6])
+    ]
+&quot;&quot;&quot;
+batch_sparse_category_data = []
+for (idx, batch_sparse_data) in enumerate(batch_all_sparse_data):
+    category_name = f&quot;sparse_feature{idx}&quot;
+    sparse_array = []
+    for i in range(batch_size):
+        sparse_array.append(batch_sparse_data[i:i+1])
+    batch_sparse_category_data.append((category_name, sparse_array))
+persia_batch_data.add_sparse(batch_sparse_category_data)
+</code></pre>
+<h3 id="add-target-data"><a class="header" href="#add-target-data">Add target data</a></h3>
+<p>Target data (ground truth) is define as a 2d float32 numpy array, user can add multiple target data into <code>PyPersiaBatchData</code> for multi-task Learning.</p>
+<pre><code class="language-python">batch_target_data = np.array(batch_target_data, dtype=np.float32)
+batch_target_data = np.stack([batch_target_data[i] for i in range(batch_size)]) 
+persia_batch_data.add_target(batch_target_data) # can invoke multiple times for multi task training
+</code></pre>
+<h3 id="data-transfer"><a class="header" href="#data-transfer">Data transfer</a></h3>
+<p>Init the <code>persia_backend</code> to transfer the <code>persia batch data</code> to the persia-middleware and persia-trainer. </p>
+<pre><code class="language-python3">from persia.ctx import init_backend
+backend = init_backend(init_output=True, wait_server_ready=True)
+backend.send_data(persia_batch_data) # register sparse data and transfer remain part to trainer service
+</code></pre>
+<p><em>review DLRM datacompose codebase at examples/DLRM/data_compose.py</em></p>
+<h2 id="define-model"><a class="header" href="#define-model">Define model</a></h2>
+<p>Construct the DLRM model after finished the data definition. The Model forward entry receive dense tensors and sparse tensors.</p>
+<pre><code class="language-python">from typing import List
+
+import torch
+class DLRM(nn.Module):
+    def __init__(self, ln, sigmoid_layer):
+        ...
+
+    def forward(self, dense: List[torch.Tensor], sparse: List[torch.Tensor]):
+        ...
+
+model = DLRM()
+</code></pre>
+<p><em>review DLRM model codebase at examples/DLRM/model.py</em></p>
+<h2 id="define-optimizer"><a class="header" href="#define-optimizer">Define optimizer</a></h2>
+<p>Define optimizer in sparse training is as simple as normal torch training. Dense optimizer is define for update the <code>DNN model</code>.Sparse optimizer is define for update the sparse sparse embedding.<code>perisa.sparse.optim</code> provide common optimizer for different training scences.</p>
+<pre><code class="language-python">from torch.optim import SGD
+from persia.sparse.optim import Adagrad
+
+# DENSE parameters optimizer
+dense_optimizer = SGD(model.parameters(), lr=0.1)
+# Sparse embedding optimizer
+sparse_optimizer = Adagrad(lr=1e-3)
+</code></pre>
+<h2 id="create-training-context"><a class="header" href="#create-training-context">Create training context</a></h2>
+<p>Finally step is create the training context to acquire dataloder and sparse embedding process</p>
+<pre><code class="language-python">from persia.ctx import TrainCtx
+
+scaler = torch.cuda.amp.GradScaler() # for half training
+
+with TrainCtx(
+    grad_scaler=scaler,
+    sparse_optimizer=sparse_optimizer,
+    port=int(os.environ[&quot;TRAINER_PORT&quot;]),
+    data_queue_size=int(os.environ[&quot;FORWARD_QUEUE_SIZE&quot;]),
+) as ctx:
+    for (batch_idx, data) in enumerate(ctx.data_loader()):
+        (dense, sparse), target = ctx.prepare_features(data)
+        output, aux_loss = model((dense, sparse))
+        bce_loss = loss_fn(output, target)
+        loss = aux_loss + bce_loss
+
+        scaler.scale(loss).backward()
+        scale = scaler.get_scale()
+        finite = ctx.on_after_backward(scale, batch_idx)
+        scaler.step(dense_optimizer)
+        dense_optimizer.zero_grad()
+        if finite:
+            scaler.update()
+        else:
+            scaler.update(scale / 4.0)
+        logger.info(f&quot;current idx: {batch_idx} loss: {loss}&quot;)
+
+</code></pre>
+<p><em>review DLRM model codebase at examples/DLRM/train.py</em></p>
+<h2 id="start-training"><a class="header" href="#start-training">Start training</a></h2>
+<pre><code class="language-bash">cd examples/DLRM/ &amp;&amp; make run 
+# run make stop to remove docker stack job
+# make stop
+</code></pre>
 <footer id="open-on-gh">Found a bug? <a href="https://github.com/PersiaML/tutorials/edit/main/src/getting-started/index.md">Edit this file on GitHub.</a></footer><div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="benchmark-results"><a class="header" href="#benchmark-results">Benchmark Results</a></h1>
 <footer id="open-on-gh">Found a bug? <a href="https://github.com/PersiaML/tutorials/edit/main/src/benchmark/index.md">Edit this file on GitHub.</a></footer>
