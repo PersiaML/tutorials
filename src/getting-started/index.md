@@ -1,4 +1,4 @@
-# Getting started
+# Getting Started
 
 According to DLRM example to make you construct machine learning application based on Persia swiftly
 
