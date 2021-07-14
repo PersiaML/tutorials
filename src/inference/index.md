@@ -31,19 +31,17 @@ class PersiaHandler(BaseHandler, ABC):
         self.persia_context = InferCtx()
 
     def preprocess(self, data):
-        with self.persia_context as ctx:
-            batch = data[0].get('batch')
-            batch = bytes(batch)
-            batch = forward_directly_from_bytes(batch, 0)
+        batch = data[0].get('batch')
+        batch = bytes(batch)
+        batch = forward_directly_from_bytes(batch, 0)
 
-            model_input = ctx.prepare_features(batch)
-
+        model_input = self.persia_context.prepare_features(batch)
         return model_input
 
     def inference(self, data, *args, **kwargs):
         denses, sparses = data
         with torch.no_grad():
-            results = self.model(denses, sparses, *args, **kwargs)
+            results = self.model(denses, sparses)
         return results
 
     def postprocess(self, data):
@@ -96,7 +94,7 @@ There are ways to [get predictions from a model] for torchserve. One of them is 
 The data construction process is the same as training, Here is an example:
 ```
 batch_size = 128
-feature_dim = 32
+feature_dim = 16
 denses = [np.random.rand(batch_size, 13).astype(np.float32)]
 sparse = []
 for sparse_idx in range(26):
