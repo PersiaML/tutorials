@@ -14,7 +14,7 @@ There is `PersiaMetricsConfig` section in `global_config.yaml`. To enable push m
 
 `job_name(str)` is a key of metrics, to distinguish your train job from others. It can be, for example, `dlrm_v1.0`.
 
-```
+```yaml
 PersiaMetricsConfig:
   enable_metrics: true
   job_name: your_job_name
@@ -26,7 +26,7 @@ It would be better that every single job hold a gateway node, instead of sharing
 
 Here is an example for deploying gateway by [docker-compose], as the default push address of PersiaML is `metrics_gateway:9091`.
 
-```
+```yaml
 version: "3.3"
 services:
     data_compose:

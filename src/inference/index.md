@@ -15,7 +15,7 @@ There are ways to write custom handler, one of them is [custom-handler-with-clas
 
 Here is an example:
 
-```
+```python
 from persia.ctx import InferCtx
 from persia.prelude import forward_directly_from_bytes
 
@@ -56,14 +56,14 @@ The sparse and dense parts of a PerisaML model are saved separately.
 
 For dense part, it can be saved directly through torch api, like [TorchScript], for example:
 
-```
+```python
 jit_model = torch.jit.script(model)
 jit_model.save('/your/model/dir/you_model_name.pth')
 ```
 
 Then, use [torch-model-archiver] to package all model artifacts into a single model archive file. This file can then be redistributed and served by anyone using TorchServe.
 
-```
+```bash
 torch-model-archiver --model-name you_model_name --version 1.0 --serialized-file /your/model/dir/you_model_name.pth --handler /your/model/dir/persia_handler.py
 ```
 
@@ -72,12 +72,12 @@ Sparse model could be saved by PerisaML api, see [Model Checkpointing](../model-
 ## 3. Deploy torchserve and Perisa servers
 
 torchserve could be launched by this command:
-```
+```bash
 torchserve --start --ncs --model-store /workspace/serve/model/ --models you_model_name.mar
 ```
 There are configures in `PersiaInferConfig` in `global_config.yaml` when deploy embedding servers and middlewware when inferencing.
 
-```
+```yaml
 PersiaInferConfig:
   # list of embedding servers(ip:port)
   servers:
@@ -92,7 +92,7 @@ PersiaInferConfig:
 There are ways to [get predictions from a model] for torchserve. One of them is using [grpc apis] through a [grpc client].
 
 The data construction process is the same as training, Here is an example:
-```
+```python
 batch_size = 128
 feature_dim = 16
 denses = [np.random.rand(batch_size, 13).astype(np.float32)]
@@ -117,12 +117,15 @@ The real-time level of the model has an impact on the online accuracy. However, 
 
 For training, a incremental update packet will be dumped to storage when gradient updated. while for infer, embedding server keep scanning a directory to find if there is a new packet to load.
 
-There are configures for incremental update in `global_config.yaml`
+There are configures about incremental update in `global_config.yaml`
 
-* `enable_incremental_update`: whether to enbale incremental update
-* `incremental_buffer_size`: buffer size of incremental update. Indices will be insert into a hashset when update gradient, when the size of hashset is execced buffer size, dump an incremental update packet to storage.
-* `incremental_dir`: the path of incremental update packet dumped or loaded.
-* `storage`: dump incremental update packet to ceph or hdfs.
+|  name   | implication  |
+|  ----  | ----  |
+| `enable_incremental_update` | whether to enbale incremental update |
+| `incremental_buffer_size` | buffer size of incremental update. Indices will be insert into a hashset when update gradient, when the size of hashset is execced buffer size, dump an incremental update packet to storage. |
+| `incremental_dir` | the path of incremental update packet dumped or loaded. |
+| `storage` | dump incremental update packet to ceph or hdfs. |
+
 
 ## 6. manage dense model to torch serve
 
