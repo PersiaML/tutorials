@@ -22,6 +22,7 @@ with TrainCtx(
 ```
 
 There are configures in `global_config.yaml` about model checkpointing.
+
 |  name   | implication  |
 |  ----  | ----  |
 | `storage` | dump or load embedding to ceph or hdfs.|
