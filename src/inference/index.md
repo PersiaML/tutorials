@@ -1,33 +1,42 @@
 Inference
 ======
 
-persia is able to be deployed with the similar way as its training phase.
+When deploying online inference services, like training, middlewares and embedding servers also needs to be deployed.
 
-In this section, we will show you how to deploy a model with [torchserve][].
+However, unlike training, there is no trainer, instead an inference service. After a inference server receives requests, it first lookup Embedding remotely, and then do forwarding locally.
 
-## 1. Prepare your handler for torchserve
+[TorchServe] is a flexible and easy to use tool for serving PyTorch models, in this section, we will show you how to deploy a PerisaML model with it.
 
-You can write a [custom handler][] which derive from torchserve BaseHandler, to lookup embedding from embedding server in preprocess procedure.
+## 1. Prepare handler for torchserve
 
-An implment of a custom handler is:
+Customized behavior(e.g. preprocess or postprocess) of TorchServe could be defined by writing a Python script, which called [custom handler]. TorchServe executes this code when it runs. 
+
+There are ways to write custom handler, one of them is [custom-handler-with-class-level-entry-point].
+
+Here is an example:
 
 ```
+from persia.ctx import InferCtx
+from persia.prelude import forward_directly_from_bytes
+
+from ts.torch_handler.base_handler import BaseHandler
+
+from abc import ABC
+import torch
+import os
+
 class PersiaHandler(BaseHandler, ABC):
     def initialize(self, context):
         super().initialize(context)
-        middleware_services = [os.environ["MIDDLEWARE_SERVICE"]]
-        self.persia_backend = PersiaEmbeddingClientPyClass(0, middleware_services)
-        self.persia_context = TrainCtx()
+        self.persia_context = InferCtx()
 
     def preprocess(self, data):
+        with self.persia_context as ctx:
+            batch = data[0].get('batch')
+            batch = bytes(batch)
+            batch = forward_directly_from_bytes(batch, 0)
 
-        batch = data[0].get('batch')
-        batch = bytes(batch)
-        # this function copy tensor to device, and lookup from embedding server, return PythonTrainBatch class
-        batch = self.persia_backend.batch_to_device_dirct(batch, 0)
-
-        # this function construct torch tensor which is similar with training phase
-        model_input, _ = self.persia_context.prepare_features(batch, is_training=False)
+            model_input = ctx.prepare_features(batch)
 
         return model_input
 
@@ -43,111 +52,93 @@ class PersiaHandler(BaseHandler, ABC):
         return [data]
 ```
 
-## 2. Prepare your model
+## 2. Prepare model
 
-You can dump you dense model by torch, like this:
+The sparse and dense parts of a PerisaML model are saved separately.
+
+For dense part, it can be saved directly through torch api, like [TorchScript], for example:
+
 ```
 jit_model = torch.jit.script(model)
-jit_model.save('/your/model/dir/deepctr_v0.pth')
+jit_model.save('/your/model/dir/you_model_name.pth')
 ```
 
-and then, use [torch-model-archiver][] to convert this model to mar package which is need by torchserve.
+Then, use [torch-model-archiver] to package all model artifacts into a single model archive file. This file can then be redistributed and served by anyone using TorchServe.
 
 ```
-torch-model-archiver --model-name deepctr --version 1.0 --serialized-file /your/model/dir/deepctr_v0.pth --handler /your/model/dir/persia_handler.py
+torch-model-archiver --model-name you_model_name --version 1.0 --serialized-file /your/model/dir/you_model_name.pth --handler /your/model/dir/persia_handler.py
 ```
 
-You can dump you sparse model by calling persia backend, like this:
-```
-ctx.dump('/your/ceph_dir/or/hdfs_dir/')
-```
+Sparse model could be saved by PerisaML api, see [Model Checkpointing](../model-checkpointing/index.md).
 
-## 3. Deploy torchserve and perisa servers
+## 3. Deploy torchserve and Perisa servers
 
-You can start torchserve by command:
+torchserve could be launched by this command:
 ```
-torchserve --start --ncs --model-store /workspace/serve/model/ --models deepctr.mar
+torchserve --start --ncs --model-store /workspace/serve/model/ --models you_model_name.mar
 ```
+There are configures in `PersiaInferConfig` in `global_config.yaml` when deploy embedding servers and middlewware when inferencing.
 
+```
+PersiaInferConfig:
+  # list of embedding servers(ip:port)
+  servers:
+    - emb_server_1:8000
+    - emb_server_2:8000
+  # embedding server will load this ckpt when start
+  initial_sparse_checkpoint: /your/sparse/model/dir
+```
 
 ## 4. Launch request to torchserve by grpc client
 
-You can request torchserve by grpc client.
+There are ways to [get predictions from a model] for torchserve. One of them is using [grpc apis] through a [grpc client].
 
-after generate proto code [follow this], you can use grpc like this:
+The data construction process is the same as training, Here is an example:
 ```
-    persia_backend = PersiaEmbeddingClientPyClass(0, [])
+batch_size = 128
+feature_dim = 32
+denses = [np.random.rand(batch_size, 13).astype(np.float32)]
+sparse = []
+for sparse_idx in range(26):
+    sparse.append((
+        f'feature{sparse_idx + 1}',
+        [np.random.randint(1000000, size=feature_dim).astype(np.uint64) for _ in range(batch_size)]
+    ))
 
-    batch_size = 128
-    feature_dim = 32
-    denses = [np.random.rand(batch_size, feature_dim).astype(np.float32)]
-    sparse = []
-    for sparse_idx in range(3):
-        sparse.append((
-            f'feature_{sparse_idx}',
-            [np.random.randint(10000000000, size=feature_dim).astype(np.uint64) for _ in range(batch_size)]
-        ))
+batch_data = PyPersiaBatchData()
+batch_data.add_dense(denses)
+batch_data.add_sparse(sparse)
 
-    batch_data = PyPersiaBatchData()
-    batch_data.add_dense(denses)
-    batch_data.add_sparse(sparse)
-
-    model_input = persia_backend.batch_to_bytes(batch_data)
-    infer(get_inference_stub(), 'deepctr', model_input)
+model_input = batch_data.to_bytes()
+infer(get_inference_stub(), 'you_model_name', model_input)
 ```
 
-## 5. Incremental update of persia embedding server
+## 5. Incremental update of sparse model
 
-persia supports incremental updates, you can modify the `global_config.yaml` file to enbale incremental config.
+The real-time level of the model has an impact on the online accuracy. However, saving a huge embedding model frequently will incur a lot of overhead. Therefore, Persia supports incremental updates, saving the incremental part(Recently updated gradient) of embedding only.
 
-for training, a incremental update packet will be dumped to storage when gradient updated.
+For training, a incremental update packet will be dumped to storage when gradient updated. while for infer, embedding server keep scanning a directory to find if there is a new packet to load.
 
-while for infer, embedding server keep scanning a directory to find if there is a new packet to load.
+There are configures for incremental update in `global_config.yaml`
 
 * `enable_incremental_update`: whether to enbale incremental update
 * `incremental_buffer_size`: buffer size of incremental update. Indices will be insert into a hashset when update gradient, when the size of hashset is execced buffer size, dump an incremental update packet to storage.
 * `incremental_dir`: the path of incremental update packet dumped or loaded.
 * `storage`: dump incremental update packet to ceph or hdfs.
 
-## 6. update dense model to torch serve
+## 6. manage dense model to torch serve
 
-You can update dense model version with [management api][], like this:
-```
-def register(stub, model_name):
-    params = {
-        'url': f"/workspace/model/{model_name}.mar",
-        'initial_workers': 1,
-        'synchronous': True,
-        'model_name': model_name
-    }
-    try:
-        response = stub.RegisterModel(management_pb2.RegisterModelRequest(**params))
-        print(f"Model {model_name} registered successfully")
-    except grpc.RpcError as e:
-        print(f"Failed to register model {model_name}.")
-        print(str(e.details()))
-        exit(1)
-```
+A dense model can be managed by torchserve through its [management api]. After generating the `.mar` file according to the above steps, its path can be sent to torchserve with [grpc client].
 
-generaly, you can dump dense model every several step of training, like this:
-```
-model_path = f"/workspace/model/deepctr_step_{batch_idx}.pth"
-jit_model = torch.jit.script(model)
-jit_model.save(model_path)
-subprocess.check_call(
-    f"torch-model-archiver \
-        --model-name deepctr \
-        --version {batch_idx} \
-        --serialized-file {model_path} \
-        --handler {handler_path} \
-        --export-path {mar_path} -f",
-    shell=True
-)
-```
+
 
 
 [torchserve]: https://github.com/pytorch/serve
-[custom handler]: https://github.com/pytorch/serve/blob/master/docs/custom_service.md#custom-handler-with-class-level-entry-point
+[custom-handler-with-class-level-entry-point]: https://github.com/pytorch/serve/blob/master/docs/custom_service.md#custom-handler-with-class-level-entry-point
+[custom handler]: https://github.com/pytorch/serve/blob/master/docs/custom_service.md#custom-handlers
+[TorchScript]: https://pytorch.org/docs/stable/jit.html
 [torch-model-archiver]:https://github.com/pytorch/serve/blob/master/model-archiver/README.md
-[follow this]: https://github.com/pytorch/serve#using-grpc-apis-through-python-client
+[grpc client]: https://github.com/pytorch/serve/blob/master/ts_scripts/torchserve_grpc_client.py
+[get predictions from a model]: https://github.com/pytorch/serve#get-predictions-from-a-model
+[grpc apis]: https://github.com/pytorch/serve#using-grpc-apis-through-python-client
 [management api]: https://github.com/pytorch/serve/blob/master/docs/management_api.md#management-api
