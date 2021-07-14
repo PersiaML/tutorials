@@ -1,34 +1,49 @@
-# Installation PersiaML
-PersiaML System consist of serval components.
-- Runtime image
-- Python library
-- Rust binary  articraft
+# Installation
 
-## Pull the dependent images 
-### for production scence
+## Use docker images 
+
+The fastest way to start using PersiaML is using PersiaML's docker images.
+
+For training, use the following images:
+
 ```bash
 docker pull persiaml/persia-cpu-runtime:latest
 docker pull persiaml/persia-gpu-runtime:latest
 ```
 
-### for dev scence
+<!-- move this to contributing doc
+### For development
+
 persia-dev image can build all you need for dev enviroment
+
 ```bash
 docker pull persiaml/persia-dev:latest
 ```
+-->
 
-### for deploy scence
-deploy enviroment should use the image with `torch serve`
+For inference, use the following image:
+
 ```bash
 docker pull persiaml/persia-inference:latest
 ```
 
-### Python libary installation
-*install from pip command directly*
+## Install manually
+
+You can also install PersiaML manually on your existing system.
+
+First install PersiaML Python client library from PyPI:
+
 ```bash
-pip3 install persia-core persia
+pip3 install persia
 ```
 
+Then install PersiaML server binaries with [cargo](https://rustup.rs/):
+
+```bash
+cargo install persia-middleware persia-server
+```
+
+<!-- move these to contributing doc
 **build persia-core from source**
 ```bash
 # build persia-core gpu version
@@ -59,11 +74,9 @@ git clone https://github.com/PersiaML/PersiaML
 cd PersiaML && pip3 install .
 ```
 
+
 ### Rust libary installation
-*install from rust cargo package manager*
-```bash
-cargo install persia-middleware persia-server
-```
+
 
 *build from source*
 ```bash
@@ -78,3 +91,4 @@ docker run -it --rm -v $(realpath PersiaML-server):/workspace/ \
     mv /build/release/persia-embedding-sharded-server /build/ && \
     rm -rf /build/release"
 ```
+-->
