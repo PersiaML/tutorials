@@ -45,7 +45,7 @@ middleware:
         - \${CUR_DIR}:/workspace
         - \${THIRD_PARTY}:/third_party
 
-emb_server:
+server:
     env_file:
         - .env
     environment:
