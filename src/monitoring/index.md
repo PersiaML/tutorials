@@ -54,7 +54,7 @@ Other deployment methods can be achieved by setting environment variable `PERSIA
 
 In any of container in this job, metrics could be queried by this command:
 
-```
+```bash
 curl metrics_gateway:9091/metrics
 ```
 
