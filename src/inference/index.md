@@ -1,15 +1,15 @@
 Inference
 ======
 
-When deploying online inference services, like training, middlewares and embedding servers also needs to be deployed.
+When deploying online inference services, similar with training, middlewares and embedding servers also needs to be deployed.
 
-However, unlike training, there is no trainer, instead an inference service. After a inference server receives requests, it first lookup Embedding remotely, and then do forwarding locally.
+However, unlike training, there is no trainer, instead of inference servers. After a inference server receives requests, it first lookup Embedding remotely, and then do forwarding locally.
 
 [TorchServe] is a flexible and easy to use tool for serving PyTorch models, in this section, we will show you how to deploy a PerisaML model with it.
 
 ## 1. Prepare handler for torchserve
 
-Customized behavior(e.g. preprocess or postprocess) of TorchServe could be defined by writing a Python script, which called [custom handler]. TorchServe executes this code when it runs. 
+Customized behavior(e.g. preprocess or postprocess) of TorchServe could be defined by writing a Python script, which called [custom handler]. TorchServe executes this script when it runs.
 
 There are ways to write custom handler, one of them is [custom-handler-with-class-level-entry-point].
 
@@ -52,7 +52,7 @@ class PersiaHandler(BaseHandler, ABC):
 
 ## 2. Prepare model
 
-The sparse and dense parts of a PerisaML model are saved separately.
+The sparse part and dense part of a PerisaML model are saved separately.
 
 For dense part, it can be saved directly through torch api, like [TorchScript], for example:
 
@@ -67,15 +67,15 @@ Then, use [torch-model-archiver] to package all model artifacts into a single mo
 torch-model-archiver --model-name you_model_name --version 1.0 --serialized-file /your/model/dir/you_model_name.pth --handler /your/model/dir/persia_handler.py
 ```
 
-Sparse model could be saved by PerisaML api, see [Model Checkpointing](../model-checkpointing/index.md).
+Sparse model can be saved by PerisaML api, see [Model Checkpointing](../model-checkpointing/index.md).
 
 ## 3. Deploy torchserve and Perisa servers
 
-torchserve could be launched by this command:
+torchserve is launched by this command:
 ```bash
 torchserve --start --ncs --model-store /workspace/serve/model/ --models you_model_name.mar
 ```
-There are configures in `PersiaInferConfig` in `global_config.yaml` when deploy embedding servers and middlewware when inferencing.
+There are configures in `PersiaInferConfig` in `global_config.yaml` when deploy embedding servers and middlewware for inference.
 
 ```yaml
 PersiaInferConfig:
@@ -113,7 +113,7 @@ infer(get_inference_stub(), 'you_model_name', model_input)
 
 ## 5. Incremental update of sparse model
 
-The real-time level of the model has an impact on the online accuracy. However, saving a huge embedding model frequently will incur a lot of overhead. Therefore, Persia supports incremental updates, saving the incremental part(Recently updated gradient) of embedding only.
+The timeliness level of the model has impact on the online accuracy. However, saving a huge embedding model frequently will incur a lot of overhead. Therefore, Persia supports incremental updates, saving the incremental part(Recently updated gradient) of embedding only.
 
 For training, a incremental update packet will be dumped to storage when gradient updated. while for infer, embedding server keep scanning a directory to find if there is a new packet to load.
 

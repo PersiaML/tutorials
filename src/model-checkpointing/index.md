@@ -7,7 +7,7 @@ Since pytorch is used in the calculation of the dense part, the pytorch api can 
 
 For sparse part, there are apis for model checkpointing.
 
-Here is an example. There is parameters called `initial_embedding_dir(str)` that indicate the directory of the checkpoint saved from last training. Once enter TrainCtx, embedding server will load this ckeckpoint and block training until load compelete.
+Here is an example. There is parameters called `initial_embedding_dir(str, default: None)` that indicate the directory of the checkpoint saved from last training. Once enter TrainCtx, embedding server will load this ckeckpoint and block training until load compelete.
 
 ```python
 with TrainCtx(
