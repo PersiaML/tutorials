@@ -1,18 +1,17 @@
 Monitoring
 ======
 
-Monitoring is necessary for a distributed systems, PersiaML use [Prometheus] to monitor status of cluster.
+Monitoring and alerting is crucial for a distributed system, PersiaML provides integration with [Prometheus] for this purpose.
 
-Nodes in PerisaML cluster push their metrics to a [PushGateway], the Pushgateway then exposes these metrics to Prometheus.
-
+Services in PerisaML push their metrics to a [PushGateway], the gateway then exposes these metrics to Prometheus.
 
 ## Step to enable metrics in PerisaML
 
-1. Config Metrics of PersiaML 
+1. Enable metrics in configuration
 
-There is `PersiaMetricsConfig` section in `global_config.yaml`. To enable push metrics, set `enable_metrics(bool)` to `true`.
+Add the following configurations in `global_config.yaml`.
 
-`job_name(str)` is a key of metrics, to distinguish your train job from others. It can be, for example, `dlrm_v1.0`.
+`job_name(str)` is a name to distinguish your job from others. It can be, for example, `dlrm_v1.0`.
 
 ```yaml
 PersiaMetricsConfig:
@@ -22,9 +21,9 @@ PersiaMetricsConfig:
 
 2. Deploy PushGateway
 
-It would be better that every single job hold a gateway node, instead of sharing it across jobs, to avoid bottlenecks caused by single point.
+See [official documentation](https://github.com/prometheus/pushgateway) for details. Here is an example for deploying gateway by [docker-compose].
 
-Here is an example for deploying gateway by [docker-compose], as the default push address of PersiaML is `metrics_gateway:9091`.
+The default push address on PersiaML services is `metrics_gateway:9091`, which can be override by the environment variable `PERSIA_METRICS_GATEWAY_ADDR`.
 
 ```yaml
 version: "3.3"
@@ -50,26 +49,25 @@ services:
             replicas: 1
 ```
 
-Other deployment methods can be achieved by setting environment variable `PERSIA_METRICS_GATEWAY_ADDR` to update push address of PersiaML nodes.
-
-In any of container in this job, metrics could be queried by this command:
+You can test the metrics are there by doing:
 
 ```bash
 curl metrics_gateway:9091/metrics
 ```
 
-3. Service Discovery for Prometheus Server
+in a service container.
 
-To gather metrics for all jobs, push gateway service should be discoveried by the prometheus server.
+3. Collecting metrics
 
-Here is methods to discovery push gateway service by [docker_sd_config], [kubernetes_sd_config] or [dockerswarm_sd_config].
+To collect metrics from the gateway, you need a prometheus service to do that for you.
 
+Details of how to setup in various environments can be found in for example [docker_sd_config], [kubernetes_sd_config] or [dockerswarm_sd_config].
 
 ## Metrics in PerisaML
 
 1. Accuracy related
 
-|  name   | implication  |
+|  Key   | Description  |
 |  ----  | ----  |
 | index_miss_count  | miss count of indices when lookup |
 | index_miss_ratio  | miss ratio of indices when lookup for one batch |
