@@ -1,19 +1,21 @@
 Inference
 ======
 
-When deploying online inference services, similar with training, middlewares and embedding servers also needs to be deployed.
+To do inference for trained models, we need to deploy PersiaML middleware service, PersiaML embedding service, and [TorchServe] services.
 
-However, unlike training, there is no trainer, instead of inference servers. After a inference server receives requests, it first lookup Embedding remotely, and then do forwarding locally.
+When a TorchServe inference server receives requests, it first looks up embeddings on PersiaML services, and then does the forward pass for the DNN part.
 
-[TorchServe] is a flexible and easy to use tool for serving PyTorch models, in this section, we will show you how to deploy a PerisaML model with it.
+[TorchServe] is a flexible framework for serving PyTorch models. In this page, we will introduce how to deploy a PerisaML model with it.
 
-## 1. Prepare handler for torchserve
+In the following sections, we first introduce how to create a custom handler for TorchServe to query embeddings during inference. Then introduce how to save models during training and load models during inference. Then we introduce how to deploy various services for inference. Finally, we introduce how to query the inference service to get the inference result.
 
-Customized behavior(e.g. preprocess or postprocess) of TorchServe could be defined by writing a Python script, which called [custom handler]. TorchServe executes this script when it runs.
+## 1. Create PersiaML handler for TorchServe
+
+With TorchService, customized operations (like preprocess or postprocess) can be done with simple Python scripts, called [custom handler].
 
 There are ways to write custom handler, one of them is [custom-handler-with-class-level-entry-point].
 
-Here is an example:
+Here is an example to define a custom handler retrieving PersiaML embeddings:
 
 ```python
 from persia.ctx import InferCtx
@@ -50,32 +52,34 @@ class PersiaHandler(BaseHandler, ABC):
         return [data]
 ```
 
-## 2. Prepare model
+## 2. Save and load PersiaML model
 
-The sparse part and dense part of a PerisaML model are saved separately.
+The sparse part and the dense part of a PerisaML model are saved separately.
 
-For dense part, it can be saved directly through torch api, like [TorchScript], for example:
+For the dense part, it is saved directly by PyTorch with [TorchScript]:
 
 ```python
 jit_model = torch.jit.script(model)
 jit_model.save('/your/model/dir/you_model_name.pth')
 ```
 
-Then, use [torch-model-archiver] to package all model artifacts into a single model archive file. This file can then be redistributed and served by anyone using TorchServe.
+Then, to serve the dense part with TorchServe, use [torch-model-archiver] to package it.
 
 ```bash
 torch-model-archiver --model-name you_model_name --version 1.0 --serialized-file /your/model/dir/you_model_name.pth --handler /your/model/dir/persia_handler.py
 ```
 
-Sparse model can be saved by PerisaML api, see [Model Checkpointing](../model-checkpointing/index.md).
+Sparse model can be saved and loaded with PerisaML Python API, see [Model Checkpointing](../model-checkpointing/index.md) for details.
 
-## 3. Deploy torchserve and Perisa servers
+## 3. Deploy PerisaML services and TorchServe
 
-torchserve is launched by this command:
+TorchServe can be launched with:
+
 ```bash
 torchserve --start --ncs --model-store /workspace/serve/model/ --models you_model_name.mar
 ```
-There are configures in `PersiaInferConfig` in `global_config.yaml` when deploy embedding servers and middlewware for inference.
+
+There are configurations in `PersiaInferConfig` in `global_config.yaml` when deploy embedding servers and middlewware for inference.
 
 ```yaml
 PersiaInferConfig:
@@ -127,14 +131,13 @@ There are configures about incremental update in `global_config.yaml`
 | `storage` | dump incremental update packet to ceph or hdfs. |
 
 
-## 6. manage dense model to torch serve
+## 6. Manage dense model to torch serve
 
 A dense model can be managed by torchserve through its [management api]. After generating the `.mar` file according to the above steps, its path can be sent to torchserve with [grpc client].
 
 
 
-
-[torchserve]: https://github.com/pytorch/serve
+[TorchServe]: https://github.com/pytorch/serve
 [custom-handler-with-class-level-entry-point]: https://github.com/pytorch/serve/blob/master/docs/custom_service.md#custom-handler-with-class-level-entry-point
 [custom handler]: https://github.com/pytorch/serve/blob/master/docs/custom_service.md#custom-handlers
 [TorchScript]: https://pytorch.org/docs/stable/jit.html
