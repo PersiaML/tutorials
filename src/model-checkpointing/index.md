@@ -1,13 +1,15 @@
 Model Checkpointing
 ======
 
-A PerisaML model contains two parts: dense and sparse.
+A PerisaML model contains two parts: the dense part and the sparse part (embeddings).
 
-Since pytorch is used in the calculation of the dense part, the pytorch api can be used directly for model saving, see [Saving and Loading Models].
+Since PyTorch is used for defining the dense part, it can be used directly for saving the dense part, see [Saving and Loading Models].
 
-For sparse part, there are apis for model checkpointing.
+For the sparse part, we need to use PersiaML API to do model checkpointing.
 
-Here is an example. There is parameters called `initial_embedding_dir(str, default: None)` that indicate the directory of the checkpoint saved from last training. Once enter TrainCtx, embedding server will load this ckeckpoint and block training until load compelete.
+There is an `initial_embedding_dir(str, default: None)` argument in the training context. It specifies the directory to load the sparse part checkpoint at the beginning of the training process. Once enter `TrainCtx`, PersiaML services will load the ckeckpoint.
+
+During training, we can dump the sparse part checkpoint to a directory with the `dump_embedding(...)` method:
 
 ```python
 with TrainCtx(
@@ -21,13 +23,13 @@ with TrainCtx(
         ctx.dump_embedding(f'{embedding_dir}/{datetime}_{batch_idx}', True)
 ```
 
-There are configures in `global_config.yaml` about model checkpointing.
+Relavant configurations in `global_config.yaml`:
 
-|  name   | implication  |
+|  Key   | Description  |
 |  ----  | ----  |
-| `storage` | dump or load embedding to ceph or hdfs.|
-| `num_persistence_workers` | parallelism of dump or load embedding. |
-| `num_signs_per_file` | num of indices dumped to a checkpoint file.(embedding dump split into files)  |
+| `storage` | Storage type. Can be "ceph" or "hdfs".|
+| `num_persistence_workers` | Number of workers for dumping and loading. |
+| `num_signs_per_file` | Number of embeddings to be saved in each file in the checkpoint directory.  |
 
 
 [Saving and Loading Models]: https://pytorch.org/tutorials/beginner/saving_loading_models.html
