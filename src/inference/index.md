@@ -117,18 +117,18 @@ infer(get_inference_stub(), 'you_model_name', model_input)
 
 ## 5. Model incremental update
 
-The timeliness level of the model has impact on the online accuracy. However, saving a huge embedding model frequently will incur a lot of overhead. Therefore, Persia supports incremental updates, saving the incremental part(Recently updated gradient) of embedding only.
+It is crucial to keep the model for inference up to date. For huge sparse models, PersiaML provides incremental updates, so that online prediction services only receives model differences during training to update the online model for inference. This dramatically reduces the model latency between training and inference.
 
-For training, a incremental update packet will be dumped to storage when gradient updated. while for infer, embedding server keep scanning a directory to find if there is a new packet to load.
+During training, an incremental update file will be dumped periodically. During inference, PersiaML services keep scanning a directory to find if there is a new incremental update file to load.
 
-There are configures about incremental update in `global_config.yaml`
+Relavant configurations in `global_config.yaml`:
 
-|  name   | implication  |
+|  Key   | Description  |
 |  ----  | ----  |
-| `enable_incremental_update` | whether to enbale incremental update |
-| `incremental_buffer_size` | buffer size of incremental update. Indices will be insert into a hashset when update gradient, when the size of hashset is execced buffer size, dump an incremental update packet to storage. |
-| `incremental_dir` | the path of incremental update packet dumped or loaded. |
-| `storage` | dump incremental update packet to ceph or hdfs. |
+| `enable_incremental_update` | Whether to enbale incremental update. |
+| `incremental_buffer_size` | Buffer size for incremental update. This is the number of embeddings in each incremental update file. |
+| `incremental_dir` | The directory for incremental update files to be dumped or loaded. |
+| `storage` | The storage type. Can be "ceph" or "hdfs". |
 
 
 ## 6. Manage dense models on TorchServe
