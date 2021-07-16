@@ -91,11 +91,11 @@ PersiaInferConfig:
   initial_sparse_checkpoint: /your/sparse/model/dir
 ```
 
-## 4. Launch request to torchserve by grpc client
+## 4. Query inference result with gRPC
 
-There are ways to [get predictions from a model] for torchserve. One of them is using [grpc apis] through a [grpc client].
+There are ways to [get predictions from a model] with TorchServe. One of them is using [gRPC API](https://github.com/pytorch/serve#using-grpc-apis-through-python-client) through a [gRPC client](https://github.com/pytorch/serve/blob/master/ts_scripts/torchserve_grpc_client.py).
 
-The data construction process is the same as training, Here is an example:
+The input data is constructed in the same way as in training, Here is an example:
 ```python
 batch_size = 128
 feature_dim = 16
@@ -115,7 +115,7 @@ model_input = batch_data.to_bytes()
 infer(get_inference_stub(), 'you_model_name', model_input)
 ```
 
-## 5. Incremental update of sparse model
+## 5. Model incremental update
 
 The timeliness level of the model has impact on the online accuracy. However, saving a huge embedding model frequently will incur a lot of overhead. Therefore, Persia supports incremental updates, saving the incremental part(Recently updated gradient) of embedding only.
 
@@ -131,7 +131,7 @@ There are configures about incremental update in `global_config.yaml`
 | `storage` | dump incremental update packet to ceph or hdfs. |
 
 
-## 6. Manage dense model to torch serve
+## 6. Manage dense models on TorchServe
 
 A dense model can be managed by torchserve through its [management api]. After generating the `.mar` file according to the above steps, its path can be sent to torchserve with [grpc client].
 
@@ -142,7 +142,5 @@ A dense model can be managed by torchserve through its [management api]. After g
 [custom handler]: https://github.com/pytorch/serve/blob/master/docs/custom_service.md#custom-handlers
 [TorchScript]: https://pytorch.org/docs/stable/jit.html
 [torch-model-archiver]:https://github.com/pytorch/serve/blob/master/model-archiver/README.md
-[grpc client]: https://github.com/pytorch/serve/blob/master/ts_scripts/torchserve_grpc_client.py
 [get predictions from a model]: https://github.com/pytorch/serve#get-predictions-from-a-model
-[grpc apis]: https://github.com/pytorch/serve#using-grpc-apis-through-python-client
 [management api]: https://github.com/pytorch/serve/blob/master/docs/management_api.md#management-api
