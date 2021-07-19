@@ -79,7 +79,7 @@ TorchServe can be launched with:
 torchserve --start --ncs --model-store /workspace/serve/model/ --models you_model_name.mar
 ```
 
-There are configurations in `PersiaInferConfig` in `global_config.yaml` when deploy embedding servers and middlewware for inference.
+There are configurations in [`global_config.yaml`](../configuring/index.md) when deploy embedding servers and middlewware for inference.
 
 ```yaml
 PersiaInferConfig:
@@ -121,14 +121,7 @@ It is crucial to keep the model for inference up to date. For huge sparse models
 
 During training, an incremental update file will be dumped periodically. During inference, PersiaML services keep scanning a directory to find if there is a new incremental update file to load.
 
-Relavant configurations in `global_config.yaml`:
-
-|  Key   | Description  |
-|  ----  | ----  |
-| `enable_incremental_update` | Whether to enbale incremental update. |
-| `incremental_buffer_size` | Buffer size for incremental update. This is the number of embeddings in each incremental update file. |
-| `incremental_dir` | The directory for incremental update files to be dumped or loaded. |
-| `storage` | The storage type. Can be "ceph" or "hdfs". |
+Relavant configurations in [`global_config.yaml`](../configuring/index.md) are `enable_incremental_update`, `incremental_buffer_size`, `incremental_dir` and `storage`.
 
 
 ## 6. Manage dense models on TorchServe

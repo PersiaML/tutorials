@@ -8,5 +8,6 @@
 * [Monitoring](./monitoring/index.md)
 * [Inference](./inference/index.md)
 * [Model Checkpointing](./model-checkpointing/index.md)
+* [Configuring](./configuring/index.md)
 * [Troubleshooting](./troubleshooting/index.md)
 * [Kubernetes Integration](./kubernetes-integration/index.md)

@@ -3,7 +3,7 @@ Model Checkpointing
 
 A PerisaML model contains two parts: the dense part and the sparse part (embeddings).
 
-Since PyTorch is used for defining the dense part, it can be used directly for saving the dense part, see [Saving and Loading Models].
+Since PyTorch is used for defining the dense part, it can be used directly for saving the dense part, see [Saving and Loading Models](https://pytorch.org/tutorials/beginner/saving_loading_models.html).
 
 For the sparse part, we need to use PersiaML API to do model checkpointing.
 
@@ -23,13 +23,4 @@ with TrainCtx(
         ctx.dump_embedding(f'{embedding_dir}/{datetime}_{batch_idx}', True)
 ```
 
-Relavant configurations in `global_config.yaml`:
-
-|  Key   | Description  |
-|  ----  | ----  |
-| `storage` | Storage type. Can be "ceph" or "hdfs".|
-| `num_persistence_workers` | Number of workers for dumping and loading. |
-| `num_signs_per_file` | Number of embeddings to be saved in each file in the checkpoint directory.  |
-
-
-[Saving and Loading Models]: https://pytorch.org/tutorials/beginner/saving_loading_models.html
+Relavant configurations in [`global_config.yaml`](../configuring/index.md) are `storage`, `num_persistence_workers` and `num_signs_per_file`.

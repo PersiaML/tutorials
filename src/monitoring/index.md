@@ -9,7 +9,7 @@ Services in PerisaML push their metrics to a [PushGateway], the gateway then exp
 
 1. Enable metrics in configuration
 
-Add the following configurations in `global_config.yaml`.
+Add the following configurations in [`global_config.yaml`](../configuring/index.md).
 
 `job_name(str)` is a name to distinguish your job from others. It can be, for example, `dlrm_v1.0`.
 
@@ -69,18 +69,18 @@ Details of how to setup in various environments can be found in for example [doc
 
 |  Key   | Description  |
 |  ----  | ----  |
-| index_miss_count  | miss count of indices when lookup |
-| index_miss_ratio  | miss ratio of indices when lookup for one batch |
-| gradient_id_miss_count | num of not found indices when updating gradient. |
-| estimated_distinct_id | estimated distinct id for every feature. |
-| batch_unique_indices_rate | unique indices rate in one batch |
-| staleness | staleness of sparse model |
-| nan_grad_skipped | nan gradient count |
+| index_miss_count  | miss count of indices when lookup. There may be reasons for the missing of embeddings, e.g. lookup a new index or the index has been evicted. |
+| index_miss_ratio  | miss ratio of indices when lookup for one batch. |
+| gradient_id_miss_count | num of not found indices when updating gradient. This will happen when embedding evicted before update gradient only.|
+| estimated_distinct_id | estimated distinct id for every feature.|
+| batch_unique_indices_rate | unique indices rate in one batch. |
+| staleness | staleness of sparse model. The iteration of dense model run one by one, while the embedding lookup happened before concurrently. The staleness describe the delay of embeddings. The value of staleness start with 0, increase one when lookup a batch, decrease one when a batch update its gradients|
+| nan_grad_skipped | nan gradient count caused by dense part. |
 
 
 2. Efficiency related
 
-|  name   | implication  |
+|  Key   | Description  |
 |  ----  | ----  |
 | lookup_mixed_batch_time_cost | lookup embedding time cost on embedding server |
 | num_pending_batches | num batches already sent to middleware but still waiting for trainer to trigger lookup |
