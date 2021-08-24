@@ -72,7 +72,7 @@ Details of how to setup in various environments can be found in for example [doc
 | index_miss_count  | miss count of indices when lookup. There may be reasons for the missing of embeddings, e.g. lookup a new index or the index has been evicted. |
 | index_miss_ratio  | miss ratio of indices when lookup for one batch. |
 | gradient_id_miss_count | num of not found indices when updating gradient. This will happen when embedding evicted before update gradient only.|
-| estimated_distinct_id | estimated distinct id for every feature.|
+| estimated_distinct_id | estimated distinct id for each feature.|
 | batch_unique_indices_rate | unique indices rate in one batch. |
 | staleness | staleness of sparse model. The iteration of dense model run one by one, while the embedding lookup happened before concurrently. The staleness describe the delay of embeddings. The value of staleness start with 0, increase one when lookup a batch, decrease one when a batch update its gradients|
 | nan_grad_skipped | nan gradient count caused by dense part. |
@@ -83,8 +83,8 @@ Details of how to setup in various environments can be found in for example [doc
 |  Key   | Description  |
 |  ----  | ----  |
 | lookup_mixed_batch_time_cost | lookup embedding time cost on embedding server |
-| num_pending_batches | num batches already sent to middleware but still waiting for trainer to trigger lookup |
-| lookup_create_requests_time_cost | lookup preprocess time cost on middleware |
+| num_pending_batches | num batches already sent to middleware but still waiting for trainer to trigger lookup. The pending batches will stored in forward buffer, which capacity is configurable by [`global_config.yaml`](https://github.com/PersiaML/tutorials/blob/docs/monitoring/src/configuring/index.md#middleware_configs). Once the buffer full, middleware server may not accept new batches.|
+| lookup_create_requests_time_cost | lookup preprocess time cost on middleware. Include ID hashing, dividing id accroding feature groups and sharded servers.|
 | lookup_rpc_time_cost | lookup embedding time cost on middleware server |
 | update_gradient_time_cost | update gradient time cost on middleware server |
 | summation_time_cost | lookup postprocess time cost on middleware |

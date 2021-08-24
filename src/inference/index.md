@@ -79,7 +79,7 @@ TorchServe can be launched with:
 torchserve --start --ncs --model-store /workspace/serve/model/ --models you_model_name.mar
 ```
 
-There are configurations in [`global_config.yaml`](../configuring/index.md) when deploy embedding servers and middlewware for inference.
+There are configurations in [`global_config.yaml`](https://github.com/PersiaML/tutorials/blob/docs/monitoring/src/configuring/index.md#global-config) when deploy embedding servers and middlewware for inference.
 
 ```yaml
 PersiaInferConfig:
@@ -121,12 +121,12 @@ It is crucial to keep the model for inference up to date. For huge sparse models
 
 During training, an incremental update file will be dumped periodically. During inference, PersiaML services keep scanning a directory to find if there is a new incremental update file to load.
 
-Relavant configurations in [`global_config.yaml`](../configuring/index.md) are `enable_incremental_update`, `incremental_buffer_size`, `incremental_dir` and `storage`.
+Relavant configurations in [`global_config.yaml`](https://github.com/PersiaML/tutorials/blob/docs/monitoring/src/configuring/index.md#global-config) are `enable_incremental_update`, `incremental_buffer_size`, `incremental_dir` and `storage`.
 
 
 ## 6. Manage dense models on TorchServe
 
-A dense model can be managed by torchserve through its [management api]. After generating the `.mar` file according to the above steps, its path can be sent to torchserve with [grpc client].
+To update dense model with sparse model, it can be managed by torchserve through its [management api]. After generating the `.mar` file according to the above steps, its path can be sent to torchserve with [grpc client].
 
 
 
