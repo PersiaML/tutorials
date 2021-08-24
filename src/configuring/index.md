@@ -19,7 +19,6 @@ shard_server_config:
   full_amount_manager_buffer_size: 1000
   num_persistence_workers: 4
   num_signs_per_file: 5000000
-  storage: Ceph
   enable_incremental_update: false
   incremental_buffer_size: 5000000
   incremental_channel_capacity: 1000
@@ -64,7 +63,6 @@ common_config:
 * `full_amount_manager_buffer_size(int, default=1000)`: The buffer size of full amount manager. A full amount manager is used to manage all of the embeddings in a embedding server.
 * `num_persistence_workers(int, default=4)`: The concurrency of embedding dumping, loading and incremental update.
 * `num_signs_per_file(int, default=1_000_000)`, Number of embeddings to be saved in each file in the checkpoint directory.
-* `storage(str, default=Ceph)`: Storage type of embedding. Can be "Ceph" or "Hdfs".
 * `enable_incremental_update(bool, default=false)`: Whether to enable incremental update.
 * `incremental_buffer_size(int, default=1_000_000)`: Buffer size for incremental update. This is the number of embeddings in each incremental update file.
 * `incremental_dir(str, default=/workspace/incremental_dir/)`: The directory for incremental update files to be dumped or loaded.

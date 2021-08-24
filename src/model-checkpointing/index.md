@@ -23,4 +23,4 @@ with TrainCtx(
         ctx.dump_embedding(f'{embedding_dir}/{datetime}_{batch_idx}', True)
 ```
 
-Relavant configurations in [`global_config.yaml`](../configuring/index.md) are `storage`, `num_persistence_workers` and `num_signs_per_file`.
+Relavant configurations in [`global_config.yaml`](../configuring/index.md) are `num_persistence_workers` and `num_signs_per_file`.
