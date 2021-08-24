@@ -97,6 +97,29 @@ There are ways to [get predictions from a model] with TorchServe. One of them is
 
 The input data is constructed in the same way as in training, Here is an example:
 ```python
+import grpc
+import inference_pb2
+import inference_pb2_grpc
+
+def get_inference_stub():
+    channel = grpc.insecure_channel('localhost:7070')
+    stub = inference_pb2_grpc.InferenceAPIsServiceStub(channel)
+    return stub
+
+def infer(stub, model_name, model_input):
+    with open(model_input, 'rb') as f:
+        data = f.read()
+
+    input_data = {'data': data}
+    response = stub.Predictions(
+        inference_pb2.PredictionsRequest(model_name=model_name, input=input_data))
+
+    try:
+        prediction = response.prediction.decode('utf-8')
+        print(prediction)
+    except grpc.RpcError as e:
+        exit(1)
+
 batch_size = 128
 feature_dim = 16
 denses = [np.random.rand(batch_size, 13).astype(np.float32)]
