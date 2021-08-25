@@ -59,7 +59,7 @@ common_config:
 ### shard_server_config
 
 * `capacity(int, default=1_000_000_000)`: The capacity of each embedding server. Once the number of indices of an embedding server exceeds the capacity, it will evict embeddings according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies.
-* `num_hashmap_internal_shards(int, default=100)`: The number of internal shard of an embedding server. Embeddings are saved in a HashMap which contains shards. Each of shards holds a lock, can reduce lock contention.
+* `num_hashmap_internal_shards(int, default=100)`: The number of internal shard of an embedding server. Embeddings are saved in a HashMap which contains multiple shards(sub-hashmap). Since the CRUD operations needs to acquire the lock of a hashmap, acquiring the lock of the sub-hashmap instead of the whole hashmap will be more conducive to concurrency between CRUD operations.
 * `full_amount_manager_buffer_size(int, default=1000)`: The buffer size of full amount manager. A full amount manager is used to manage all of the embeddings in a embedding server.
 * `num_persistence_workers(int, default=4)`: The concurrency of embedding dumping, loading and incremental update.
 * `num_signs_per_file(int, default=1_000_000)`, Number of embeddings to be saved in each file in the checkpoint directory.
@@ -73,7 +73,7 @@ common_config:
 
 ## Embedding Config
 
-In addition to `global_config`, detailed settings related to embedding is provided in a separate embedding configuration file usually named as `embedding_config.yaml`.The path to the embedding config file should be parsed as argument `XXXX` when running PersiaML servers.
+In addition to `global_config`, detailed settings related to embedding is provided in a separate embedding configuration file usually named as `embedding_config.yaml`.The path to the embedding config file should be parsed as argument `--embedding-config` when running PersiaML servers.
 
 Here is an example for `embedding_config.yaml`.
 

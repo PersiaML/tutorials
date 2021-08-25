@@ -82,13 +82,12 @@ torchserve --start --ncs --model-store /workspace/serve/model/ --models you_mode
 There are configurations in [`global_config.yaml`](https://github.com/PersiaML/tutorials/blob/docs/monitoring/src/configuring/index.md#global-config) when deploy embedding servers and middleware for inference.
 
 ```yaml
-PersiaInferConfig:
-  # list of embedding servers(ip:port)
-  servers:
-    - emb_server_1:8000
-    - emb_server_2:8000
-  # embedding server will load this ckpt when start
-  initial_sparse_checkpoint: /your/sparse/model/dir
+common_config:
+  intent: Infer
+    servers:
+      - emb_server_1:8000
+      - emb_server_2:8000
+    initial_sparse_checkpoint: /your/sparse/model/dir
 ```
 
 ## 4. Query inference result with gRPC
