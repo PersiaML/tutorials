@@ -3,7 +3,7 @@ Configuring
 
 ## Global Config
 
-There are configures for PersiaML servers(middleware or embedding server) defined in a file usually named as `global_config.yaml`. This file is one of the args for PersiaML servers binary file.
+In order to achieve best performance on various training and inference jobs, PersiaML servers provide a handful of configuration options via a yaml config file usually named as `global_config.yaml`. The path to the config file should be parsed as an argument `--global-config` when running PersiaML servers.
 
 Here is an example for `global_config.yaml`.
 
@@ -26,7 +26,7 @@ middleware_config:
   forward_buffer_size: 1000
 ```
 
-The following is a detailed description of each configuration.
+Depending on the scope, `global_config` was divided into three major sections, namely `common_config`, `shard_server_config` and `middleware_config`. `common_config` provides global settings for PersiaML training and inference jobs. `shard_server_config` provides configurations for the PersiaML embedding server, and `middleware_config` provides configurations for the PersiaML middleware. The following is a detailed description of each configuration.
 
 ### common_config
 
@@ -39,9 +39,9 @@ The following is a detailed description of each configuration.
 
 #### intent
 
-The intent of PresiaML can be `Train` or `Infer`.
+The intent of PresiaML, can be either `Train` or `Infer`.
 
-There are additional configures when intent is `Infer`, here is an example.
+When intent is `Infer`, additional configurations including `servers` and `initial_sparse_checkpoint` have to be provided. Here is an example:
 
 ```yaml
 common_config:
@@ -52,14 +52,14 @@ common_config:
     initial_sparse_checkpoint: /your/sparse/model/dir
 ```
 
-* `servers(list of str, required)`: `ip:port` list of embedding servers.
+* `servers(list of str, required)`: list of embedding servers each in the `ip:port` format.
 * `initial_sparse_checkpoint(str, required)`: Embedding server will load this ckpt when start.
 
 
 ### shard_server_config
 
-* `capacity(int, default=1_000_000_000)`: The capacity of each embedding server. Once the num of indices of an embedding server exceed the capacity, it will evict embeddings according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies. 
-* `num_hashmap_internal_shards(int, default=100)`: The num of internal shard of an embedding server. Embeddings are saved in a HashMap which contains shards. Each of shards holds a lock, can reduce lock contention.
+* `capacity(int, default=1_000_000_000)`: The capacity of each embedding server. Once the number of indices of an embedding server exceeds the capacity, it will evict embeddings according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies.
+* `num_hashmap_internal_shards(int, default=100)`: The number of internal shard of an embedding server. Embeddings are saved in a HashMap which contains shards. Each of shards holds a lock, can reduce lock contention.
 * `full_amount_manager_buffer_size(int, default=1000)`: The buffer size of full amount manager. A full amount manager is used to manage all of the embeddings in a embedding server.
 * `num_persistence_workers(int, default=4)`: The concurrency of embedding dumping, loading and incremental update.
 * `num_signs_per_file(int, default=1_000_000)`, Number of embeddings to be saved in each file in the checkpoint directory.
@@ -73,7 +73,7 @@ common_config:
 
 ## Embedding Config
 
-Embedding defined by a yaml file usually named as `embedding_config.yaml`, which is also args of PersiaML servers binary file.
+In addition to `global_config`, detailed settings related to embedding is provided in a separate embedding configuration file usually named as `embedding_config.yaml`.The path to the embedding config file should be parsed as argument `XXXX` when running PersiaML servers.
 
 Here is an example for `embedding_config.yaml`.
 
@@ -128,4 +128,4 @@ The following is a detailed description of each configuration.
        * `hash_stack_rounds(int, default=0)`: Embedding hash rounds.
        * `embedding_size(int, default=0)`: Embedding hash space of each rounds.
 
-* `feature_groups(map, default={})`: Feature group division. Refer to the description of `feature_index_prefix_bit`, feature in one feature group will share a same index prefix. 
+* `feature_groups(map, default={})`: Feature group division. Refer to the description of `feature_index_prefix_bit`, feature in one feature group will share a same index prefix.

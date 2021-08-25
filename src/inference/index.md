@@ -7,7 +7,7 @@ When a TorchServe inference server receives requests, it first looks up embeddin
 
 [TorchServe] is a flexible framework for serving PyTorch models. In this page, we will introduce how to deploy a PerisaML model with it.
 
-In the following sections, we first introduce how to create a custom handler for TorchServe to query embeddings during inference. Then introduce how to save models during training and load models during inference. Then we introduce how to deploy various services for inference. Finally, we introduce how to query the inference service to get the inference result.
+In the following sections, we first introduce how to create a custom handler for TorchServe to query embeddings during inference. Next, we introduce how to save models during training and load models during inference. Then, we introduce how to deploy various services for inference. Finally, we introduce how to query the inference service to get the inference result.
 
 ## 1. Create PersiaML handler for TorchServe
 
@@ -79,7 +79,7 @@ TorchServe can be launched with:
 torchserve --start --ncs --model-store /workspace/serve/model/ --models you_model_name.mar
 ```
 
-There are configurations in [`global_config.yaml`](https://github.com/PersiaML/tutorials/blob/docs/monitoring/src/configuring/index.md#global-config) when deploy embedding servers and middlewware for inference.
+There are configurations in [`global_config.yaml`](https://github.com/PersiaML/tutorials/blob/docs/monitoring/src/configuring/index.md#global-config) when deploy embedding servers and middleware for inference.
 
 ```yaml
 PersiaInferConfig:
