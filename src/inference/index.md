@@ -148,7 +148,7 @@ Relavant configurations in [`global_config.yaml`](https://github.com/PersiaML/tu
 
 ## 6. Manage dense models on TorchServe
 
-To update dense model with sparse model, it can be managed by torchserve through its [management api]. After generating the `.mar` file according to the above steps, its path can be sent to torchserve with [grpc client].
+To update dense model with sparse model, it can be managed by torchserve through its [management api]. After generating the `.mar` file according to the above steps, its path can be sent to torchserve with [grpc client](https://github.com/pytorch/serve/blob/master/ts_scripts/torchserve_grpc_client.py).
 
 
 
