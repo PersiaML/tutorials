@@ -2,19 +2,10 @@
 
 ## Use docker images 
 
-The fastest way to start using PersiaML is using PersiaML's docker images.
-
-For training, use the following images:
+The fastest way to start using PersiaML is using docker images.
 
 ```bash
-docker pull persiaml/persia-cpu-runtime:latest
-docker pull persiaml/persia-gpu-runtime:latest
-```
-
-For inference, use the following image:
-
-```bash
-docker pull persiaml/persia-inference:latest
+docker pull persiaml/persia-cuda-runtime:latest
 ```
 
 ## Install manually
@@ -27,9 +18,18 @@ First install PersiaML Python client library from PyPI:
 pip3 install persia
 ```
 
-Then install PersiaML server binaries with [cargo](https://rustup.rs/):
-
+Or install PersiaML locally from source:
 ```bash
-cargo install persia-middleware persia-server
-```
+# install rust compile denpendency
+export RUSTUP_HOME=/rust
+export CARGO_HOME=/cargo
+export PATH=/cargo/bin:/rust/bin:$PATH
 
+curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain none -y --profile default --no-modify-path
+chown -R 1000:1000 /rust /cargo 
+rustup install nightly-2021-06-01
+
+# install python package
+git clone git@github.com:PersiaML/PersiaML.git
+cd PersiaML && pip3 install . -v
+```

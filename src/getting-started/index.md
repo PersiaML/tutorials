@@ -162,26 +162,16 @@ from persia.ctx import TrainCtx
 scaler = torch.cuda.amp.GradScaler() # for half training
 
 with TrainCtx(
-    grad_scaler=scaler,
     sparse_optimizer=sparse_optimizer,
-    port=int(os.environ["TRAINER_PORT"]),
-    data_queue_size=int(os.environ["FORWARD_QUEUE_SIZE"]),
+    dense_optimizer=dense_optimizer,
+    device_id=device_id,
 ) as ctx:
     for (batch_idx, data) in enumerate(ctx.data_loader()):
         (dense, sparse), target = ctx.prepare_features(data)
         output, aux_loss = model((dense, sparse))
         bce_loss = loss_fn(output, target)
         loss = aux_loss + bce_loss
-
-        scaler.scale(loss).backward()
-        scale = scaler.get_scale()
-        finite = ctx.on_after_backward(scale, batch_idx)
-        scaler.step(dense_optimizer)
-        dense_optimizer.zero_grad()
-        if finite:
-            scaler.update()
-        else:
-            scaler.update(scale / 4.0)
+        scaled_loss = ctx.backward(loss)
         logger.info(f"current idx: {batch_idx} loss: {loss}")
 
 ```
