@@ -1,7 +1,7 @@
-Configuring
+Configuration
 ======
 
-## Global Config
+## Global Configuration
 
 In order to achieve best performance on various training and inference jobs, PersiaML servers provide a handful of configuration options via a yaml config file usually named as `global_config.yaml`. The path to the config file should be parsed as an argument `--global-config` when running PersiaML servers.
 
