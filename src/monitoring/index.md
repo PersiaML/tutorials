@@ -9,7 +9,7 @@ Services in PerisaML push their metrics to a [PushGateway], the gateway then exp
 
 1. Enable metrics in configuration
 
-Add the following configurations in [`global_config.yaml`](../configuring/index.md).
+Add the following configurations in [`global_config.yaml`](../configuration/index.md).
 
 `job_name(str)` is a name to distinguish your job from others. It can be, for example, `dlrm_v1.0`.
 
