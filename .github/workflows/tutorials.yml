@@ -1,4 +1,4 @@
-name: CI
+name: tutorials
 
 on:
   push:
