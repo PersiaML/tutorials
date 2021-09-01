@@ -1,18 +1,18 @@
 # Installation
 
-- [Use Docker Dmages ](#use-docker-images)
-    - [Using pre-build images](using-prebuild-images)
-    - [Building the image locally](build-the-image-locally)
+- [Use Docker Images ](#use-docker-images)
+    - [Using pre-built images](#using-pre-built-images)
+    - [Building the image locally](#building-the-image-locally)
 - [Install Manually](#install-manually)
     - [Common Requirements](#common-requirements)
     - [Install from Pip](#install-from-pip)
     - [Install from source](#install-from-source)
 
 
-## Docker Image
+## Use Docker Images
 
-The fastest way to start using PersiaML is using prebuild docker images.
-### Using pre-build image
+The fastest way to training your first Persia task is using pre-built docker images.
+### Using pre-built images
 ```bash
 docker pull persiaml/persia-cuda-runtime:latest
 ```
