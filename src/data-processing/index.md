@@ -1,10 +1,10 @@
 # Data Processing
-PersiaML data format is consist of three part, contiguous data, categorical data and corresponding label data. Parsing the origin training data to Persia data format and then add them into the python class `persia.prelude.PyPersiaBatchData`.
+Training data in PersiaML consists of three parts, contiguous data (dense), categorical data (sparse) and label data (target). When training with Persia, first format the original training data into the corresponding Persia data format, and then add them to `persia.prelude.PyPersiaBatchData`.
 
 ## Contiguous Data
-We define the *Contiguous Data* as *Dense data* in our library.User can add multiple 2D *Dense Data* of different datatype into `PyPersiaBatchData` by invoke the corresponding methods.The shape of 2d tensor should be equal.
+We define the *Contiguous Data* as *Dense Data* in our library. Mixed datatypes are supported. One can add multiple 2D *Dense Data* of different datatypes to `PyPersiaBatchData` by invoking the corresponding methods. Note that the shape of all 2D Dense data should be equal. (TODO: why?)
 
-*datatype current `PyPersiaBatchData` support*
+*datatypes `PyPersiaBatchData` currently support*
 - add_dense_f32 => np.float32 
 - add_dense_f64 => np.float64
 - add_dense_i32 =>  np.int32
@@ -27,7 +27,7 @@ batch_data.add_dense_f64(np.ones((batch_size, dim), dtype=np.float64))
 batch_data.add_dense_i64(np.ones((batch_size, dim), dtype=np.int64))
 ```
 ## Categorical Data
-We define the *Categorical Data* as *Sparse Data* in our library. It is important to add the name to each *Sparse Data* for purpose of later embedding lookup phase.A *Categorical Data* is composed by a batch of variable length of 1d tensor.
+We define the *Categorical Data* as *Sparse Data* in our library. It is important to add the name to each *Sparse Data* for later embedding lookup. A *Categorical Data* is composed of a batch of 1d tensors of variable length.
 
 *code example*
 ```python
@@ -54,7 +54,7 @@ batch_data.add_sparse(batch_sparse_datas)
 ```
 
 ## Label Data
-We define the *Label Data* as the *Target Data*.*Target Data* should be a `2d flaot32 tensor`.
+We use the *Target Data* to represent *Label*. *Target Data* should be a `2d flaot32 tensor`.
 
 *code example*
 ```python
