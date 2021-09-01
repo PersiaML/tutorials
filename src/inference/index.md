@@ -83,7 +83,7 @@ There are configurations in [`global_config.yaml`](https://github.com/PersiaML/t
 
 ```yaml
 common_config:
-  intent: Infer
+  job_type: Infer
     servers:
       - emb_server_1:8000
       - emb_server_2:8000

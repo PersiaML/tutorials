@@ -13,11 +13,11 @@ Here is an example for `global_config.yaml`.
 
 ```yaml
 common_config:
-  intent: Train
+  job_type: Train
   metrics_config:
     enable_metrics: false
     push_interval_sec: 10
-shard_server_config:
+embedding_server_config:
   capacity: 100000000
   num_hashmap_internal_shards: 128
   full_amount_manager_buffer_size: 1000
@@ -30,19 +30,19 @@ middleware_config:
   forward_buffer_size: 1000
 ```
 
-Depending on the scope, `global_config` was divided into three major sections, namely `common_config`, `shard_server_config` and `middleware_config`. `common_config` configures the job type (`intent`) and metrics server. `shard_server_config` configures the PersiaML embedding server, and `middleware_config` provides configurations for the PersiaML middleware. The following is a detailed description of each configuration.
+Depending on the scope, `global_config` was divided into three major sections, namely `common_config`, `embedding_server_config` and `middleware_config`. `common_config` configures the job type (`job_type`) and metrics server. `embedding_server_config` configures the PersiaML embedding server, and `middleware_config` provides configurations for the PersiaML middleware. The following is a detailed description of each configuration.
 
 ### common_config
 
-#### intent
+#### job_type
 
-The intent of PresiaML can be either `Train` or `Infer`.
+The job_type of PresiaML can be either `Train` or `Infer`.
 
-When `intent` is `Infer`, additional configurations including `servers` and `initial_sparse_checkpoint` have to be provided. Here is an example:
+When `job_type` is `Infer`, additional configurations including `servers` and `initial_sparse_checkpoint` have to be provided. Here is an example:
 
 ```yaml
 common_config:
-  intent: Infer
+  job_type: Infer
     servers:
       - emb_server_1:8000
       - emb_server_2:8000
@@ -62,8 +62,8 @@ common_config:
 * `job_name(str, default=persia_defalut_job_name)`: A name to distinguish your job from others.
 
 
-### shard_server_config
-`shard_server_config` specifies the configuration for the embedding server.
+### embedding_server_config
+`embedding_server_config` specifies the configuration for the embedding server.
 * `capacity(int, default=1,000,000,000)`: The capacity of each embedding server. Once the number of indices of an embedding server exceeds the capacity, it will evict embeddings according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies.
 * `num_hashmap_internal_shards(int, default=100)`: The number of internal shard of an embedding server. Embeddings are saved in a HashMap which contains multiple shards (sub-hashmaps). Since the CRUD operations need to acquire the lock of a hashmap, acquiring the lock of the sub-hashmap instead of the whole hashmap will be more conducive to concurrency between CRUD operations.
 * `full_amount_manager_buffer_size(int, default=1000)`: The buffer size of full amount manager. In order to achieve better performance, the embedding server does not traverse the hashmap directly during full dump. Instead, Embedding is submitted asynchronously through full amount manager.
