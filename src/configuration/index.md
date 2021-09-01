@@ -1,18 +1,22 @@
 Configuration
 ======
 
+In order to achieve the best performance on various training and inference jobs, PersiaML servers provide a handful of configuration options via two config files, a global configuration file usually named as `global_config.yaml`, and an embedding configuration file usually named as `embedding_config.yaml`. The global configuration allows one to define job type and general behaviors of servers, whereas embedding configuration provides definition of embedding details for individual sparse features.
+
+
+
 ## Global Configuration
 
-In order to achieve the best performance on various training and inference jobs, PersiaML servers provide a handful of configuration options via a yaml config file usually named as `global_config.yaml`. The path to the config file should be parsed as an argument `--global-config` when running PersiaML servers.
+Global configuration specifies the configuration of the current PersiaML job. The path to the global configuration file should be parsed as argument `--global-config` when launching PersiaML servers or middleware.
 
 Here is an example for `global_config.yaml`.
 
 ```yaml
 common_config:
+  intent: Train
   metrics_config:
     enable_metrics: false
     push_interval_sec: 10
-  intent: Train
 shard_server_config:
   capacity: 100000000
   num_hashmap_internal_shards: 128
@@ -26,22 +30,15 @@ middleware_config:
   forward_buffer_size: 1000
 ```
 
-Depending on the scope, `global_config` was divided into three major sections, namely `common_config`, `shard_server_config` and `middleware_config`. `common_config` provides global settings for PersiaML training and inference jobs. `shard_server_config` provides configurations for the PersiaML embedding server, and `middleware_config` provides configurations for the PersiaML middleware. The following is a detailed description of each configuration.
+Depending on the scope, `global_config` was divided into three major sections, namely `common_config`, `shard_server_config` and `middleware_config`. `common_config` configures the job type (`intent`) and metrics server. `shard_server_config` configures the PersiaML embedding server, and `middleware_config` provides configurations for the PersiaML middleware. The following is a detailed description of each configuration.
 
 ### common_config
-
-#### metrics_config
-
-* `enable_metrics(bool, default=false)`: Whether to enable metrics.
-* `push_interval_sec(int ,default=10)`: The interval of pushing metrics to the promethus pushgateway server.
-* `job_name(str, default=persia_defalut_job_name)`: A name to distinguish your job from others.
-
 
 #### intent
 
 The intent of PresiaML can be either `Train` or `Infer`.
 
-When intent is `Infer`, additional configurations including `servers` and `initial_sparse_checkpoint` have to be provided. Here is an example:
+When `intent` is `Infer`, additional configurations including `servers` and `initial_sparse_checkpoint` have to be provided. Here is an example:
 
 ```yaml
 common_config:
@@ -56,15 +53,24 @@ common_config:
 * `initial_sparse_checkpoint(str, required)`: Embedding server will load this ckpt when start.
 
 
-### shard_server_config
+#### metrics_config
+`metrics_config` defines a set of configuration options for monitoring. See [Monitoring](../monitering/index.md) for details.
 
-* `capacity(int, default=1_000_000_000)`: The capacity of each embedding server. Once the number of indices of an embedding server exceeds the capacity, it will evict embeddings according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies.
-* `num_hashmap_internal_shards(int, default=100)`: The number of internal shard of an embedding server. Embeddings are saved in a HashMap which contains multiple shards(sub-hashmap). Since the CRUD operations need to acquire the lock of a hashmap, acquiring the lock of the sub-hashmap instead of the whole hashmap will be more conducive to concurrency between CRUD operations.
-* `full_amount_manager_buffer_size(int, default=1000)`: The buffer size of full amount manager. In terms of performance, embedding server does not traverse the hashmap directly during full dump. Instead, Embedding is submitted asynchronously through full amount manager.
+
+* `enable_metrics(bool, default=false)`: Whether to enable metrics.
+* `push_interval_sec(int ,default=10)`: The interval of pushing metrics to the promethus pushgateway server.
+* `job_name(str, default=persia_defalut_job_name)`: A name to distinguish your job from others.
+
+
+### shard_server_config
+`shard_server_config` specifies the configuration for the embedding server.
+* `capacity(int, default=1,000,000,000)`: The capacity of each embedding server. Once the number of indices of an embedding server exceeds the capacity, it will evict embeddings according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies.
+* `num_hashmap_internal_shards(int, default=100)`: The number of internal shard of an embedding server. Embeddings are saved in a HashMap which contains multiple shards (sub-hashmaps). Since the CRUD operations need to acquire the lock of a hashmap, acquiring the lock of the sub-hashmap instead of the whole hashmap will be more conducive to concurrency between CRUD operations.
+* `full_amount_manager_buffer_size(int, default=1000)`: The buffer size of full amount manager. In order to achieve better performance, the embedding server does not traverse the hashmap directly during full dump. Instead, Embedding is submitted asynchronously through full amount manager.
 * `num_persistence_workers(int, default=4)`: The concurrency of embedding dumping, loading and incremental update.
-* `num_signs_per_file(int, default=1_000_000)`: Number of embeddings to be saved in each file in the checkpoint directory.
+* `num_signs_per_file(int, default=1,000,000)`: Number of embeddings to be saved in each file in the checkpoint directory.
 * `enable_incremental_update(bool, default=false)`: Whether to enable incremental update.
-* `incremental_buffer_size(int, default=1_000_000)`: Buffer size for incremental update. Embedding will be insert into this buffer after updating the gradient. Once the buffer is full, the embeddings in the buffer will be dumped.
+* `incremental_buffer_size(int, default=1,000,000)`: Buffer size for incremental update. Embeddings will be inserted into this buffer after each gradient update, and will only be dumped when the buffer is full. Only valid when `enable_incremental_update=true`.
 * `incremental_dir(str, default=/workspace/incremental_dir/)`: The directory for incremental update files to be dumped or loaded.
 
 ### middleware_configs
@@ -73,7 +79,7 @@ common_config:
 
 ## Embedding Config
 
-In addition to `global_config`, detailed settings related to embedding are provided in a separate embedding configuration file usually named `embedding_config.yaml`.The path to the embedding config file should be parsed as argument `--embedding-config` when running PersiaML servers.
+In addition to `global_config`, detailed settings related to sparse feature embeddings are provided in a separate embedding configuration file usually named `embedding_config.yaml`. The path to the embedding config file should be parsed as argument `--embedding-config` when running PersiaML servers.
 
 Here is an example for `embedding_config.yaml`.
 
@@ -115,17 +121,17 @@ feature_groups:
 
 ```
 
-The following is a detailed description of each configuration. `required` means there is no default values.
+The following is a detailed description of each configuration. `required` means there are no default values.
 
- * `feature_index_prefix_bit(int, default=8)`: Number of bits occupied by feature group. In order to avoid hash collisions between different features, the first n(n=feature_index_prefix_bit) bits of an index(u64) are taken as the feature bits, and the last (64-n) bits is taken as the index bits. The original id will be processed before inserted into the hash table, following `ID = original_ID % 0~2^(64-n) + index_prefix << (64-n)`. Slots in the same feature group share the same `index_prefix`, which is automatically generated by Persia according to the `feature_groups`.
+ * `feature_index_prefix_bit(int, default=8)`: Number of bits occupied by each feature group. To avoid hash collisions between different features, the first `n(n=feature_index_prefix_bit)` bits of an index(u64) are taken as the feature bits, and the last `64-n` bits are taken as the index bits. The original id will be processed before inserted into the hash table, following `ID = original_ID % 0~2^(64-n) + index_prefix << (64-n)`. Slots in the same feature group share the same `index_prefix`, which is automatically generated by Persia according to the `feature_groups`.
 
  * `slots_config(map, required)`: `slots_config` contains all the definitions of Embedding. The key of the map is the feature name, and the value of the map is a struct named `SlotConfig`. The following is a detailed description of configuration in a `SlotConfig`.
     * `dim(int, required)`: dim of embedding.
     * `sample_fixed_size(int, default=10)`: raw embedding placeholder size to fill 3d tensor -> (bs, sample_fix_sized, dim).
-    * `embedding_summation(bool, default=true)`: whether to reduce(summation) embedding before feed to dense net.
+    * `embedding_summation(bool, default=true)`: whether to reduce(summation) embedding before feeding to dense net.
     * `sqrt_scaling(bool, default=false)`: whether to numerical scaling embedding values.
-    * `hash_stack_config(struct, default=None)`: A method to represent a large number of sparse features with a small amount of Embedding vector. It means mapping the original ID to `0~E (E=embedding_size)` through `n (n=hash_stack_rounds)` different hash functions, such as `ID_1, ID_2... ID_n`. Each such ID corresponds to an embedding vector, then performs reduce(summation) operation among these embedding vectors, as input to the dense net of the original ID.
+    * `hash_stack_config(struct, default=None)`: a method to represent a large number of sparse features with a small amount of Embedding vector. It means mapping the original ID to `0~E (E=embedding_size)` through `n (n=hash_stack_rounds)` different hash functions, such as `ID_1, ID_2... ID_n`. Each such ID corresponds to an embedding vector, then performs reduce(summation) operation among these embedding vectors, as input to the dense net of the original ID.
        * `hash_stack_rounds(int, default=0)`: Embedding hash rounds.
        * `embedding_size(int, default=0)`: Embedding hash space of each rounds.
 
-* `feature_groups(map, default={})`: Feature group division. Refer to the description of `feature_index_prefix_bit`, feature in one feature group will share the same index prefix.
+* `feature_groups(map, default={})`: Feature group division. Refer to the description of `feature_index_prefix_bit`. Feature in one feature group will share the same index prefix.
