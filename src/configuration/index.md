@@ -54,7 +54,7 @@ common_config:
 
 
 #### metrics_config
-`metrics_config` defines a set of configuration options for monitoring. See [Monitoring](../monitering/index.md) for details.
+`metrics_config` defines a set of configuration options for monitoring. See [Monitoring](../monitoring/index.md) for details.
 
 
 * `enable_metrics(bool, default=false)`: Whether to enable metrics.
