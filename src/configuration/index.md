@@ -60,11 +60,11 @@ common_config:
 
 * `capacity(int, default=1_000_000_000)`: The capacity of each embedding server. Once the number of indices of an embedding server exceeds the capacity, it will evict embeddings according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies.
 * `num_hashmap_internal_shards(int, default=100)`: The number of internal shard of an embedding server. Embeddings are saved in a HashMap which contains multiple shards(sub-hashmap). Since the CRUD operations need to acquire the lock of a hashmap, acquiring the lock of the sub-hashmap instead of the whole hashmap will be more conducive to concurrency between CRUD operations.
-* `full_amount_manager_buffer_size(int, default=1000)`: The buffer size of full amount manager. A full amount manager is used to manage all of the embeddings in an embedding server.
+* `full_amount_manager_buffer_size(int, default=1000)`: The buffer size of full amount manager. In terms of performance, embedding server does not traverse the hashmap directly during full dump. Instead, Embedding is submitted asynchronously through full amount manager.
 * `num_persistence_workers(int, default=4)`: The concurrency of embedding dumping, loading and incremental update.
-* `num_signs_per_file(int, default=1_000_000)`, Number of embeddings to be saved in each file in the checkpoint directory.
+* `num_signs_per_file(int, default=1_000_000)`: Number of embeddings to be saved in each file in the checkpoint directory.
 * `enable_incremental_update(bool, default=false)`: Whether to enable incremental update.
-* `incremental_buffer_size(int, default=1_000_000)`: Buffer size for incremental update. This is the number of embeddings in each incremental update file.
+* `incremental_buffer_size(int, default=1_000_000)`: Buffer size for incremental update. Embedding will be insert into this buffer after updating the gradient. Once the buffer is full, the embeddings in the buffer will be dumped.
 * `incremental_dir(str, default=/workspace/incremental_dir/)`: The directory for incremental update files to be dumped or loaded.
 
 ### middleware_configs
