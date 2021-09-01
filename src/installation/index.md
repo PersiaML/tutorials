@@ -49,6 +49,7 @@ USE_CUDA=1 pip3 install persia
 git clone git@github.com:PersiaML/PersiaML.git 
 pip3 install click colorlog torch colorama setuptools setuptools-rust setuptools_scm
 
+cd PersiaML
 # install cpu version
 python3 setup.py install
 # install cuda version
