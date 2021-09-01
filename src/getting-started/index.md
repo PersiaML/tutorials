@@ -64,13 +64,7 @@ batch_dense_data, batch_all_sparse_data, batch_target_data = zip(*batch_data)
 persia_batch_data = PyPersiaBatchData()
 batch_dense_data = np.stack(batch_dense_data)
 
-# add single dense
 persia_batch_data.add_dense_f32(batch_dense_data)
-
-# add a dense list
-# dense_array_list = []
-# dense_array_list.append(batch_dense_data)
-# persia_batch_data.add_dense(dense_array_list)
 ```
 
 ### Add sparse data
@@ -117,10 +111,10 @@ persia_batch_data.add_target(batch_target_data) # can invoke multiple times for 
 
 ### Data transfer 
 Init the `persia_backend` to transfer the `persia batch data` to the persia-middleware and persia-trainer. 
-```python3
-from persia.ctx import init_backend
-backend = init_backend(init_output=True, wait_server_ready=True)
-backend.send_data(persia_batch_data) # register sparse data and transfer remain part to trainer service
+```python
+from persia.ctx import DataCtx
+with DataCtx():
+    ctx.send_data(persia_batch_data) # register sparse data and transfer remain part to trainer service
 ```
 
 _review DLRM datacompose codebase at examples/DLRM/data_compose.py_
@@ -162,6 +156,7 @@ from persia.ctx import TrainCtx
 scaler = torch.cuda.amp.GradScaler() # for half training
 
 with TrainCtx(
+    model=model,
     sparse_optimizer=sparse_optimizer,
     dense_optimizer=dense_optimizer,
     device_id=device_id,
