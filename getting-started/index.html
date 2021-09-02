@@ -78,7 +78,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="../getting-started/index.html" class="active"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="../benchmark/index.html"><strong aria-hidden="true">4.</strong> Benchmark</a></li><li class="chapter-item expanded "><a href="../data-processing/index.html"><strong aria-hidden="true">5.</strong> Data Processing</a></li><li class="chapter-item expanded "><a href="../monitoring/index.html"><strong aria-hidden="true">6.</strong> Monitoring</a></li><li class="chapter-item expanded "><a href="../inference/index.html"><strong aria-hidden="true">7.</strong> Inference</a></li><li class="chapter-item expanded "><a href="../model-checkpointing/index.html"><strong aria-hidden="true">8.</strong> Model Checkpointing</a></li><li class="chapter-item expanded "><a href="../configuration/index.html"><strong aria-hidden="true">9.</strong> Configuration</a></li><li class="chapter-item expanded "><a href="../troubleshooting/index.html"><strong aria-hidden="true">10.</strong> Troubleshooting</a></li><li class="chapter-item expanded "><a href="../kubernetes-integration/index.html"><strong aria-hidden="true">11.</strong> Kubernetes Integration</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../installation/index.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="../getting-started/index.html" class="active"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="../benchmark/index.html"><strong aria-hidden="true">4.</strong> Benchmark</a></li><li class="chapter-item expanded "><a href="../data-processing/index.html"><strong aria-hidden="true">5.</strong> Data Processing</a></li><li class="chapter-item expanded "><a href="../monitoring/index.html"><strong aria-hidden="true">6.</strong> Monitoring</a></li><li class="chapter-item expanded "><a href="../inference/index.html"><strong aria-hidden="true">7.</strong> Inference</a></li><li class="chapter-item expanded "><a href="../model-checkpointing/index.html"><strong aria-hidden="true">8.</strong> Model Checkpointing</a></li><li class="chapter-item expanded "><a href="../configuration/index.html"><strong aria-hidden="true">9.</strong> Configuration</a></li><li class="chapter-item expanded "><a href="../troubleshooting/index.html"><strong aria-hidden="true">10.</strong> Troubleshooting</a></li><li class="chapter-item expanded "><a href="../kubernetes-integration/index.html"><strong aria-hidden="true">11.</strong> Kubernetes Integration</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -199,13 +199,7 @@ batch_dense_data, batch_all_sparse_data, batch_target_data = zip(*batch_data)
 <pre><code class="language-python">persia_batch_data = PyPersiaBatchData()
 batch_dense_data = np.stack(batch_dense_data)
 
-# add single dense
 persia_batch_data.add_dense_f32(batch_dense_data)
-
-# add a dense list
-# dense_array_list = []
-# dense_array_list.append(batch_dense_data)
-# persia_batch_data.add_dense(dense_array_list)
 </code></pre>
 <h3 id="add-sparse-data"><a class="header" href="#add-sparse-data">Add sparse data</a></h3>
 <p>Add multiple categories sparse data into <code>PyPersiaBatchData</code>, each category data should have the same batch size and a unique namespace to share feature space. </p>
@@ -247,9 +241,9 @@ persia_batch_data.add_target(batch_target_data) # can invoke multiple times for 
 </code></pre>
 <h3 id="data-transfer"><a class="header" href="#data-transfer">Data transfer</a></h3>
 <p>Init the <code>persia_backend</code> to transfer the <code>persia batch data</code> to the persia-middleware and persia-trainer. </p>
-<pre><code class="language-python3">from persia.ctx import init_backend
-backend = init_backend(init_output=True, wait_server_ready=True)
-backend.send_data(persia_batch_data) # register sparse data and transfer remain part to trainer service
+<pre><code class="language-python">from persia.ctx import DataCtx
+with DataCtx():
+    ctx.send_data(persia_batch_data) # register sparse data and transfer remain part to trainer service
 </code></pre>
 <p><em>review DLRM datacompose codebase at examples/DLRM/data_compose.py</em></p>
 <h2 id="define-model"><a class="header" href="#define-model">Define model</a></h2>
@@ -284,26 +278,17 @@ sparse_optimizer = Adagrad(lr=1e-3)
 scaler = torch.cuda.amp.GradScaler() # for half training
 
 with TrainCtx(
-    grad_scaler=scaler,
+    model=model,
     sparse_optimizer=sparse_optimizer,
-    port=int(os.environ[&quot;TRAINER_PORT&quot;]),
-    data_queue_size=int(os.environ[&quot;FORWARD_QUEUE_SIZE&quot;]),
+    dense_optimizer=dense_optimizer,
+    device_id=device_id,
 ) as ctx:
     for (batch_idx, data) in enumerate(ctx.data_loader()):
         (dense, sparse), target = ctx.prepare_features(data)
         output, aux_loss = model((dense, sparse))
         bce_loss = loss_fn(output, target)
         loss = aux_loss + bce_loss
-
-        scaler.scale(loss).backward()
-        scale = scaler.get_scale()
-        finite = ctx.on_after_backward(scale, batch_idx)
-        scaler.step(dense_optimizer)
-        dense_optimizer.zero_grad()
-        if finite:
-            scaler.update()
-        else:
-            scaler.update(scale / 4.0)
+        scaled_loss = ctx.backward(loss)
         logger.info(f&quot;current idx: {batch_idx} loss: {loss}&quot;)
 
 </code></pre>
@@ -318,7 +303,7 @@ with TrainCtx(
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../installation.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../installation/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                             <a rel="next" href="../benchmark/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
@@ -330,7 +315,7 @@ with TrainCtx(
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../installation.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../installation/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                     <a rel="next" href="../benchmark/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">

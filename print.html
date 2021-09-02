@@ -79,7 +79,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="getting-started/index.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="benchmark/index.html"><strong aria-hidden="true">4.</strong> Benchmark</a></li><li class="chapter-item expanded "><a href="data-processing/index.html"><strong aria-hidden="true">5.</strong> Data Processing</a></li><li class="chapter-item expanded "><a href="monitoring/index.html"><strong aria-hidden="true">6.</strong> Monitoring</a></li><li class="chapter-item expanded "><a href="inference/index.html"><strong aria-hidden="true">7.</strong> Inference</a></li><li class="chapter-item expanded "><a href="model-checkpointing/index.html"><strong aria-hidden="true">8.</strong> Model Checkpointing</a></li><li class="chapter-item expanded "><a href="configuration/index.html"><strong aria-hidden="true">9.</strong> Configuration</a></li><li class="chapter-item expanded "><a href="troubleshooting/index.html"><strong aria-hidden="true">10.</strong> Troubleshooting</a></li><li class="chapter-item expanded "><a href="kubernetes-integration/index.html"><strong aria-hidden="true">11.</strong> Kubernetes Integration</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="installation/index.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="getting-started/index.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="benchmark/index.html"><strong aria-hidden="true">4.</strong> Benchmark</a></li><li class="chapter-item expanded "><a href="data-processing/index.html"><strong aria-hidden="true">5.</strong> Data Processing</a></li><li class="chapter-item expanded "><a href="monitoring/index.html"><strong aria-hidden="true">6.</strong> Monitoring</a></li><li class="chapter-item expanded "><a href="inference/index.html"><strong aria-hidden="true">7.</strong> Inference</a></li><li class="chapter-item expanded "><a href="model-checkpointing/index.html"><strong aria-hidden="true">8.</strong> Model Checkpointing</a></li><li class="chapter-item expanded "><a href="configuration/index.html"><strong aria-hidden="true">9.</strong> Configuration</a></li><li class="chapter-item expanded "><a href="troubleshooting/index.html"><strong aria-hidden="true">10.</strong> Troubleshooting</a></li><li class="chapter-item expanded "><a href="kubernetes-integration/index.html"><strong aria-hidden="true">11.</strong> Kubernetes Integration</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -146,7 +146,57 @@
 <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
 <footer id="open-on-gh">Found a bug? <a href="https://github.com/PersiaML/tutorials/edit/main/src/introduction.md">Edit this file on GitHub.</a></footer><div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
-<footer id="open-on-gh">Found a bug? <a href="https://github.com/PersiaML/tutorials/edit/main/src/installation.md">Edit this file on GitHub.</a></footer><div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+<ul>
+<li><a href="installation/index.html#use-docker-images">Use Docker Images </a>
+<ul>
+<li><a href="installation/index.html#using-pre-built-images">Using pre-built images</a></li>
+<li><a href="installation/index.html#building-the-image-locally">Building the image locally</a></li>
+</ul>
+</li>
+<li><a href="installation/index.html#install-manually">Install Manually</a>
+<ul>
+<li><a href="installation/index.html#common-requirements">Common Requirements</a></li>
+<li><a href="installation/index.html#install-from-pip">Install from Pip</a></li>
+<li><a href="installation/index.html#install-from-source">Install from source</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="use-docker-images"><a class="header" href="#use-docker-images">Use Docker Images</a></h2>
+<p>The fastest way to training your first Persia task is using pre-built docker images.</p>
+<h3 id="using-pre-built-images"><a class="header" href="#using-pre-built-images">Using pre-built images</a></h3>
+<pre><code class="language-bash">docker pull persiaml/persia-cuda-runtime:latest
+</code></pre>
+<h3 id="building-the-image-locally"><a class="header" href="#building-the-image-locally">Building the image locally</a></h3>
+<pre><code class="language-bash">git clone git@github.com:PersiaML/PersiaML.git 
+# docker image name: persiaml/persia-cuda-runtime:dev
+cd PersiaML &amp;&amp; make build_dev_image 
+</code></pre>
+<h2 id="install-manually"><a class="header" href="#install-manually">Install Manually</a></h2>
+<p>You can also install PersiaML manually on your existing system.</p>
+<h3 id="common-requirements"><a class="header" href="#common-requirements">Common requirements</a></h3>
+<pre><code class="language-bash">export RUSTUP_HOME=/rust
+export CARGO_HOME=/cargo
+export PATH=/cargo/bin:/rust/bin:PATH
+
+curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly -y --profile default --no-modify-path
+rustup install nightly-2021-06-01
+
+sudo apt-get install -y python3.7 libpython3.7-dev
+</code></pre>
+<h3 id="install-from-pip"><a class="header" href="#install-from-pip">Install From Pip</a></h3>
+<pre><code class="language-bash">USE_CUDA=1 pip3 install persia
+</code></pre>
+<h3 id="install-from-source"><a class="header" href="#install-from-source">Install From Source</a></h3>
+<pre><code class="language-bash">git clone git@github.com:PersiaML/PersiaML.git 
+pip3 install click colorlog torch colorama setuptools setuptools-rust setuptools_scm
+
+cd PersiaML
+# install cpu version
+python3 setup.py install
+# install cuda version
+USE_CUDA=1 python3 setup.py install
+</code></pre>
+<footer id="open-on-gh">Found a bug? <a href="https://github.com/PersiaML/tutorials/edit/main/src/installation/index.md">Edit this file on GitHub.</a></footer><div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="getting-started"><a class="header" href="#getting-started">Getting Started</a></h1>
 <p>According to DLRM example to make you construct machine learning application based on Persia swiftly</p>
 <h2 id="setup"><a class="header" href="#setup">Setup</a></h2>
@@ -204,13 +254,7 @@ batch_dense_data, batch_all_sparse_data, batch_target_data = zip(*batch_data)
 <pre><code class="language-python">persia_batch_data = PyPersiaBatchData()
 batch_dense_data = np.stack(batch_dense_data)
 
-# add single dense
 persia_batch_data.add_dense_f32(batch_dense_data)
-
-# add a dense list
-# dense_array_list = []
-# dense_array_list.append(batch_dense_data)
-# persia_batch_data.add_dense(dense_array_list)
 </code></pre>
 <h3 id="add-sparse-data"><a class="header" href="#add-sparse-data">Add sparse data</a></h3>
 <p>Add multiple categories sparse data into <code>PyPersiaBatchData</code>, each category data should have the same batch size and a unique namespace to share feature space. </p>
@@ -252,9 +296,9 @@ persia_batch_data.add_target(batch_target_data) # can invoke multiple times for 
 </code></pre>
 <h3 id="data-transfer"><a class="header" href="#data-transfer">Data transfer</a></h3>
 <p>Init the <code>persia_backend</code> to transfer the <code>persia batch data</code> to the persia-middleware and persia-trainer. </p>
-<pre><code class="language-python3">from persia.ctx import init_backend
-backend = init_backend(init_output=True, wait_server_ready=True)
-backend.send_data(persia_batch_data) # register sparse data and transfer remain part to trainer service
+<pre><code class="language-python">from persia.ctx import DataCtx
+with DataCtx():
+    ctx.send_data(persia_batch_data) # register sparse data and transfer remain part to trainer service
 </code></pre>
 <p><em>review DLRM datacompose codebase at examples/DLRM/data_compose.py</em></p>
 <h2 id="define-model"><a class="header" href="#define-model">Define model</a></h2>
@@ -289,26 +333,17 @@ sparse_optimizer = Adagrad(lr=1e-3)
 scaler = torch.cuda.amp.GradScaler() # for half training
 
 with TrainCtx(
-    grad_scaler=scaler,
+    model=model,
     sparse_optimizer=sparse_optimizer,
-    port=int(os.environ[&quot;TRAINER_PORT&quot;]),
-    data_queue_size=int(os.environ[&quot;FORWARD_QUEUE_SIZE&quot;]),
+    dense_optimizer=dense_optimizer,
+    device_id=device_id,
 ) as ctx:
     for (batch_idx, data) in enumerate(ctx.data_loader()):
         (dense, sparse), target = ctx.prepare_features(data)
         output, aux_loss = model((dense, sparse))
         bce_loss = loss_fn(output, target)
         loss = aux_loss + bce_loss
-
-        scaler.scale(loss).backward()
-        scale = scaler.get_scale()
-        finite = ctx.on_after_backward(scale, batch_idx)
-        scaler.step(dense_optimizer)
-        dense_optimizer.zero_grad()
-        if finite:
-            scaler.update()
-        else:
-            scaler.update(scale / 4.0)
+        scaled_loss = ctx.backward(loss)
         logger.info(f&quot;current idx: {batch_idx} loss: {loss}&quot;)
 
 </code></pre>
@@ -322,6 +357,66 @@ with TrainCtx(
 <h1 id="benchmark"><a class="header" href="#benchmark">Benchmark</a></h1>
 <footer id="open-on-gh">Found a bug? <a href="https://github.com/PersiaML/tutorials/edit/main/src/benchmark/index.md">Edit this file on GitHub.</a></footer><div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="data-processing"><a class="header" href="#data-processing">Data Processing</a></h1>
+<p>Training data in PersiaML consists of three parts, contiguous data (dense), categorical data (sparse) and label data (target). When training with Persia, first format the original training data into the corresponding Persia data format, and then add them to <code>persia.prelude.PyPersiaBatchData</code>.</p>
+<h2 id="contiguous-data"><a class="header" href="#contiguous-data">Contiguous Data</a></h2>
+<p>We define the <em>Contiguous Data</em> as <em>Dense Data</em> in our library. Mixed datatypes are supported. One can add multiple 2D <em>Dense Data</em> of different datatypes to <code>PyPersiaBatchData</code> by invoking the corresponding methods. Note that the shape of all 2D Dense data should be equal. (TODO: why?)</p>
+<p><em>datatypes <code>PyPersiaBatchData</code> currently support</em></p>
+<ul>
+<li>add_dense_f32 =&gt; np.float32 </li>
+<li>add_dense_f64 =&gt; np.float64</li>
+<li>add_dense_i32 =&gt;  np.int32</li>
+<li>add_dense_i64 =&gt; np.int64</li>
+</ul>
+<p><em>code example</em></p>
+<pre><code class="language-python">import numpy as np
+
+from persia.prelude import PyPersiaBatchData
+
+batch_data = PyPersiaBatchData()
+
+batch_size = 1024
+dim = 256
+
+batch_data.add_dense_f32(np.ones((batch_size, dim), dtype=np.float32))
+batch_data.add_dense_i32(np.ones((batch_size, dim), dtype=np.int32))
+batch_data.add_dense_f64(np.ones((batch_size, dim), dtype=np.float64))
+batch_data.add_dense_i64(np.ones((batch_size, dim), dtype=np.int64))
+</code></pre>
+<h2 id="categorical-data"><a class="header" href="#categorical-data">Categorical Data</a></h2>
+<p>We define the <em>Categorical Data</em> as <em>Sparse Data</em> in our library. It is important to add the name to each <em>Sparse Data</em> for later embedding lookup. A <em>Categorical Data</em> is composed of a batch of 1d tensors of variable length.</p>
+<p><em>code example</em></p>
+<pre><code class="language-python">import numpy as np
+
+from persia.prelude import PyPersiaBatchData
+
+sparse_data_num = 3
+batch_size = 1024
+max_sparse_len = 65536
+
+# gen mock sparse data
+batch_sparse_datas = []
+for feature_idx in range(sparse_data_num):
+    batch_sparse_data = []
+    for batch_idx in range(batch_size):
+        cnt_sparse_len = np.random.randint(0, max_sparse_len)
+        sparse_data = np.random.one((cnt_sparse_len), dtype=np.uint64)
+    batch_sparse_datas.append((batch_sparse_data, f&quot;feature_{feature_idx}&quot;))
+
+# add mock sparse data into PyPersiaBatchData 
+batch_data = PyPersiaBatchData()
+batch_data.add_sparse(batch_sparse_datas)
+</code></pre>
+<h2 id="label-data"><a class="header" href="#label-data">Label Data</a></h2>
+<p>We use the <em>Target Data</em> to represent <em>Label</em>. <em>Target Data</em> should be a <code>2d flaot32 tensor</code>.</p>
+<p><em>code example</em></p>
+<pre><code class="language-python">import numpy as np
+
+from persia.prelude import PyPersiaBatchData
+
+batch_data = PyPersiaBatchData()
+batch_size = 1024
+batch_data.add_target(np.ones((1024, 2), dtype=np.float32))
+</code></pre>
 <footer id="open-on-gh">Found a bug? <a href="https://github.com/PersiaML/tutorials/edit/main/src/data-processing/index.md">Edit this file on GitHub.</a></footer><div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="monitoring"><a class="header" href="#monitoring">Monitoring</a></h1>
 <p>Monitoring and alerting is crucial for a distributed system, PersiaML provides integration with <a href="https://prometheus.io/docs/introduction/overview/">Prometheus</a> for this purpose.</p>
@@ -670,6 +765,13 @@ feature_groups:
 </ul>
 <footer id="open-on-gh">Found a bug? <a href="https://github.com/PersiaML/tutorials/edit/main/src/configuration/index.md">Edit this file on GitHub.</a></footer><div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="troubleshooting"><a class="header" href="#troubleshooting">Troubleshooting</a></h1>
+<p>Debugging running task in distributed training can be difficult.We provide some general suggestions in this page.</p>
+<h2 id="investigate-debug-log"><a class="header" href="#investigate-debug-log">Investigate debug log</a></h2>
+<p>PersiaML print the log according to different <code>LOG_LEVEL</code>.Set corresponding launch environment <code>LOG_LEVEL</code> when launch the <em>trainer</em>, <em>middleware-server</em> and <em>embedding-server</em>. The value of <em>LOG_LEVEL</em> can be accepted include <em>debug</em>, <em>info</em>, <em>warn</em> and <em>error</em> can be accept, the default value is <code>info</code>.</p>
+<h2 id="investigate-grafana-metrics"><a class="header" href="#investigate-grafana-metrics">Investigate Grafana metrics</a></h2>
+<p>We use the <code>Prometheus</code> to collect the metrics in training phase.You can find out the information such as current embedding staleness, current embedding_size or the time cost of embedding backward. Read the <a href="troubleshooting/../monitoring/index.html">Monitoring cheapter</a> for more metric.</p>
+<h2 id="print-intermediate-results"><a class="header" href="#print-intermediate-results">Print intermediate results</a></h2>
+<p>Print the intermediate result is also necessary when meet some tough problems.When you need to print the intermediate results during the training phase, there are two solutions that you can do to after adding the intermediate log.The one is building a new docker image.And the second is install the persiaML python library manully. Read the <a href="troubleshooting/../installation/index.html">Installation cheapter</a> for more detail.</p>
 <footer id="open-on-gh">Found a bug? <a href="https://github.com/PersiaML/tutorials/edit/main/src/troubleshooting/index.md">Edit this file on GitHub.</a></footer><div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="kubernetes-integration"><a class="header" href="#kubernetes-integration">Kubernetes Integration</a></h1>
 <footer id="open-on-gh">Found a bug? <a href="https://github.com/PersiaML/tutorials/edit/main/src/kubernetes-integration/index.md">Edit this file on GitHub.</a></footer>

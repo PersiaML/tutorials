@@ -64,13 +64,7 @@ batch_dense_data, batch_all_sparse_data, batch_target_data = zip(*batch_data)
 persia_batch_data = PyPersiaBatchData()
 batch_dense_data = np.stack(batch_dense_data)
 
-# add single dense
 persia_batch_data.add_dense_f32(batch_dense_data)
-
-# add a dense list
-# dense_array_list = []
-# dense_array_list.append(batch_dense_data)
-# persia_batch_data.add_dense(dense_array_list)
 ```
 
 ### Add sparse data
@@ -117,10 +111,10 @@ persia_batch_data.add_target(batch_target_data) # can invoke multiple times for 
 
 ### Data transfer 
 Init the `persia_backend` to transfer the `persia batch data` to the persia-middleware and persia-trainer. 
-```python3
-from persia.ctx import init_backend
-backend = init_backend(init_output=True, wait_server_ready=True)
-backend.send_data(persia_batch_data) # register sparse data and transfer remain part to trainer service
+```python
+from persia.ctx import DataCtx
+with DataCtx():
+    ctx.send_data(persia_batch_data) # register sparse data and transfer remain part to trainer service
 ```
 
 _review DLRM datacompose codebase at examples/DLRM/data_compose.py_
@@ -162,26 +156,17 @@ from persia.ctx import TrainCtx
 scaler = torch.cuda.amp.GradScaler() # for half training
 
 with TrainCtx(
-    grad_scaler=scaler,
+    model=model,
     sparse_optimizer=sparse_optimizer,
-    port=int(os.environ["TRAINER_PORT"]),
-    data_queue_size=int(os.environ["FORWARD_QUEUE_SIZE"]),
+    dense_optimizer=dense_optimizer,
+    device_id=device_id,
 ) as ctx:
     for (batch_idx, data) in enumerate(ctx.data_loader()):
         (dense, sparse), target = ctx.prepare_features(data)
         output, aux_loss = model((dense, sparse))
         bce_loss = loss_fn(output, target)
         loss = aux_loss + bce_loss
-
-        scaler.scale(loss).backward()
-        scale = scaler.get_scale()
-        finite = ctx.on_after_backward(scale, batch_idx)
-        scaler.step(dense_optimizer)
-        dense_optimizer.zero_grad()
-        if finite:
-            scaler.update()
-        else:
-            scaler.update(scale / 4.0)
+        scaled_loss = ctx.backward(loss)
         logger.info(f"current idx: {batch_idx} loss: {loss}")
 
 ```

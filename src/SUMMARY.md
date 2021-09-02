@@ -1,7 +1,7 @@
 # Summary
 
 * [Introduction](./introduction.md)
-* [Installation](./installation.md)
+* [Installation](./installation/index.md)
 * [Getting Started](./getting-started/index.md)
 * [Benchmark](./benchmark/index.md)
 * [Data Processing](./data-processing/index.md)

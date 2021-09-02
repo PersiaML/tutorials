@@ -12,27 +12,27 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
 
-        <link rel="icon" href="favicon.svg">
-        <link rel="shortcut icon" href="favicon.png">
-        <link rel="stylesheet" href="css/variables.css">
-        <link rel="stylesheet" href="css/general.css">
-        <link rel="stylesheet" href="css/chrome.css">
-        <link rel="stylesheet" href="css/print.css" media="print">
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
         <!-- Fonts -->
-        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="fonts/fonts.css">
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="open-in.css">
+        <link rel="stylesheet" href="../open-in.css">
     </head>
     <body>
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
-            var path_to_root = "";
+            var path_to_root = "../";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
@@ -78,7 +78,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="installation.html" class="active"><strong aria-hidden="true">2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="getting-started/index.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="benchmark/index.html"><strong aria-hidden="true">4.</strong> Benchmark</a></li><li class="chapter-item expanded "><a href="data-processing/index.html"><strong aria-hidden="true">5.</strong> Data Processing</a></li><li class="chapter-item expanded "><a href="monitoring/index.html"><strong aria-hidden="true">6.</strong> Monitoring</a></li><li class="chapter-item expanded "><a href="inference/index.html"><strong aria-hidden="true">7.</strong> Inference</a></li><li class="chapter-item expanded "><a href="model-checkpointing/index.html"><strong aria-hidden="true">8.</strong> Model Checkpointing</a></li><li class="chapter-item expanded "><a href="configuration/index.html"><strong aria-hidden="true">9.</strong> Configuration</a></li><li class="chapter-item expanded "><a href="troubleshooting/index.html"><strong aria-hidden="true">10.</strong> Troubleshooting</a></li><li class="chapter-item expanded "><a href="kubernetes-integration/index.html"><strong aria-hidden="true">11.</strong> Kubernetes Integration</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../installation/index.html" class="active"><strong aria-hidden="true">2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="../getting-started/index.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="../benchmark/index.html"><strong aria-hidden="true">4.</strong> Benchmark</a></li><li class="chapter-item expanded "><a href="../data-processing/index.html"><strong aria-hidden="true">5.</strong> Data Processing</a></li><li class="chapter-item expanded "><a href="../monitoring/index.html"><strong aria-hidden="true">6.</strong> Monitoring</a></li><li class="chapter-item expanded "><a href="../inference/index.html"><strong aria-hidden="true">7.</strong> Inference</a></li><li class="chapter-item expanded "><a href="../model-checkpointing/index.html"><strong aria-hidden="true">8.</strong> Model Checkpointing</a></li><li class="chapter-item expanded "><a href="../configuration/index.html"><strong aria-hidden="true">9.</strong> Configuration</a></li><li class="chapter-item expanded "><a href="../troubleshooting/index.html"><strong aria-hidden="true">10.</strong> Troubleshooting</a></li><li class="chapter-item expanded "><a href="../kubernetes-integration/index.html"><strong aria-hidden="true">11.</strong> Kubernetes Integration</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -111,7 +111,7 @@
                     <h1 class="menu-title">PersiaML Tutorials</h1>
 
                     <div class="right-buttons">
-                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
                         <a href="https://github.com/PersiaML/tutorials" title="Git repository" aria-label="Git repository">
@@ -143,15 +143,65 @@
                     <main>
                         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
-<footer id="open-on-gh">Found a bug? <a href="https://github.com/PersiaML/tutorials/edit/main/src/installation.md">Edit this file on GitHub.</a></footer>
+<ul>
+<li><a href="#use-docker-images">Use Docker Images </a>
+<ul>
+<li><a href="#using-pre-built-images">Using pre-built images</a></li>
+<li><a href="#building-the-image-locally">Building the image locally</a></li>
+</ul>
+</li>
+<li><a href="#install-manually">Install Manually</a>
+<ul>
+<li><a href="#common-requirements">Common Requirements</a></li>
+<li><a href="#install-from-pip">Install from Pip</a></li>
+<li><a href="#install-from-source">Install from source</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="use-docker-images"><a class="header" href="#use-docker-images">Use Docker Images</a></h2>
+<p>The fastest way to training your first Persia task is using pre-built docker images.</p>
+<h3 id="using-pre-built-images"><a class="header" href="#using-pre-built-images">Using pre-built images</a></h3>
+<pre><code class="language-bash">docker pull persiaml/persia-cuda-runtime:latest
+</code></pre>
+<h3 id="building-the-image-locally"><a class="header" href="#building-the-image-locally">Building the image locally</a></h3>
+<pre><code class="language-bash">git clone git@github.com:PersiaML/PersiaML.git 
+# docker image name: persiaml/persia-cuda-runtime:dev
+cd PersiaML &amp;&amp; make build_dev_image 
+</code></pre>
+<h2 id="install-manually"><a class="header" href="#install-manually">Install Manually</a></h2>
+<p>You can also install PersiaML manually on your existing system.</p>
+<h3 id="common-requirements"><a class="header" href="#common-requirements">Common requirements</a></h3>
+<pre><code class="language-bash">export RUSTUP_HOME=/rust
+export CARGO_HOME=/cargo
+export PATH=/cargo/bin:/rust/bin:PATH
+
+curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly -y --profile default --no-modify-path
+rustup install nightly-2021-06-01
+
+sudo apt-get install -y python3.7 libpython3.7-dev
+</code></pre>
+<h3 id="install-from-pip"><a class="header" href="#install-from-pip">Install From Pip</a></h3>
+<pre><code class="language-bash">USE_CUDA=1 pip3 install persia
+</code></pre>
+<h3 id="install-from-source"><a class="header" href="#install-from-source">Install From Source</a></h3>
+<pre><code class="language-bash">git clone git@github.com:PersiaML/PersiaML.git 
+pip3 install click colorlog torch colorama setuptools setuptools-rust setuptools_scm
+
+cd PersiaML
+# install cpu version
+python3 setup.py install
+# install cuda version
+USE_CUDA=1 python3 setup.py install
+</code></pre>
+<footer id="open-on-gh">Found a bug? <a href="https://github.com/PersiaML/tutorials/edit/main/src/installation/index.md">Edit this file on GitHub.</a></footer>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="introduction.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../introduction.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
-                            <a rel="next" href="getting-started/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="../getting-started/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         <div style="clear: both"></div>
@@ -160,10 +210,10 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="introduction.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../introduction.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
-                    <a rel="next" href="getting-started/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="../getting-started/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
@@ -173,12 +223,12 @@
         <script type="text/javascript">
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
 
         <!-- Custom JS scripts -->
     </body>

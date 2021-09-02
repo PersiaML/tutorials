@@ -78,7 +78,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../installation.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="../getting-started/index.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="../benchmark/index.html"><strong aria-hidden="true">4.</strong> Benchmark</a></li><li class="chapter-item expanded "><a href="../data-processing/index.html" class="active"><strong aria-hidden="true">5.</strong> Data Processing</a></li><li class="chapter-item expanded "><a href="../monitoring/index.html"><strong aria-hidden="true">6.</strong> Monitoring</a></li><li class="chapter-item expanded "><a href="../inference/index.html"><strong aria-hidden="true">7.</strong> Inference</a></li><li class="chapter-item expanded "><a href="../model-checkpointing/index.html"><strong aria-hidden="true">8.</strong> Model Checkpointing</a></li><li class="chapter-item expanded "><a href="../configuration/index.html"><strong aria-hidden="true">9.</strong> Configuration</a></li><li class="chapter-item expanded "><a href="../troubleshooting/index.html"><strong aria-hidden="true">10.</strong> Troubleshooting</a></li><li class="chapter-item expanded "><a href="../kubernetes-integration/index.html"><strong aria-hidden="true">11.</strong> Kubernetes Integration</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../installation/index.html"><strong aria-hidden="true">2.</strong> Installation</a></li><li class="chapter-item expanded "><a href="../getting-started/index.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li class="chapter-item expanded "><a href="../benchmark/index.html"><strong aria-hidden="true">4.</strong> Benchmark</a></li><li class="chapter-item expanded "><a href="../data-processing/index.html" class="active"><strong aria-hidden="true">5.</strong> Data Processing</a></li><li class="chapter-item expanded "><a href="../monitoring/index.html"><strong aria-hidden="true">6.</strong> Monitoring</a></li><li class="chapter-item expanded "><a href="../inference/index.html"><strong aria-hidden="true">7.</strong> Inference</a></li><li class="chapter-item expanded "><a href="../model-checkpointing/index.html"><strong aria-hidden="true">8.</strong> Model Checkpointing</a></li><li class="chapter-item expanded "><a href="../configuration/index.html"><strong aria-hidden="true">9.</strong> Configuration</a></li><li class="chapter-item expanded "><a href="../troubleshooting/index.html"><strong aria-hidden="true">10.</strong> Troubleshooting</a></li><li class="chapter-item expanded "><a href="../kubernetes-integration/index.html"><strong aria-hidden="true">11.</strong> Kubernetes Integration</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -143,6 +143,66 @@
                     <main>
                         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
 <h1 id="data-processing"><a class="header" href="#data-processing">Data Processing</a></h1>
+<p>Training data in PersiaML consists of three parts, contiguous data (dense), categorical data (sparse) and label data (target). When training with Persia, first format the original training data into the corresponding Persia data format, and then add them to <code>persia.prelude.PyPersiaBatchData</code>.</p>
+<h2 id="contiguous-data"><a class="header" href="#contiguous-data">Contiguous Data</a></h2>
+<p>We define the <em>Contiguous Data</em> as <em>Dense Data</em> in our library. Mixed datatypes are supported. One can add multiple 2D <em>Dense Data</em> of different datatypes to <code>PyPersiaBatchData</code> by invoking the corresponding methods. Note that the shape of all 2D Dense data should be equal. (TODO: why?)</p>
+<p><em>datatypes <code>PyPersiaBatchData</code> currently support</em></p>
+<ul>
+<li>add_dense_f32 =&gt; np.float32 </li>
+<li>add_dense_f64 =&gt; np.float64</li>
+<li>add_dense_i32 =&gt;  np.int32</li>
+<li>add_dense_i64 =&gt; np.int64</li>
+</ul>
+<p><em>code example</em></p>
+<pre><code class="language-python">import numpy as np
+
+from persia.prelude import PyPersiaBatchData
+
+batch_data = PyPersiaBatchData()
+
+batch_size = 1024
+dim = 256
+
+batch_data.add_dense_f32(np.ones((batch_size, dim), dtype=np.float32))
+batch_data.add_dense_i32(np.ones((batch_size, dim), dtype=np.int32))
+batch_data.add_dense_f64(np.ones((batch_size, dim), dtype=np.float64))
+batch_data.add_dense_i64(np.ones((batch_size, dim), dtype=np.int64))
+</code></pre>
+<h2 id="categorical-data"><a class="header" href="#categorical-data">Categorical Data</a></h2>
+<p>We define the <em>Categorical Data</em> as <em>Sparse Data</em> in our library. It is important to add the name to each <em>Sparse Data</em> for later embedding lookup. A <em>Categorical Data</em> is composed of a batch of 1d tensors of variable length.</p>
+<p><em>code example</em></p>
+<pre><code class="language-python">import numpy as np
+
+from persia.prelude import PyPersiaBatchData
+
+sparse_data_num = 3
+batch_size = 1024
+max_sparse_len = 65536
+
+# gen mock sparse data
+batch_sparse_datas = []
+for feature_idx in range(sparse_data_num):
+    batch_sparse_data = []
+    for batch_idx in range(batch_size):
+        cnt_sparse_len = np.random.randint(0, max_sparse_len)
+        sparse_data = np.random.one((cnt_sparse_len), dtype=np.uint64)
+    batch_sparse_datas.append((batch_sparse_data, f&quot;feature_{feature_idx}&quot;))
+
+# add mock sparse data into PyPersiaBatchData 
+batch_data = PyPersiaBatchData()
+batch_data.add_sparse(batch_sparse_datas)
+</code></pre>
+<h2 id="label-data"><a class="header" href="#label-data">Label Data</a></h2>
+<p>We use the <em>Target Data</em> to represent <em>Label</em>. <em>Target Data</em> should be a <code>2d flaot32 tensor</code>.</p>
+<p><em>code example</em></p>
+<pre><code class="language-python">import numpy as np
+
+from persia.prelude import PyPersiaBatchData
+
+batch_data = PyPersiaBatchData()
+batch_size = 1024
+batch_data.add_target(np.ones((1024, 2), dtype=np.float32))
+</code></pre>
 <footer id="open-on-gh">Found a bug? <a href="https://github.com/PersiaML/tutorials/edit/main/src/data-processing/index.md">Edit this file on GitHub.</a></footer>
                     </main>
 
