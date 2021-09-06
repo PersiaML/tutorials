@@ -10,24 +10,20 @@ We compare the performance of Persia with [PaddlePaddle](https://github.com/Padd
 
 ## End-to-end performance
 
-<img src="https://github.com/PersiaML/paper-experiments/blob/main/img/AUC%20on%20Criteo%20Dataset.png" width="300" height="300">
-<img src="https://github.com/PersiaML/paper-experiments/blob/main/img/AUC%20on%20Avazu%20CTR%20Dataset.png" width="300" height="300">
-<img src="https://github.com/PersiaML/paper-experiments/blob/main/img/AUC%20on%20Alibaba%20AD%20Dataset.png" width="300" height="300">
+<img src="https://github.com/PersiaML/paper-experiments/blob/main/img/AUC%20on%20Criteo%20Dataset.png" width="320"><img src="https://github.com/PersiaML/paper-experiments/blob/main/img/AUC%20on%20Avazu%20CTR%20Dataset.png" width="320"><img src="https://github.com/PersiaML/paper-experiments/blob/main/img/AUC%20on%20Alibaba%20AD%20Dataset.png" width="320">
 
 The figure above demonstrates the end-to-end train performance of three datasets when using 8GPU.
 
 
 ## Rank Scalability
 
-<img src="https://github.com/PersiaML/paper-experiments/blob/main/img/Scalibility%20on%20Criteo%20Dataset.png" width="300" height="300">
-<img src="https://github.com/PersiaML/paper-experiments/blob/main/img/Scalibility%20on%20Avazu%20CTR%20Dataset.png" width="300" height="300">
-<img src="https://github.com/PersiaML/paper-experiments/blob/main/img/Scalibility%20on%20Alibaba%20AD%20Dataset.png" width="300" height="300">
+<img src="https://github.com/PersiaML/paper-experiments/blob/main/img/Scalibility%20on%20Criteo%20Dataset.png" width="320"><img src="https://github.com/PersiaML/paper-experiments/blob/main/img/Scalibility%20on%20Avazu%20CTR%20Dataset.png" width="320"><img src="https://github.com/PersiaML/paper-experiments/blob/main/img/Scalibility%20on%20Alibaba%20AD%20Dataset.png" width="320">
 
 
 The figure above demonstrates the rank scalability of three datasets when using 1,2,4,8GPU.
 
 ## Model Size Scalability
 
-<img src="https://github.com/PersiaML/paper-experiments/blob/main/img/persia_model_scalability.png" width="300" height="300">
+<img src="https://github.com/PersiaML/paper-experiments/blob/main/img/persia_model_scalability.png" width="400">
 
 The figure above demonstrates the model size scalability persia system.
