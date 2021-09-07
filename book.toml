@@ -9,7 +9,7 @@ renderer = ["html"]
 
 [preprocessor.katex]
 
-[output.linkcheck]
+# [output.linkcheck]
 
 [output.html]
 follow-web-links = true
