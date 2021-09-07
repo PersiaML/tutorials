@@ -16,4 +16,4 @@ tar xzf mdbook-katex-v0.2.10-x86_64-unknown-linux-musl.tar.gz
 wget 'https://github.com/badboy/mdbook-open-on-gh/releases/download/2.0.1/mdbook-open-on-gh-2.0.1-x86_64-unknown-linux-musl.tar.gz'
 tar xzf mdbook-open-on-gh-2.0.1-x86_64-unknown-linux-musl.tar.gz
 
-env PATH=.:$PATH mdbook build
+env PATH=$PWD:$PATH mdbook build
