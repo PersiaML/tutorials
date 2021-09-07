@@ -1,6 +1,5 @@
 PersiaML Tutorials
 ======
-[![tutorials](https://github.com/PersiaML/tutorials/actions/workflows/tutorials.yml/badge.svg)](https://github.com/PersiaML/tutorials/actions/workflows/tutorials.yml)
 
 ## How to contribute
 
