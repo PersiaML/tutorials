@@ -23,7 +23,7 @@ The following figure shows the rank scalability of three datasets when using 1,2
 
 <img src="https://github.com/PersiaML/paper-experiments/blob/main/img/Scalibility%20on%20Criteo%20Dataset.png" width="320"><img src="https://github.com/PersiaML/paper-experiments/blob/main/img/Scalibility%20on%20Avazu%20CTR%20Dataset.png" width="320"><img src="https://github.com/PersiaML/paper-experiments/blob/main/img/Scalibility%20on%20Alibaba%20AD%20Dataset.png" width="320">
 
-Results show that Persia can achieve obviously speedup compared with other systems.
+Results show that Persia can achieve obviously speedup compared with other systems, whether it is synchronous or asynchronous mode. Moreover, the results also show Persia can achieve nearly linear scalability(without nccl p2p).
 
 ## Model Size Scalability
 
