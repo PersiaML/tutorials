@@ -17,7 +17,7 @@ The following figure shows the end-to-end train performance (test auc) of three 
 
 The figure above demonstrates Persia's hybrid training mode has almost the same performance as the x-deepleaning's synchronous training mode, better than all asynchronous training mode.
 
-## Rank Scalability
+## Scalability: number of workers
 
 The following figure shows the rank scalability of three datasets when using 1,2,4,8 GPU.
 
@@ -25,7 +25,7 @@ The following figure shows the rank scalability of three datasets when using 1,2
 
 Results show that Persia can achieve obviously speedup compared with other systems, whether it is synchronous or asynchronous mode. Moreover, the results also show Persia can achieve nearly linear scalability ([without nccl p2p](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/env.html#nccl-p2p-disable)). Since Persia does not transfer the parameters of the dense part in the case of a single GPU, we use the dashed box to indicate its actual training efficiency in this case.
 
-## Model Size Scalability
+## Scalability: size of model
 
 <img src="img/persia_model_scalability.png" width="400">
 
