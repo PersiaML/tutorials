@@ -33,7 +33,7 @@ The figure above demonstrates the model size scalability of Persia. The size of 
 
 ## Speed on large scale cluster
 
-We also compared the training speed of Persia, PaddlePaddle and x-deeplearning on a 8 GPU servers (Total 64 GPUs) and 20 CPU servers cluster. The model and configuration are the same as the above experiment, using Avazu Ctr dataset. Result shows that Persia can also achieve obvious speedup compared with other systems on larger clusters.
+We also compared the training speed of Persia, PaddlePaddle and x-deeplearning on 8 GPU servers (Total 64 GPUs) and 20 CPU servers cluster. The model and configuration are the same as the above experiment, using Avazu Ctr dataset. Result shows that Persia can also achieve obvious speedup compared with other systems on larger clusters.
 
 |  System   | Speed (Sample per second)  |
 |  ----  | ----  |
