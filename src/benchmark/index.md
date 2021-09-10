@@ -3,7 +3,7 @@ Benchmark
 
 ## Setup
 
-We use up to 4 GPU servers and 16 CPU servers for benchmarks. Each GPU server is equipped with 8 NVIDIA V100 32 GB GPUs interconnected by NVLink, connected by 100 Gbps TCP/IP network. Each CPU server is equipped with 64 core `Intel(R) Xeon(R) Gold 5218 CPU@2.30GHz`, connected by 10 Gbps TCP/IP network.
+We use up to 8 GPU servers and 20 CPU servers for benchmarks. Each GPU server is equipped with 8 NVIDIA V100 32 GB GPUs interconnected by NVLink, connected by 100 Gbps TCP/IP network. Each CPU server is equipped with 52 core `Intel(R) Xeon(R) CPU E5-2680 v4@2.40GHz`, connected by 10 Gbps TCP/IP network.
 
 We compare the performance of Persia with [PaddlePaddle](https://github.com/PaddlePaddle/Paddle) and [x-deepleaning](https://github.com/alibaba/x-deeplearning) on a DNN model. The DNN model adapted the embedding and MLP paradigm which has been widely used by industrial recommender systems, e.g. [DNN for YouTube](https://dl.acm.org/doi/10.1145/2959100.2959190), [Wide & Deep](https://dl.acm.org/doi/abs/10.1145/2988450.2988454) and [Deep Crossing](https://dl.acm.org/doi/10.1145/2939672.2939704). The DNN model consists of four parts, embedding layer, concat layer, MLP layer, `cross_entropy` loss. The embedding size of all sparse features are set to 16. The MLP layer is 6 fully connected layers with hidden size `[4096, 2048, 1024, 512, 256]`.
 
@@ -29,3 +29,15 @@ Results show that Persia can achieve obvious speedup compared with other systems
 <img src="img/persia_model_scalability.png" width="400">
 
 The figure above demonstrates the model size scalability of Persia. The size of the sparse model hardly affects the training speed of Persia.
+
+
+## Speed on large scale cluster
+
+We also compared the training speed of Persia, PaddlePaddle and x-deeplearning on a 8 GPU servers (Total 64 GPUs) and 20 CPU servers cluster. The model and configuration are the same as the above experiment, using Avazu Ctr dataset. Result shows that Persia can also achieve obvious speedup compared with other systems on larger clusters.
+
+|  System   | Speed (Sample per second)  |
+|  ----  | ----  |
+| Persia | 5202763 |
+| XDL (async) | 133746 |
+| XDL (sync) | 79830 |
+| PaddlePaddle | 796207 |
