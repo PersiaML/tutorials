@@ -47,6 +47,22 @@ services:
         image: prom/pushgateway:latest
         deploy:
             replicas: 1
+
+    prometheus:
+        image: prom/prometheus:latest
+        deploy:
+            replicas: 1
+        command: "--config.file=/workspace/config/prometheus.yml"
+
+    grafana:
+        image: grafana/grafana:latest
+        ports:
+            - "3000:3000/tcp"
+        deploy:
+            replicas: 1
+        environment:
+            GF_PATHS_PROVISIONING: /workspace/grafana/provisioning/
+
 ```
 
 You can test the metrics are there by doing:
@@ -56,6 +72,8 @@ curl metrics_gateway:9091/metrics
 ```
 
 in a service container.
+
+By configuring the GF_PATHS_PROVISIONING environment variable, you can specify the [grafana provisioning](https://grafana.com/docs/grafana/latest/administration/provisioning/) directory, to access our preset grafana panels.
 
 3. Collecting metrics
 
