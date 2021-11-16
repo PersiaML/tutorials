@@ -13,7 +13,8 @@ Here is an example for `global_config.yaml`.
 
 ```yaml
 common_config:
-  num_embedding_io_workers: 4
+  checkpointing_config:
+    num_workers: 8
   metrics_config:
     enable_metrics: true
     push_interval_sec: 10
@@ -32,7 +33,9 @@ Depending on the scope, `global_config` was divided into three major sections, n
 
 ### common_config
 
-* `num_embedding_io_workers(int, default=4)`: The concurrency of embedding dumping, loading and incremental update.
+#### checkpointing_config
+
+* `num_workers(int, default=4)`: The concurrency of embedding dumping, loading and incremental update.
 
 #### job_type
 
