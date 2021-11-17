@@ -11,10 +11,9 @@ According to DLRM example to make you construct machine learning application bas
     # wget https://ndownloader.figshare.com/files/10082655 -o data.tar.gz
     tar -zxvf data.tar.gz && rm -rf data.tar.gz
     ```
-2. Initialize the persia-core git submodule `git submodule init --udpate`
-3. Prepare for runtime docker image
+2. Prepare for runtime docker image
     ```bash
-    make build_all 
+    docker pull persiaml/persia-cuda-runtime:latest
     ```
 
 ## Process training data
@@ -113,23 +112,25 @@ persia_batch_data.add_target(batch_target_data) # can invoke multiple times for 
 Init the `persia_backend` to transfer the `persia batch data` to the persia-middleware and persia-trainer. 
 ```python
 from persia.ctx import DataCtx
+
 with DataCtx():
     ctx.send_data(persia_batch_data) # register sparse data and transfer remain part to trainer service
 ```
 
 _review DLRM datacompose codebase at examples/DLRM/data_compose.py_
 
-## Define model
+## Define DNN model
 Construct the DLRM model after finished the data definition. The Model forward entry receive dense tensors and sparse tensors.
 ```python
 from typing import List
 
 import torch
+
 class DLRM(nn.Module):
     def __init__(self, ln, sigmoid_layer):
         ...
 
-    def forward(self, dense: List[torch.Tensor], sparse: List[torch.Tensor]):
+    def forward(self, dense: torch.Tensor, sparse: List[torch.Tensor]):
         ...
 
 model = DLRM()
@@ -140,6 +141,7 @@ _review DLRM model codebase at examples/DLRM/model.py_
 Define optimizer in sparse training is as simple as normal torch training. Dense optimizer is define for update the `DNN model`.Sparse optimizer is define for update the sparse sparse embedding.`perisa.sparse.optim` provide common optimizer for different training scences.
 ```python
 from torch.optim import SGD
+
 from persia.sparse.optim import Adagrad
 
 # DENSE parameters optimizer
@@ -152,8 +154,10 @@ sparse_optimizer = Adagrad(lr=1e-3)
 Finally step is create the training context to acquire dataloder and sparse embedding process
 ```python
 from persia.ctx import TrainCtx
+from persia.data import StreamDataset, Dataloader
 
-scaler = torch.cuda.amp.GradScaler() # for half training
+prefetch_size = 10
+dataset = StreamDataset(prefetch_size)
 
 with TrainCtx(
     model=model,
@@ -161,11 +165,11 @@ with TrainCtx(
     dense_optimizer=dense_optimizer,
     device_id=device_id,
 ) as ctx:
-    for (batch_idx, data) in enumerate(ctx.data_loader()):
-        (dense, sparse), target = ctx.prepare_features(data)
-        output, aux_loss = model((dense, sparse))
-        bce_loss = loss_fn(output, target)
-        loss = aux_loss + bce_loss
+
+    train_data_loader = Dataloader(dataset)
+    for (batch_idx, data) in enumerate(loader):
+        output, target = ctx.forward(data)
+        loss= loss_fn(output, target)
         scaled_loss = ctx.backward(loss)
         logger.info(f"current idx: {batch_idx} loss: {loss}")
 
