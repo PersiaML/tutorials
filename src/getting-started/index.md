@@ -153,17 +153,35 @@ sparse_optimizer = Adagrad(lr=1e-3)
 ## Create training context
 Finally step is create the training context to acquire dataloder and sparse embedding process
 ```python
+from torch import nn
+
 from persia.ctx import TrainCtx
 from persia.data import StreamDataset, Dataloader
+from persia.env import get_local_rank
 
 prefetch_size = 10
 dataset = StreamDataset(prefetch_size)
+
+local_rank = get_local_rank()
+
+use_cuda = True
+if use_cuda:
+    device_id = get_local_rank()
+    torch.cuda.set_device(device_id)
+    model.cuda(device_id)
+    mixed_precision = True
+else:
+    mixed_precision = False
+    device_id = None
+
+loss_fn = nn.BCELoss()
 
 with TrainCtx(
     model=model,
     sparse_optimizer=sparse_optimizer,
     dense_optimizer=dense_optimizer,
     device_id=device_id,
+    mixed_precision=mixed_precision
 ) as ctx:
 
     train_data_loader = Dataloader(dataset)
