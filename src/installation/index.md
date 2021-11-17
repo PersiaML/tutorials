@@ -14,15 +14,23 @@ TODO(@zhuxuefeng)
 
 refer to https://argo-cd.readthedocs.io/en/stable/getting_started/
 
-Requirements¶
+Requirements
 
-    Installed kubectl command-line tool.
-    Have a kubeconfig file (default location is ~/.kube/config).
+* Installed kubectl command-line tool.
+* Have a kubeconfig file (default location is ~/.kube/config).
 
 Installation
 
-kubectl create namespace persia
-kubectl apply -n argocd -f https://raw.githubusercontent.com/xxxxxxxxx/install.yaml
+```bash
+$ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/resources/jobs.persia.com.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/resources/operator.persia.com.yaml
+```
+
+Run
+
+```bash
+$ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/example/k8s.train.yml
+```
 
 ### Access the Control Panel
 
