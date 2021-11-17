@@ -18,9 +18,9 @@ docker pull persiaml/persia-cuda-runtime:latest
 ```
 ### Building the image locally
 ```bash
-git clone git@github.com:PersiaML/PersiaML.git 
+git clone https://github.com/PersiaML/PERSIA.git
 # docker image name: persiaml/persia-cuda-runtime:dev
-cd PersiaML && make build_dev_image 
+cd PERSIA && IMAGE_TAG=dev make build_cuda_runtime_image -e
 ```
 ## Install Manually
 
@@ -29,6 +29,8 @@ You can also install PersiaML manually on your existing system.
 
 ### Common requirements
 ```bash
+apt update && apt-get install -y curl git python3 python3-dev python3-pip 
+
 export RUSTUP_HOME=/rust
 export CARGO_HOME=/cargo
 export PATH=/cargo/bin:/rust/bin:$PATH
@@ -36,22 +38,21 @@ export PATH=/cargo/bin:/rust/bin:$PATH
 curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly -y --profile default --no-modify-path
 rustup install nightly-2021-06-01
 
-sudo apt-get install -y python3.7 libpython3.7-dev
 ```
 
 ### Install From Pip 
 ```bash
-USE_CUDA=1 pip3 install persia
+USE_CUDA=1 NATIVE=1 pip3 install persia
 ```
 
 ### Install From Source
 ```bash
-git clone git@github.com:PersiaML/PersiaML.git 
-pip3 install click colorlog torch colorama setuptools setuptools-rust setuptools_scm
+git clone https://github.com/PersiaML/PERSIA.git
+pip3 install torch click colorlog colorama setuptools setuptools-rust setuptools_scm
 
-cd PersiaML
+cd PERSIA
 # install cpu version
-python3 setup.py install
+NATIVE=1 python3 setup.py install
 # install cuda version
-USE_CUDA=1 python3 setup.py install
+USE_CUDA=1 NATIVE=1 python3 setup.py install
 ```

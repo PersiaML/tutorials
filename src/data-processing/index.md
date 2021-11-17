@@ -35,22 +35,23 @@ import numpy as np
 
 from persia.prelude import PyPersiaBatchData
 
-sparse_data_num = 3
+categorical_data_num = 3
 batch_size = 1024
-max_sparse_len = 65536
+max_categorical_len = 65536
 
 # gen mock sparse data
-batch_sparse_datas = []
-for feature_idx in range(sparse_data_num):
-    batch_sparse_data = []
+batch_categorical_data = []
+for categorical_idx in range(categorical_data_num):
+    batch_categorical_data_item = []
     for batch_idx in range(batch_size):
-        cnt_sparse_len = np.random.randint(0, max_sparse_len)
-        sparse_data = np.random.one((cnt_sparse_len), dtype=np.uint64)
-    batch_sparse_datas.append((batch_sparse_data, f"feature_{feature_idx}"))
+        cnt_categorical_len = np.random.randint(0, max_categorical_len)
+        sample_data = np.random.one((cnt_categorical_len), dtype=np.uint64)
+        batch_categorical_data_item.append(sample_data)
+    batch_categorical_data.append((f"feature_{categorical_idx}", batch_sparse_data))
 
 # add mock sparse data into PyPersiaBatchData 
 batch_data = PyPersiaBatchData()
-batch_data.add_sparse(batch_sparse_datas)
+batch_data.add_sparse(batch_categorical_data)
 ```
 
 ## Label Data
