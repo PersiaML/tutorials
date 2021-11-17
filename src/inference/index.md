@@ -19,29 +19,32 @@ Here is an example to define a custom handler retrieving PersiaML embeddings:
 
 ```python
 from persia.ctx import InferCtx
-from persia.prelude import forward_directly_from_bytes
-
+from persia.service import get_middleware_services
 from ts.torch_handler.base_handler import BaseHandler
 
 from abc import ABC
 import torch
-import os
+
+device_id = 0 if torch.cuda.is_available() else None
+
 
 class PersiaHandler(BaseHandler, ABC):
     def initialize(self, context):
         super().initialize(context)
-        self.persia_context = InferCtx()
+        middleware_addrs = get_middleware_services()
+        self.persia_context = InferCtx(middleware_addrs, device_id=device_id)
+        self.persia_context.wait_for_serving()
 
     def preprocess(self, data):
-        batch = data[0].get('batch')
+        batch = data[0].get("batch")
         batch = bytes(batch)
-        batch = forward_directly_from_bytes(batch, 0)
+        batch = self.persia_context.get_embedding_from_bytes(batch, device_id)
 
         model_input = self.persia_context.prepare_features(batch)
         return model_input
 
     def inference(self, data, *args, **kwargs):
-        denses, sparses = data
+        denses, sparses, _ = data
         with torch.no_grad():
             results = self.model(denses, sparses)
         return results
@@ -97,44 +100,75 @@ There are ways to [get predictions from a model] with TorchServe. One of them is
 The input data is constructed in the same way as in training, Here is an example:
 ```python
 import grpc
+import os
+import sys
+import json
+
+sys.path.append("/cache/proto/")
+
+import numpy as np
+from tqdm import tqdm
+from sklearn import metrics
+
 import inference_pb2
 import inference_pb2_grpc
 
+from data_generator import make_dataloader
+from persia.prelude import PyPersiaBatchData
+
+
 def get_inference_stub():
-    channel = grpc.insecure_channel('localhost:7070')
+    channel = grpc.insecure_channel("localhost:7070")
     stub = inference_pb2_grpc.InferenceAPIsServiceStub(channel)
     return stub
 
+
 def infer(stub, model_name, model_input):
-    with open(model_input, 'rb') as f:
-        data = f.read()
-
-    input_data = {'data': data}
+    input_data = {"batch": model_input}
     response = stub.Predictions(
-        inference_pb2.PredictionsRequest(model_name=model_name, input=input_data))
-
+        inference_pb2.PredictionsRequest(model_name=model_name, input=input_data)
+    )
     try:
-        prediction = response.prediction.decode('utf-8')
-        print(prediction)
-    except grpc.RpcError as e:
+        prediction = response.prediction.decode("utf-8")
+        prediction = prediction.splitlines()
+        prediction = [x.strip() for x in prediction]
+        prediction = [x.replace(",", "") for x in prediction]
+        prediction = prediction[1:-1]
+        prediction = [float(x) for x in prediction]
+        return prediction
+    except:
         exit(1)
 
-batch_size = 128
-feature_dim = 16
-denses = [np.random.rand(batch_size, 13).astype(np.float32)]
-sparse = []
-for sparse_idx in range(26):
-    sparse.append((
-        f'feature{sparse_idx + 1}',
-        [np.random.randint(1000000, size=feature_dim).astype(np.uint64) for _ in range(batch_size)]
-    ))
 
-batch_data = PyPersiaBatchData()
-batch_data.add_dense(denses)
-batch_data.add_sparse(sparse)
+if __name__ == "__main__":
 
-model_input = batch_data.to_bytes()
-infer(get_inference_stub(), 'you_model_name', model_input)
+    test_filepath = os.path.join("/data/", "test.npz")
+    _, loader = make_dataloader(test_filepath, batch_size=1024)
+    all_pred = []
+    all_target = []
+
+    for (dense, batch_sparse_ids, target) in tqdm(loader, desc="gen batch data..."):
+        batch_data = PyPersiaBatchData()
+        batch_data.add_dense([dense])
+        batch_data.add_sparse(batch_sparse_ids, False)
+
+        model_input = batch_data.to_bytes()
+        prediction = infer(get_inference_stub(), "adult_income", model_input)
+
+        assert len(prediction) == len(
+            target
+        ), f"miss results {len(prediction)} vs {len(target)}"
+
+        all_target.append(target)
+        all_pred.append(prediction)
+
+    all_pred, all_target = np.concatenate(all_pred), np.concatenate(all_target)
+
+    fpr, tpr, th = metrics.roc_curve(all_target, all_pred)
+    infer_auc = metrics.auc(fpr, tpr)
+
+    print(f"infer_auc = {infer_auc}")
+
 ```
 
 ## 5. Model incremental update
