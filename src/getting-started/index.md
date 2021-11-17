@@ -1,4 +1,30 @@
-# Getting Started
+# Customize a PERSIA Job
+
+## TODO: workflow diagram
+
+## Training Data
+
+1. 数据定义
+2. how to adapt existing dataset
+
+more advanced features: ...
+
+## Model
+
+
+## PS, ... config
+
+
+more advanced features: ..
+
+## Inference
+
+XXXX
+
+more advanced features: ...
+
+
+--------
 
 According to DLRM example to make you construct machine learning application based on Persia swiftly
 
@@ -193,11 +219,11 @@ with TrainCtx(
 
 ```
 _review DLRM model codebase at examples/DLRM/train.py_
-
+<!--
 ## Start training
 
 ```bash
 cd examples/DLRM/ && make run 
 # run make stop to remove docker stack job
 # make stop
-```
+``` -->
