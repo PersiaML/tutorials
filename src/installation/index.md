@@ -50,7 +50,7 @@ TODO: provide example config, and link to docs
 #### Install Python Package
 
 **Using Pre-compiled Wheels**:
-
+TODO(wangyulong)
 **From Source**:
 
 ```bash
@@ -79,6 +79,32 @@ NATIVE=1 python3 setup.py install
 USE_CUDA=1 NATIVE=1 python3 setup.py install
 ```
 
-#### TODO: How to Run?
+## How to Run?
 
+We provided several examples and multiple type of launcher to help you quick start a *PersiaML* task.
+
+### Kubernetes Launcher
+TODO(@zhuxuefeng)
+
+### Docker Compose Launcher
+
+Docker [compose](https://docs.docker.com/compose/) can launch multiple services under the swarm mode.Follow the [swarm mode](https://docs.docker.com/engine/swarm/) to adding multiple machines to swarm cluster to apply the distributed PersiaML training task.
+
+*launcher example below*
+```bash
+git clone https://github.com/PersiaML/PERSIA.git
+cd PERSIA/examples/docker-compose
+CODE_BASE=../src/getting_started/ make run -e
+```
+
+### Honcho Launcher
+[Honcho](https://github.com/nickstenning/honcho) is a tool for managing multiple processes.Current honcho launcher only support launch the PersiaML Task in single node due to some distributed environments is hard to shared across multiple nodes.
+
+*launcher example below*
+```bash
+git clone https://github.com/PersiaML/PERSIA.git
+cd PERSIA/examples/honcho
+pip3 install honcho
+CODE_BASE=../src/getting_started/ honcho start
+```
 

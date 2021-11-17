@@ -9,15 +9,21 @@
 
 more advanced features: ...
 
-## Model
-
-
-## PS, ... config
-
+## Model Definition
 
 more advanced features: ..
 
+## Middleware
+
+## Parameter Sever
+
+more advanced features: ..
 ## Inference
+
+more advanced features: ..
+
+## Deployment
+more advanced features: ..
 
 XXXX
 
