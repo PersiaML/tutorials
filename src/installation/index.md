@@ -12,27 +12,42 @@
 
 TODO(@zhuxuefeng)
 
-Requirements
+**Requirements:**
 
-* Installed kubectl command-line tool.
-* Have a kubeconfig file (default location is ~/.kube/config).
+* Installed `kubectl` command-line tool.
+* Have a `kubeconfig` file (default location is `~/.kube/config`).
 
-Installation
+**Installation:**
 
 ```bash
 $ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/resources/jobs.persia.com.yaml
 $ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/resources/operator.persia.com.yaml
 ```
 
-Run
+**Run:**
 
-To run Persia, you need a shared stroage, and put datas, python entries and configurations to the shared stroage.
-
-If you are using nfs, you can put data to `/nfs/general/data/adult_income/`, put python entries and configurations to `/nfs/general/PersiaML/e2e/adult_income/`, then you can run persia by following command. 
+To run PERSIA, xxxxx
 
 ```bash
 $ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/example/k8s.train.yml
 ```
+
+This runs a basic example training task (xxxxxx adult_income).
+
+Generally, to run a customized training task, you need your own definition of models, configurations and data processing, and mount them to your training tasks.
+
+By default, there files are in the following locations in every container of the K8S application:
+
+- configuration file: /data/configuration.yml
+- xxxx file: ....
+
+For more details. See #customization.
+<!-- 
+ shared stroage, and put data, python entries and configurations to the shared stroage.
+
+If you are using nfs, for example, if the NFS is mounted at `/nfs/`, then you can store data in `/nfs/general/data/adult_income/`, put python entries and configurations to `/nfs/general/PersiaML/e2e/adult_income/`, then you can run persia by following command.  -->
+
+
 
 ### Access the Control Panel
 
@@ -51,6 +66,17 @@ How to access the UI
 
 Follow the running chapter after download the docker docker image.
 
+### Docker Compose Launcher
+
+Docker [compose](https://docs.docker.com/compose/) can launch multiple services under the swarm mode.Follow the [swarm mode](https://docs.docker.com/engine/swarm/) to adding multiple machines to swarm cluster to apply the distributed PersiaML training task.
+
+We provide the preset `docker-compose.yml` file in our examples.Try below command to start your `PERSIA` task after install the `docker-compose` tools and `PERSIA` runtime image.
+
+```bash
+git clone https://github.com/PersiaML/PERSIA.git
+cd PERSIA/examples/docker-compose
+CODE_BASE=../src/getting_started/ make run -e
+```
 
 ### Using Python Package
 
@@ -89,18 +115,6 @@ We provided several examples and multiple type of launcher to help you quick sta
 ### Kubernetes Launcher
 TODO(@zhuxuefeng)
 
-### Docker Compose Launcher
-
-Docker [compose](https://docs.docker.com/compose/) can launch multiple services under the swarm mode.Follow the [swarm mode](https://docs.docker.com/engine/swarm/) to adding multiple machines to swarm cluster to apply the distributed PersiaML training task.
-
-We provide the preset `docker-compose.yml` file in our examples.Try below command to start your `PERSIA` task after install the `docker-compose` tools and `PERSIA` runtime image.
-
-```bash
-git clone https://github.com/PersiaML/PERSIA.git
-cd PERSIA/examples/docker-compose
-CODE_BASE=../src/getting_started/ make run -e
-```
-
 ### Honcho Launcher
 [Honcho](https://github.com/nickstenning/honcho) is a tool for managing multiple processes.Current honcho launcher only support launch the PersiaML Task in single node due to some distributed environments is hard to shared across multiple nodes.
 
@@ -112,3 +126,6 @@ git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA/examples/honcho
 CODE_BASE=../src/getting_started/ honcho start
 ```
 
+## Deployment
+
+see xxxxxx.md

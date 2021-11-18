@@ -3,9 +3,19 @@
 ## TODO: workflow diagram
 
 
+There are a few files you can customize in PERSIA:
+
+TODO: keep order consistent with the following sections
+1. data preprocessing file: xxx.py
+2. configuration file: xxxx.yml
+3. model definition: train.py
+4. ...
+
 ## Training Data
 
 Training data in PersiaML consists of three parts, contiguous data (dense), categorical data (sparse) and label data (target). When training with Persia, first format the original training data into the corresponding Persia data format, and then add them to `persia.prelude.PyPersiaBatchData`.
+
+diagram to show what is a sample
 
 ### Contiguous Data
 We define the *Contiguous Data* as *Dense Data* in our library. Mixed datatypes are supported. One can add multiple 2D *Dense Data* of different datatypes to `PyPersiaBatchData` by invoking the corresponding methods. Note that the shape of all 2D Dense data should be equal. 
@@ -35,7 +45,7 @@ We use the *Target Data* to represent *Label*. There only accpet the *Target Dat
 ### Customize Persia Batch Data
 
 *code example*
-```python
+```python (data_preprocessing.py)
 import numpy as np
 
 from persia.prelude import PyPersiaBatchData
@@ -73,6 +83,8 @@ batch_data.add_target(np.ones((1024, 2), dtype=np.float32))
 ```
 
 more advanced features: ...
+
+- advanced 1 (under construction)
 
 ## Model Definition
 
