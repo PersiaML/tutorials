@@ -3,41 +3,38 @@ Benchmark
 
 ## Setup
 
-We use up to 8 GPU servers and 20 CPU servers for benchmarks. Each GPU server is equipped with 8 NVIDIA V100 32 GB GPUs interconnected by NVLink, connected by 100 Gbps TCP/IP network. Each CPU server is equipped with 52 core `Intel(R) Xeon(R) CPU E5-2680 v4@2.40GHz`, connected by 10 Gbps TCP/IP network.
+We evaluate Persia over three open-source benchmarks and one real-world production microvideo recommendation workflow at Kwai:
 
-We compare the performance of Persia with [PaddlePaddle](https://github.com/PaddlePaddle/Paddle) and [x-deepleaning](https://github.com/alibaba/x-deeplearning) on a DNN model. The DNN model adapted the embedding and MLP paradigm which has been widely used by industrial recommender systems, e.g. [DNN for YouTube](https://dl.acm.org/doi/10.1145/2959100.2959190), [Wide & Deep](https://dl.acm.org/doi/abs/10.1145/2988450.2988454) and [Deep Crossing](https://dl.acm.org/doi/10.1145/2939672.2939704). The DNN model consists of four parts, embedding layer, concat layer, MLP layer, `cross_entropy` loss. The embedding size of all sparse features are set to 16. The MLP layer is 6 fully connected layers with hidden size `[4096, 2048, 1024, 512, 256]`.
+* [Taobao-Ad](https://www.kaggle.com/pavansanagapati/ad-displayclick-data-on-taobaocom): predict the advertisement CTR from Taobao’s website for 8 days with 26 million records.
+* [Avazu-Ad](https://www.kaggle.com/c/avazu-ctr-prediction): predict the advertisement CTR of Avazu’s log for 11 days with 32 million records.
+* [Criteo-Ad](https://www.kaggle.com/c/criteo-display-ad-challenge): predict the advertisement CTR of Criteo’s traffic for 24 days with 44 million records.
+* Kwai-Video(confidential production dataset): predict the explicit behavior of Kwai’s active users about the microvideo recommendation in 7 days with 3 billion records.
 
-We conducted experiments on three datasets, including [Criteo](https://www.kaggle.com/c/criteo-display-ad-challenge), [Avazu CTR](https://www.kaggle.com/c/avazu-ctr-prediction) and [Alibaba AD](https://www.kaggle.com/pavansanagapati/ad-displayclick-data-on-taobaocom).
+For the three open source advertisement CTR benchmarks, we include 80% of the records as training set and the rest 20% of the records as test set, we consider a fully connected feed forward neural network (FFNN) as the deep learning model with five hidden layer dimensions of 4096, 2048, 1024, 512 and 256. For the Kwai production microvideo recommendation task, 85% of the data are included in the training set while the rest 15% are considered as the test set, we also use FFNN as the model to predict multiple user behaviors.
+
+We include up to 64 Nvidia V100 GPUs, and 100 CPU instances (each with 52 cores and 480GB RAM). The instances are connected by a network with the bandwidth of 100 Gbps. The baseline systems (XDL and PaddlePaddle) are equipped with the same amount of computation resources for each individual setting.
 
 ## End-to-end performance
 
-We compared the end-to-end performance of Persia, PaddlePaddle and x-deeplearning in terms of test AUC. The same DNN model was trained and validated on the three datasets as described above, and all trainings were performed by 8 GPUs. The following figure shows the AUC with respect to the number of training samples when training was performed by different frameworks. The figure demonstrates that Persia's hybrid training mode converges to a higher AUC than both PaddlePaddle and x-deeplearning in asynchronous training mode, and has almost the same performance as the x-deepleaning's synchronous training mode.
+<img src="img/convergence.png" width="1200">
 
-<img src="img/AUC on Criteo Dataset.png" width="320"><img src="img/AUC on Avazu CTR Dataset.png" width="320"><img src="img/AUC on Criteo Dataset.png" width="320">
+We see that the persia hybrid algorithm shows almost identical convergence when comparing with the fully synchronous mode. We see that test AUC gap between the hybrid mode and synchronous mode is always less than 0.1% in the three open-source benchmarks, and less than 0.001% in the production Kwai-video benchmark; by contrast, the gap between the asynchronous mode and the synchronous mode is much higher (from 0.5% to 1.0%); further, as we allow more aggressive asynchronicity in PaddlePaddle, the gap is more significant.
 
 
 ## Scalability: number of workers
 
-The following figure shows the rank scalability of three datasets when using 1,2,4,8 GPU.
+<img src="img/scalability.png" width="1200">
 
-<img src="img/Scalibility on Criteo Dataset.png" width="320"><img src="img/Scalibility on Avazu CTR Dataset.png" width="320"><img src="img/Scalibility on Alibaba AD Dataset.png" width="320">
-
-Results show that Persia can achieve obvious speedup compared with other systems, whether it is in synchronous or asynchronous mode. Moreover, the results also show Persia can achieve nearly linear scalability ([without nccl p2p](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/env.html#nccl-p2p-disable)). Since Persia does not transfer the parameters of the dense part in case of a single GPU, we use the dashed box to indicate its actual training efficiency in this case.
-
-## Scalability: size of model
-
-<img src="img/persia_model_scalability.png" width="400">
-
-The figure above demonstrates the model size scalability of Persia. The size of the sparse model hardly affects the training speed of Persia.
+Above figure illustrates significant performance improvements from Persia: e.g., for the Taobao-Ad benchmark, Persia is 7.12× and 8.4× faster than that of the synchronous and asynchronous modes of XDL, and 1.71× faster than PaddlePaddle–same level of speedup also appears in the Avazu-Ad and Criteo-Ad benchmark.
 
 
-## Speed on large scale cluster
+## Scalability: number of parameters
 
-We also compared the training speed of Persia, PaddlePaddle and x-deeplearning on 8 GPU servers (Total 64 GPUs) and 20 CPU servers cluster. The model and configuration are the same as the above experiment, using Avazu Ctr dataset. Result shows that Persia can also achieve obvious speedup compared with other systems on larger clusters.
+The intensive test of Persia’ capacity is conducted over Google cloud platform with a heterogeneous cluster including:
+* 8 a2-highgpu-8g instances (each with 8 Nvidia A100 GPUs) as NN workers;
+* 100 c2-standard-30 instances (each with 30vCPUs, 120GB RAM) as middleware servers;
+* 30 m2-ultramem-416 instances (each with 416vCPUs, 12TB RAM) as embedding PS.
 
-|  System   | Speed (Sample per second)  |
-|  ----  | ----  |
-| Persia | 5202763 |
-| XDL (async) | 133746 |
-| XDL (sync) | 79830 |
-| PaddlePaddle | 796207 |
+<img src="img/model_scalability.png" width="600">
+
+We see that Persia shows stable training throughput when increasing the model size even up to 100 trillion parameters. For the 100 trillion-parameter model, Persia also achieves 2.6× higher throughput than the fully synchronous mode.
