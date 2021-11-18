@@ -12,8 +12,6 @@
 
 TODO(@zhuxuefeng)
 
-refer to https://argo-cd.readthedocs.io/en/stable/getting_started/
-
 Requirements
 
 * Installed kubectl command-line tool.
@@ -27,6 +25,10 @@ $ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/re
 ```
 
 Run
+
+To run Persia, you need a shared stroage, and put datas, python entries and configurations to the shared stroage.
+
+If you are using nfs, you can put data to `/nfs/general/data/adult_income/`, put python entries and configurations to `/nfs/general/PersiaML/e2e/adult_income/`, then you can run persia by following command. 
 
 ```bash
 $ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/example/k8s.train.yml

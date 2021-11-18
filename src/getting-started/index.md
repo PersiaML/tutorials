@@ -13,11 +13,35 @@ more advanced features: ...
 
 more advanced features: ..
 
-## Middleware
+## Configuring Embedding Servers
 
-## Parameter Sever
+Embedding servers include middleware server and parameter server.
 
-more advanced features: ..
+A embedding middleware server runs asynchronous updating algorithm for getting the embedding parameters from the embedding parameter server; aggregating embedding vectors (potentially) and putting embedding gradients back to embedding parameter server. You can learn the details of the system design through 4.2 section in our [paper](https://arxiv.org/abs/2111.05897). Generally, you only need to adjust the number of instances and resources according to your workload.
+
+A embedding parameter server manages the storage and update of the embedding parameters according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies. So you need to configure capacity of the LRU cache in the configuration file according to your workload and available memory size. In addition, the capacity means the max number of embedding vectors, not the number of parameters.
+
+more advanced features: See [Configuration](../configuration/index.md)
+
+## Model Checkpointing
+
+You can call `load_checkpoint` or `dump_checkpoint` in a persia context, both the dense part and the sparse part will be saved into `checkpoint_dir`. The model will be saved to the local path by default, when the path start with `hdfs://`, it will be saved to hdfs path.
+
+```python
+with TrainCtx(
+    model=model,
+    sparse_optimizer=sparse_optimizer,
+    dense_optimizer=dense_optimizer,
+    device_id=device_id,
+    embedding_config=embedding_config,
+) as ctx:
+    ctx.load_checkpoint(checkpoint_dir)
+    if batch_idx % 10000 == 0:
+        ctx.dump_checkpoint(checkpoint_dir)
+```
+
+more advanced features: See [Model Checkpointing](../model-checkpointing/index.md)
+
 ## Inference
 
 more advanced features: ..
