@@ -48,7 +48,6 @@ For more details. See #customization.
 If you are using nfs, for example, if the NFS is mounted at `/nfs/`, then you can store data in `/nfs/general/data/adult_income/`, put python entries and configurations to `/nfs/general/PersiaML/e2e/adult_income/`, then you can run persia by following command.  -->
 
 
-
 ### Access the Control Panel
 
 How to access the UI
@@ -64,7 +63,6 @@ How to access the UI
 > cd PERSIA && IMAGE_TAG=dev make build_cuda_runtime_image -e
 > ```
 
-Follow the running chapter after download the docker docker image.
 
 ### Docker Compose Launcher
 
@@ -108,12 +106,6 @@ USE_CUDA=1 NATIVE=1 pip3 install persia
 > USE_CUDA=1 NATIVE=1 python3 setup.py install
 > ```
 
-## How to Run?
-
-We provided several examples and multiple type of launcher to help you quick start a *PersiaML* task.
-
-### Kubernetes Launcher
-TODO(@zhuxuefeng)
 
 ### Honcho Launcher
 [Honcho](https://github.com/nickstenning/honcho) is a tool for managing multiple processes.Current honcho launcher only support launch the PersiaML Task in single node due to some distributed environments is hard to shared across multiple nodes.
