@@ -11,6 +11,7 @@ TODO: keep order consistent with the following sections
 2. configuration file: xxxx.yml
 3. model definition: train.py
 4. ...
+5. TODO: (optional) If you are using k8s, xxxx.yaml
 
 ## Training Data
 
