@@ -13,19 +13,20 @@ TODO: keep order consistent with the following sections
 
 ## Training Data
 
-Training data in PersiaML consists of three parts, contiguous data (dense), categorical data (sparse) and label data (target). When training with Persia, first format the original training data into the corresponding Persia data format, and then add them to `persia.prelude.PyPersiaBatchData`.
+**PersiaBatch consists of three parts, contiguous data, categorical data and label data.**
 
-diagram to show what is a sample
+<img src="./img/persia_batch_description.svg" width="100%">
+
 
 ### Contiguous Data
-We define the *Contiguous Data* as *Dense Data* in our library. Mixed datatypes are supported. One can add multiple 2D *Dense Data* of different datatypes to `PyPersiaBatchData` by invoking the corresponding methods. Note that the shape of all 2D Dense data should be equal. 
+Contiguous data is a tensor or vector that contains numerical data.For example the click_num, income, price, labor time or some numerical type data could be concat as the contiguous data and become a part of training data.
+
+In PERSIA batch data, contiguous data is alias as dense data.It is describe as a 2d tensor with float datatype. 
 
 ### Categorical Data
-We define the *Categorical Data* as *Sparse Data* in our library. It is important to add the name to each *Sparse Data* for later embedding lookup. A *Categorical Data* is composed of a batch of 1d tensors of variable length.
+Categorical data is a sparse tensor that contains variable length of discrete value. Such user_id, photo_id, client_id. There should at least exists categorical name and dimension to describe a categorical data.PERSIA parameter server will project the discrete value in categorical data to a vector and the dimension of vector is equal to the value you describe before.It is simple to adding one categorical data in PERSIA, modify the embedding config file and add the categorical name and its dimension.Both `middleware-server` and `embedding-server` will load the embedding config file to apply the categorical data configuration.
 
-Every categorical data you wanner added should be define in `embedding_config.yml`.Both `middleware-server` and `embedding-server` will load the `embedding_config.yml` file to apply the categorical data configuration.
-
-In below code, we define three categorical data.For each categorical data the requirement fields only category name and the embedding dimension.
+In below code, we define three categorical data.For each categorical data the requirement fields are category name and the embedding dimension.
 
 ```yml
 slot_configs:
@@ -40,7 +41,7 @@ slot_configs:
 
 _more advanced features: embedding_config_chapter.md_
 ### Label Data
-We use the *Target Data* to represent *Label*. There only accpet the *Target Data* which `ndim` equal to 2 .
+Label data in PERSIA batch is a 2d `float32` tensor that support add the classification target and regression target.
 
 ### Customize Persia Batch Data
 

@@ -56,6 +56,16 @@ How to access the UI
 
 ### Using Docker-compose
 
+**Requirements:**
+
+* [docker](https://docs.docker.com/engine/install/ubuntu/) command line tools
+* [dockerc-compose](https://docs.docker.com/compose/) command line tools
+
+**Installation:**
+
+```bash
+docker pull persiaml/persia-cuda-runtime:latest
+```
 > Note: these docker images can be built from preset command after download source repo
 > ```bash
 > git clone https://github.com/PersiaML/PERSIA.git
@@ -63,10 +73,7 @@ How to access the UI
 > cd PERSIA && IMAGE_TAG=dev make build_cuda_runtime_image -e
 > ```
 
-
-### Docker Compose Launcher
-
-Docker [compose](https://docs.docker.com/compose/) can launch multiple services under the swarm mode.Follow the [swarm mode](https://docs.docker.com/engine/swarm/) to adding multiple machines to swarm cluster to apply the distributed PersiaML training task.
+**Run:**
 
 We provide the preset `docker-compose.yml` file in our examples.Try below command to start your `PERSIA` task after install the `docker-compose` tools and `PERSIA` runtime image.
 
@@ -78,9 +85,14 @@ CODE_BASE=../src/getting_started/ make run -e
 
 ### Using Python Package
 
-#### Install Python Package
+**Requirements**
+
+```bash
+pip3 install honcho
+```
 
 **Using Pre-compiled Wheels**:
+
 TODO(wangyulong)
 **From Source**:
 
@@ -90,7 +102,6 @@ apt update && apt-get install -y curl git python3 python3-dev python3-pip
 export RUSTUP_HOME=/rust
 export CARGO_HOME=/cargo
 export PATH=/cargo/bin:/rust/bin:$PATH
-
 curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly -y --profile default --no-modify-path
 
 git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA 
@@ -98,7 +109,6 @@ USE_CUDA=1 NATIVE=1 pip3 install persia
 ```
 > NOTE: install from python setup.py
 > ```bash
-> git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA
 > pip3 install torch click colorlog colorama setuptools setuptools-rust setuptools_scm
 > # install cpu version
 > NATIVE=1 python3 setup.py install
@@ -106,14 +116,10 @@ USE_CUDA=1 NATIVE=1 pip3 install persia
 > USE_CUDA=1 NATIVE=1 python3 setup.py install
 > ```
 
+**Run:**
 
-### Honcho Launcher
-[Honcho](https://github.com/nickstenning/honcho) is a tool for managing multiple processes.Current honcho launcher only support launch the PersiaML Task in single node due to some distributed environments is hard to shared across multiple nodes.
-
-Try below command to launch the training task, we already prepare the corresponding honcho preset env file.
-
+Launche the PERSIA and explore the all processes output log.
 ```bash
-pip3 install honcho
 git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA/examples/honcho
 CODE_BASE=../src/getting_started/ honcho start
 ```
