@@ -186,7 +186,102 @@ with TrainCtx(
 
 more advanced features: See [Model Checkpointing](../model-checkpointing/index.md)
 
-## Deployment
-more advanced features: ..
+## Distributed Task
+
+The Persia Operator is a Kubernetes [custom resource definitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/). You can define your distributed persia task by an operator file.
+
+Here is an example for an operator file
+
+```yaml
+apiVersion: persia.com/v1
+kind: PersiaJob
+metadata:
+  name: adult-income  # persia job name, need to be globally unique
+  namespace: default  # k8s namespace to deploy to this job
+spec:
+  # the following path are the path inside the container
+  globalConfigPath: /workspace/config/global_config_train.yml
+  embeddingConfigPath: /workspace/config/embedding_config.yml
+  trainerPyEntryPath: /workspace/train.py
+  dataLoaderPyEntryPath: /workspace/data_compose.py
+  # k8s volumes definition, see https://kubernetes.io/docs/concepts/storage/volumes/
+  volumes:
+    - name: workspace
+      hostPath:
+        path: /nfs/general/PersiaML/e2e/adult_income/
+        type: Directory
+  # global env, it will apply to all containers.
+  env:
+    - name: PERSIA_NATS_IP
+      value: nats://persia-nats-service:4222
+
+  # embedding server configurations.
+  embeddingServer:
+    replicas: 1  # num of instance
+    resources:   # resources of containers, see https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+      limits:
+        memory: "24Gi"
+        cpu: "4"
+    volumeMounts:  # volume mounts of containers, see https://kubernetes.io/docs/concepts/storage/volumes/
+      - name: workspace
+        mountPath: /workspace/
+
+  # middleware server configurations.
+  middlewareServer:
+    replicas: 1
+    resources:
+      limits:
+        memory: "24Gi"
+        cpu: "4"
+    volumeMounts:
+      - name: workspace
+        mountPath: /workspace/
+
+  # trainer configurations.
+  trainer:
+    replicas: 1
+    nprocPerNode: 1
+    resources:
+      limits:
+        memory: "24Gi"
+        cpu: "12"
+        nvidia.com/gpu: "1"
+    volumeMounts:
+      - name: workspace
+        mountPath: /workspace/
+    env:
+      - name: CUBLAS_WORKSPACE_CONFIG
+        value: :4096:8
+
+  # dataloader configurations.
+  dataloader:
+    replicas: 1
+    resources:
+      limits:
+        memory: "8Gi"
+        cpu: "1"
+    volumeMounts:
+      - name: workspace
+        mountPath: /workspace/
+
+---
+# a nats operator
+apiVersion: "nats.io/v1alpha2"
+kind: "NatsCluster"
+metadata:
+  name: "persia-nats-service"
+spec:
+  size: 1
+  natsConfig:
+    maxPayload: 52428800
+  resources:
+    limits:
+      memory: "8Gi"
+      cpu: "2" 
+```
+
+## Deployment for inference
+
+see #Deployment for inference
 
 

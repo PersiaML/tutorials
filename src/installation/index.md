@@ -20,38 +20,38 @@ TODO(@zhuxuefeng)
 **Installation:**
 
 ```bash
+$ kubectl apply -f https://github.com/nats-io/nats-operator/releases/latest/download/00-prereqs.yaml
+$ kubectl apply -f https://github.com/nats-io/nats-operator/releases/latest/download/10-deployment.yaml
 $ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/resources/jobs.persia.com.yaml
 $ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/resources/operator.persia.com.yaml
 ```
 
 **Run:**
 
-To run PERSIA, xxxxx
+To run a basic example training task(adult income prediction), use following command.
 
 ```bash
 $ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/example/k8s.train.yml
 ```
 
-This runs a basic example training task (xxxxxx adult_income).
+This runs a basic example training task by an operator definition file `k8s.train.yml`, which define the system configuration(e.g. resources limit, volume mounts, environment variables) of a persia task.
 
-Generally, to run a customized training task, you need your own definition of models, configurations and data processing, and mount them to your training tasks.
+Generally, to run a customized training task, you need your own definition of models, configurations and data processing, and mount them to your training tasks. They are:
 
-By default, there files are in the following locations in every container of the K8S application:
+- Embedding configuration file: A file define the embedding parameters, e.g. embedding dim, whether to do summation, usually named as `embedding_config.yaml`. For more details see #embedding config.
+- Server configuration file: Configuration of embedding servers, e.g. capacity of embedding servers, usually named as `global_config.yaml`. For more details see #global config.
+- Model definition file: A file define the dense model with torch, usually named as `train.py`. For more details see #model definition.
+- Data preprocessing file: A file define the preprocessing of data, usually named as `data_compose.py`. For more details see #train data.
+
+There are fileds for these files in an operator definition file, you can change them to a specify path. They are: `embeddingConfigPath`, `globalConfigPath`, `trainerPyEntryPath`, `dataLoaderPyEntryPath`.
+
+<!-- By default, there files are in the following locations in every container of the K8S application:
 
 - configuration file: /data/configuration.yml
-- xxxx file: ....
+- xxxx file: .... -->
 
 For more details. See #customization.
-<!-- 
- shared stroage, and put data, python entries and configurations to the shared stroage.
 
-If you are using nfs, for example, if the NFS is mounted at `/nfs/`, then you can store data in `/nfs/general/data/adult_income/`, put python entries and configurations to `/nfs/general/PersiaML/e2e/adult_income/`, then you can run persia by following command.  -->
-
-
-
-### Access the Control Panel
-
-How to access the UI
 
 ## Run Manually
 
@@ -128,4 +128,4 @@ CODE_BASE=../src/getting_started/ honcho start
 
 ## Deployment
 
-see xxxxxx.md
+see #Deployment for inference
