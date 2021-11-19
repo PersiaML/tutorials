@@ -20,19 +20,18 @@ TODO: keep order consistent with the following sections
 
 **PersiaBatch consists of three parts, contiguous data, categorical data and label data.**
 
-<img src="./img/persia_batch_description.svg" width="100%">
+<img src="./img/persia_batch_description.svg" width="80%" style="margin:auto">
 
 TODO: make all naming consistent with paper
 
-TODO: add sample_1, sample_2, ...
-
-### Contiguous Data
-Contiguous data is a tensor or vector that contains numerical data.For example the click_num, income, price, labor time or some numerical type data could be concat as the contiguous data and become a part of training data.
+### Non-ID Type Features
+Non-ID Type Features is a tensor or vector that contains numerical data.For example the click_num, income, price, labor time or some numerical type data could be concat as the contiguous data and become a part of training data.
 
 In PERSIA batch data, contiguous data is alias as dense data.It is describe as a 2d tensor with float datatype. 
 
-### Categorical Data
-Categorical data is a sparse tensor that contains variable length of discrete value. Such user_id, photo_id, client_id. There should at least exists categorical name and dimension to describe a categorical data.PERSIA parameter server will project the discrete value in categorical data to a vector and the dimension of vector is equal to the value you describe before.It is simple to adding one categorical data in PERSIA, modify the embedding config file and add the categorical name and its dimension.Both `middleware-server` and `embedding-server` will load the embedding config file to apply the categorical data configuration.
+
+### ID Type Features
+ID Type Features is a sparse tensor that contains variable length of discrete value. Such user_id, photo_id, client_id. There should at least exists categorical name and dimension to describe a categorical data.PERSIA parameter server will project the discrete value in categorical data to a vector and the dimension of vector is equal to the value you describe before.It is simple to adding one categorical data in PERSIA, modify the embedding config file and add the categorical name and its dimension.Both `middleware-server` and `embedding-server` will load the embedding config file to apply the categorical data configuration.
 
 In below code, we define three categorical data.For each categorical data the requirement fields are category name and the embedding dimension.
 
@@ -48,7 +47,8 @@ slot_configs:
 ```
 
 _more advanced features: embedding_config_chapter.md_
-### Label Data
+
+### Labels
 Label data in PERSIA batch is a 2d `float32` tensor that support add the classification target and regression target.
 
 ### Customize Persia Batch Data
@@ -114,7 +114,7 @@ class DNN(nn.Module):
 Here provide many sparse optimizer in `persia.sparse.optim` module.You can choose the suitable optimizer to adapt your requirement.
 
 ### Customize PersiaML Training Context 
-Finally step is create the training context to acquire dataloder and sparse embedding process
+Final step is create the training context to acquire dataloder and sparse embedding process
 
 ```python
 from torch import nn
