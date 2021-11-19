@@ -1,4 +1,4 @@
-Inference
+Deployment for inference
 ======
 
 To do inference for trained models, we need to deploy PersiaML middleware service, PersiaML embedding service, and [TorchServe] services.
