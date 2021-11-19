@@ -121,7 +121,7 @@ USE_CUDA=1 NATIVE=1 pip3 install persia
 
 Launche the PERSIA and explore the all processes output log.
 ```bash
-git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA/examples/honcho
+git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA/examples/honcho   # TODO: use dataset name for example dir
 CODE_BASE=../src/getting_started/ honcho start
 ```
 
