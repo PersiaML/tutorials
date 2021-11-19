@@ -12,9 +12,9 @@ TODO: keep order consistent with the following sections
 3. model definition: train.py
 4. ...
 5. TODO: Launcher configuration:
-  1. If you are using k8s, xxxx.yaml
-  2. if your are using docker compose
-  3. ...
+    1. If you are using k8s, xxxx.yaml
+    2. if your are using docker compose
+    3. ...
 
 ## Training Data
 
