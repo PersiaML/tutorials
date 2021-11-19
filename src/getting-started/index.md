@@ -18,6 +18,9 @@ TODO: keep order consistent with the following sections
 
 <img src="./img/persia_batch_description.svg" width="100%">
 
+TODO: make all naming consistent with paper
+
+TODO: add sample_1, sample_2, ...
 
 ### Contiguous Data
 Contiguous data is a tensor or vector that contains numerical data.For example the click_num, income, price, labor time or some numerical type data could be concat as the contiguous data and become a part of training data.
