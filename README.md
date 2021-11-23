@@ -1,4 +1,4 @@
-PersiaML Tutorials
+PERSIA Tutorials
 ======
 
 ## How to contribute
