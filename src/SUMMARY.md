@@ -1,8 +1,8 @@
 # Summary
 
 * [Introduction](./introduction.md)
-* [Getting Started](./installation/index.md)
-* [Customization](./getting-started/index.md)
+* [Getting Started](./getting-started/index.md)
+* [Customization](./customize-a-persia-job/index.md)
 * [Benchmark](./benchmark/index.md)
 * [Troubleshooting](./troubleshooting/index.md)
 
