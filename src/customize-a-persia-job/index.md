@@ -176,26 +176,12 @@ A embedding parameter server manages the storage and update of the embedding par
 
 more advanced features: See [Configuration](../configuration/index.md)
 
-## Model Checkpointing
 
-You can call `load_checkpoint` or `dump_checkpoint` in a persia context, both the dense part and the sparse part will be saved into `checkpoint_dir`. The model will be saved to the local path by default, when the path start with `hdfs://`, it will be saved to hdfs path.
+## Launcher configuration
 
-```python
-with TrainCtx(
-    model=model,
-    sparse_optimizer=sparse_optimizer,
-    dense_optimizer=dense_optimizer,
-    device_id=device_id,
-    embedding_config=embedding_config,
-) as ctx:
-    ctx.load_checkpoint(checkpoint_dir)
-    if batch_idx % 10000 == 0:
-        ctx.dump_checkpoint(checkpoint_dir)
-```
+### docker compose launcher
 
-more advanced features: See [Model Checkpointing](../model-checkpointing/index.md)
-
-## Distributed Task
+### k8s launcher
 
 The Persia Operator is a Kubernetes [custom resource definitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/). You can define your distributed persia task by an operator file.
 
