@@ -16,8 +16,8 @@
 ## Links
 
 * [GitHub Repository](https://github.com/PersiaML/PERSIA)
-* [Tutorials](https://persiaml-tutorials.pages.dev/) (Under Construction)
-* [API documentation](https://persiaml.pages.dev/) (Under Construction)
+* [Tutorials](https://persiaml-tutorials.pages.dev/)
+* [API documentation](https://persiaml.pages.dev/)
 
 ## Discussion
 
