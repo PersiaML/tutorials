@@ -41,7 +41,7 @@ Generally, to run a customized training task, you need your own definition of mo
 - Embedding configuration file: A file define the embedding parameters, e.g. embedding dim, whether to do summation, usually named as `embedding_config.yaml`. For more details see #embedding config.
 - Server configuration file: Configuration of embedding servers, e.g. capacity of embedding servers, usually named as `global_config.yaml`. For more details see #global config.
 - Model definition file: A file define the dense model with torch, usually named as `train.py`. For more details see #model definition.
-- Data preprocessing file: A file define the preprocessing of data, usually named as `data_compose.py`. For more details see #train data.
+- Data preprocessing file: A file define the preprocessing of data, usually named as `data_loader.py`. For more details see #train data.
 
 There are fileds for these files in an operator definition file, you can change them to a specify path. They are: `embeddingConfigPath`, `globalConfigPath`, `trainerPyEntryPath`, `dataLoaderPyEntryPath`.
 

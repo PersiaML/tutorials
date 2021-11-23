@@ -1,9 +1,9 @@
 Deployment for inference
 ======
 
-To do inference for trained models, we need to deploy PersiaML middleware service, PersiaML embedding service, and [TorchServe] services.
+To do inference for trained models, we need to deploy embedding worker, embedding parameter server, and [TorchServe] server.
 
-When a TorchServe inference server receives requests, it first looks up embeddings on PersiaML services, and then does the forward pass for the DNN part.
+When a TorchServe inference server receives requests, it first looks up embeddings on PERSIA services, and then does the forward pass for the DNN part.
 
 [TorchServe] is a flexible framework for serving PyTorch models. In this page, we will introduce how to deploy a PerisaML model with it.
 
@@ -19,7 +19,7 @@ Here is an example to define a custom handler retrieving PersiaML embeddings:
 
 ```python
 from persia.ctx import InferCtx
-from persia.service import get_middleware_services
+from persia.service import get_embedding_worker_services
 from ts.torch_handler.base_handler import BaseHandler
 
 from abc import ABC
@@ -31,8 +31,8 @@ device_id = 0 if torch.cuda.is_available() else None
 class PersiaHandler(BaseHandler, ABC):
     def initialize(self, context):
         super().initialize(context)
-        middleware_addrs = get_middleware_services()
-        self.persia_context = InferCtx(middleware_addrs, device_id=device_id)
+        embedding_worker_addrs = get_embedding_worker_services()
+        self.persia_context = InferCtx(embedding_worker_addrs, device_id=device_id)
         self.persia_context.wait_for_serving()
 
     def preprocess(self, data):
@@ -82,7 +82,7 @@ TorchServe can be launched with:
 torchserve --start --ncs --model-store /workspace/serve/model/ --models you_model_name.mar
 ```
 
-There are configurations in [`global_config.yaml`](https://github.com/PersiaML/tutorials/blob/docs/monitoring/src/configuring/index.md#global-config) when deploy embedding servers and middleware for inference.
+There are configurations in [`global_config.yaml`](https://github.com/PersiaML/tutorials/blob/docs/monitoring/src/configuring/index.md#global-config) when deploy embedding parameter servers and embedding workers for inference.
 
 ```yaml
 common_config:

@@ -32,7 +32,7 @@ Above figure illustrates significant performance improvements from Persia: e.g.,
 
 The intensive test of Persia’ capacity is conducted over Google cloud platform with a heterogeneous cluster including:
 * 8 a2-highgpu-8g instances (each with 8 Nvidia A100 GPUs) as NN workers;
-* 100 c2-standard-30 instances (each with 30vCPUs, 120GB RAM) as middleware servers;
+* 100 c2-standard-30 instances (each with 30vCPUs, 120GB RAM) as embedding workers;
 * 30 m2-ultramem-416 instances (each with 416vCPUs, 12TB RAM) as embedding PS.
 
 <img src="img/model_scalability.png" width="600">

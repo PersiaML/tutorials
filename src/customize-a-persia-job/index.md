@@ -31,7 +31,7 @@ In PERSIA batch data, contiguous data is alias as dense data.It is describe as a
 
 
 ### ID Type Features
-ID Type Features is a sparse tensor that contains variable length of discrete value. Such user_id, photo_id, client_id. There should at least exists categorical name and dimension to describe a categorical data.PERSIA parameter server will project the discrete value in categorical data to a vector and the dimension of vector is equal to the value you describe before.It is simple to adding one categorical data in PERSIA, modify the embedding config file and add the categorical name and its dimension.Both `middleware-server` and `embedding-server` will load the embedding config file to apply the categorical data configuration.
+ID Type Features is a sparse tensor that contains variable length of discrete value. Such user_id, photo_id, client_id. There should at least exists categorical name and dimension to describe a categorical data.PERSIA parameter server will project the discrete value in categorical data to a vector and the dimension of vector is equal to the value you describe before.It is simple to adding one categorical data in PERSIA, modify the embedding config file and add the categorical name and its dimension.Both `embedding-worker` and `embedding-parameter-server` will load the embedding config file to apply the categorical data configuration.
 
 In below code, we define three categorical data.For each categorical data the requirement fields are category name and the embedding dimension.
 
@@ -166,11 +166,11 @@ with TrainCtx(
 
 more advanced features: ..
 
-## Configuring Embedding Servers
+## Configuring Embedding Worker
 
-Embedding servers include middleware server and parameter server.
+A embedding worker runs asynchronous updating algorithm for getting the embedding parameters from the embedding parameter server; aggregating embedding vectors (potentially) and putting embedding gradients back to embedding parameter server. You can learn the details of the system design through 4.2 section in our [paper](https://arxiv.org/abs/2111.05897). Generally, you only need to adjust the number of instances and resources according to your workload.
 
-A embedding middleware server runs asynchronous updating algorithm for getting the embedding parameters from the embedding parameter server; aggregating embedding vectors (potentially) and putting embedding gradients back to embedding parameter server. You can learn the details of the system design through 4.2 section in our [paper](https://arxiv.org/abs/2111.05897). Generally, you only need to adjust the number of instances and resources according to your workload.
+## Configuring Embedding Parameter Server
 
 A embedding parameter server manages the storage and update of the embedding parameters according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies. So you need to configure capacity of the LRU cache in the configuration file according to your workload and available memory size. In addition, the capacity means the max number of embedding vectors, not the number of parameters.
 
