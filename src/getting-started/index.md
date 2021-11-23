@@ -10,73 +10,69 @@
 
 ## Run on Kubernetes with PERSIA Operator (Recommended)
 
-TODO(@zhuxuefeng)
+**Requirements**
 
-**Requirements:**
+* `kubectl` command-line tool
+* valid `kubeconfig` file (default located at `~/.kube/config`)
 
-* Installed `kubectl` command-line tool.
-* Have a `kubeconfig` file (default location is `~/.kube/config`).
-
-**Installation:**
+**Installation**
 
 ```bash
-$ kubectl apply -f https://github.com/nats-io/nats-operator/releases/latest/download/00-prereqs.yaml
-$ kubectl apply -f https://github.com/nats-io/nats-operator/releases/latest/download/10-deployment.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/resources/jobs.persia.com.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/resources/operator.persia.com.yaml
+\$ kubectl apply -f https://github.com/nats-io/nats-operator/releases/latest/download/00-prereqs.yaml
+\$ kubectl apply -f https://github.com/nats-io/nats-operator/releases/latest/download/10-deployment.yaml
+\$ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/resources/jobs.persia.com.yaml
+\$ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/resources/operator.persia.com.yaml
 ```
 
-**Run:**
+**Run**
 
-To run a basic example training task(adult income prediction), use following command.
+To run a simple example training task (adult income prediction) TODO: @zhuxuefeng add hyperlink to the dataset, apply the following Kubernetes PERSIA task definition file:
 
 ```bash
-$ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/example/k8s.train.yml
+\$ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/example/k8s.train.yml
 ```
 
-This runs a basic example training task by an operator definition file `k8s.train.yml`, which define the system configuration(e.g. resources limit, volume mounts, environment variables) of a persia task.
+TODO: @zhuxuefeng use adult-income-prediction.train.yml as file name
 
-Generally, to run a customized training task, you need your own definition of models, configurations and data processing, and mount them to your training tasks. They are:
+This runs the adult income prediction training task defined by `k8s.train.yml`. `k8s.train.yml` defines the system configuration (e.g. resources limit, volume mounts, and environment variables) of a PERSIA training task.
 
-- Embedding configuration file: A file define the embedding parameters, e.g. embedding dim, whether to do summation, usually named as `embedding_config.yaml`. For more details see #embedding config.
-- Server configuration file: Configuration of embedding servers, e.g. capacity of embedding servers, usually named as `global_config.yaml`. For more details see #global config.
-- Model definition file: A file define the dense model with torch, usually named as `train.py`. For more details see #model definition.
-- Data preprocessing file: A file define the preprocessing of data, usually named as `data_loader.py`. For more details see #train data.
+To run a customized training task on your own dataset and models, we can customize the following configuration files:
 
-There are fileds for these files in an operator definition file, you can change them to a specify path. They are: `embeddingConfigPath`, `globalConfigPath`, `trainerPyEntryPath`, `dataLoaderPyEntryPath`.
+- **Embedding configuration file:** A file defining the embedding configurations (e.g. embedding dimension, and sum pooling). This file is named as `embedding_config.yaml` by default. For more details see #embedding config. TODO: @zhuxuefeng fix this link
+- **Embedding PS configuration file:** Configuration of embedding parameter servers, e.g. max capacity of embedding parameter servers. This file is named as `global_config.yaml` by default. For more details see #global config. TODO: @zhuxuefeng fix this link
+- **Model definition configuration file:** A file that defines the neural network (NN) using PyTorch. This file is named as `train.py` by default. For more details see #model definition. TODO: @zhuxuefeng fix this link
+- **Data preprocessing configuration file:** A file that defines the data preprocessing. This file is named as `data_loader.py` by default. For more details see #train data. TODO: @zhuxuefeng fix this link
 
-<!-- By default, there files are in the following locations in every container of the K8S application:
+To change the file name for these configuration files, we can remap the `embeddingConfigPath`, `globalConfigPath`, `trainerPyEntryPath`, `dataLoaderPyEntryPath` in the Kubernetes PERSIA task definition file.
 
-- configuration file: /data/configuration.yml
-- xxxx file: .... -->
-
-For more details. See #customization.
-
+For more details. See #customization. TODO: @zhuxuefeng fix this link
 
 ## Run Manually
 
-### Using Docker-compose
+### Using Docker-Compose
 
-**Requirements:**
+**Requirements**
 
-* [docker](https://docs.docker.com/engine/install/ubuntu/) command line tools
-* [dockerc-compose](https://docs.docker.com/compose/) command line tools
+* [docker](https://docs.docker.com/engine/install/ubuntu/)
+* [docker-compose](https://docs.docker.com/compose/)
 
-**Installation:**
+**Installation**
+
+TODO: @wangyulong  do we really need to pull images?
 
 ```bash
-docker pull persiaml/persia-cuda-runtime:latest
+\$ $docker pull persiaml/persia-cuda-runtime:latest
 ```
-> Note: these docker images can be built from preset command after download source repo
+> **NOTE** These docker images can be built from
 > ```bash
-> git clone https://github.com/PersiaML/PERSIA.git
+> \$ git clone https://github.com/PersiaML/PERSIA.git
 > # docker image name: persiaml/persia-cuda-runtime:dev
-> cd PERSIA && IMAGE_TAG=dev make build_cuda_runtime_image -e
+> \$ cd PERSIA && IMAGE_TAG=dev make build_cuda_runtime_image -e
 > ```
 
-**Run:**
+**Run**
 
-We provide the preset `docker-compose.yml` file in our examples.Try below command to start your `PERSIA` task after install the `docker-compose` tools and `PERSIA` runtime image.
+We provide an example `docker-compose.yml` file. Try below command to start your `PERSIA` task after install the `docker-compose` tools and `PERSIA` runtime image. # TODO: @wangyulong is this adult income ?
 
 ```bash
 git clone https://github.com/PersiaML/PERSIA.git
@@ -88,14 +84,14 @@ CODE_BASE=../src/getting_started/ make run -e
 
 **Requirements**
 
-```bash
-pip3 install honcho
-```
+* [honcho](xxx) TODO: @wangyulong fix the link
+* [PERSIA python package](xxx) TODO: @wangyulong fix the link
 
-**Using Pre-compiled Wheels**:
+**Using Pre-compiled Wheels**
 
 TODO(wangyulong)
-**From Source**:
+
+**From Source**
 
 ```bash
 apt update && apt-get install -y curl git python3 python3-dev python3-pip 
@@ -108,7 +104,10 @@ curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly -y --profi
 git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA 
 USE_CUDA=1 NATIVE=1 pip3 install persia
 ```
-> NOTE: install from python setup.py
+
+TODO: @wangyulong what's the difference?
+
+> **NOTE** install from python setup.py
 > ```bash
 > pip3 install torch click colorlog colorama setuptools setuptools-rust setuptools_scm
 > # install cpu version
@@ -117,9 +116,10 @@ USE_CUDA=1 NATIVE=1 pip3 install persia
 > USE_CUDA=1 NATIVE=1 python3 setup.py install
 > ```
 
-**Run:**
+**Run**
 
-Launche the PERSIA and explore the all processes output log.
+After installing PERSIA Python package locally, you can launch the example adult income prediction task by:
+
 ```bash
 git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA/examples/honcho   # TODO: use dataset name for example dir
 CODE_BASE=../src/getting_started/ honcho start
@@ -127,4 +127,4 @@ CODE_BASE=../src/getting_started/ honcho start
 
 ## Deployment
 
-see #Deployment for inference
+see #Deployment for inference  TODO: @zhuxuefeng  fix the link
