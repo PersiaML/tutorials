@@ -195,45 +195,29 @@ metadata:
   namespace: default  # k8s namespace to deploy to this job
 spec:
   # the following path are the path inside the container
-  globalConfigPath: /workspace/config/global_config_train.yml
-  embeddingConfigPath: /workspace/config/embedding_config.yml
-  trainerPyEntryPath: /workspace/train.py
-  dataLoaderPyEntryPath: /workspace/data_compose.py
-  # k8s volumes definition, see https://kubernetes.io/docs/concepts/storage/volumes/
-  volumes:
-    - name: workspace
-      hostPath:
-        path: /nfs/general/PersiaML/e2e/adult_income/
-        type: Directory
-  # global env, it will apply to all containers.
+  globalConfigPath: /home/PersiaML/examples/src/getting_started/config/global_config.yml
+  embeddingConfigPath: /home/PersiaML/examples/src/getting_started/config/embedding_config.yml
+  nnWorkerPyEntryPath: /home/PersiaML/examples/src/getting_started/train.py
+  dataLoaderPyEntryPath: /home/PersiaML/examples/src/getting_started/data_compose.py
   env:
     - name: PERSIA_NATS_IP
       value: nats://persia-nats-service:4222
 
-  # embedding server configurations.
-  embeddingServer:
-    replicas: 1  # num of instance
-    resources:   # resources of containers, see https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-      limits:
-        memory: "24Gi"
-        cpu: "4"
-    volumeMounts:  # volume mounts of containers, see https://kubernetes.io/docs/concepts/storage/volumes/
-      - name: workspace
-        mountPath: /workspace/
-
-  # middleware server configurations.
-  middlewareServer:
+  embeddingParameterServer:
     replicas: 1
     resources:
       limits:
         memory: "24Gi"
         cpu: "4"
-    volumeMounts:
-      - name: workspace
-        mountPath: /workspace/
 
-  # trainer configurations.
-  trainer:
+  embeddingWorker:
+    replicas: 1
+    resources:
+      limits:
+        memory: "24Gi"
+        cpu: "4"
+
+  nnWorker:
     replicas: 1
     nprocPerNode: 1
     resources:
@@ -241,23 +225,16 @@ spec:
         memory: "24Gi"
         cpu: "12"
         nvidia.com/gpu: "1"
-    volumeMounts:
-      - name: workspace
-        mountPath: /workspace/
     env:
       - name: CUBLAS_WORKSPACE_CONFIG
         value: :4096:8
 
-  # dataloader configurations.
   dataloader:
     replicas: 1
     resources:
       limits:
         memory: "8Gi"
         cpu: "1"
-    volumeMounts:
-      - name: workspace
-        mountPath: /workspace/
 
 ---
 # a nats operator
@@ -274,6 +251,8 @@ spec:
       memory: "8Gi"
       cpu: "2" 
 ```
+more advanced features: See [kubernetes-integration](../kubernetes-integration/index.md)
+
 
 ## Deployment for inference
 
