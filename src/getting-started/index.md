@@ -27,7 +27,7 @@ TODO: make all naming consistent with paper
 ### Non-ID Type Features
 Non-ID Type Features is a tensor or vector that contains numerical data.For example the click_num, income, price, labor time or some numerical type data could be concat as the contiguous data and become a part of training data.
 
-In PERSIA batch data, contiguous data is alias as dense data.It is describe as a 2d tensor with float datatype. 
+In PERSIA batch data, it is described as a 2d tensor with float datatype. 
 
 
 ### ID Type Features
