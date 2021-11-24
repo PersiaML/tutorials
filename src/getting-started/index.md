@@ -58,34 +58,30 @@ For more details. See #customization. TODO: @zhuxuefeng fix this link
 
 **Installation**
 
-TODO: @wangyulong  do we really need to pull images?
-
-```bash
-\$ $docker pull persiaml/persia-cuda-runtime:latest
-```
-> **NOTE** These docker images can be built from
+> **NOTE** These docker images can be built from 
 > ```bash
-> \$ git clone https://github.com/PersiaML/PERSIA.git
+> git clone https://github.com/PersiaML/PERSIA.git
 > # docker image name: persiaml/persia-cuda-runtime:dev
-> \$ cd PERSIA && IMAGE_TAG=dev make build_cuda_runtime_image -e
+> cd PERSIA && IMAGE_TAG=dev make build_cuda_runtime_image -e
 > ```
 
 **Run**
 
-We provide an example `docker-compose.yml` file. Try below command to start your `PERSIA` task after install the `docker-compose` tools and `PERSIA` runtime image. # TODO: @wangyulong is this adult income ?
+We provide an adult income example `docker-compose.yml` file. Try below command to start your `PERSIA` task after install the `docker-compose` tools.
 
 ```bash
 git clone https://github.com/PersiaML/PERSIA.git
 cd PERSIA/examples/docker-compose
-CODE_BASE=../src/getting_started/ make run -e
+EXAMPLE=getting_started make run -e
 ```
 
 ### Using Python Package
 
 **Requirements**
 
-* [honcho](xxx) TODO: @wangyulong fix the link
-* [PERSIA python package](xxx) TODO: @wangyulong fix the link
+* [PERSIA python package](https://pypi.org/project/persia/) 
+* [honcho](https://github.com/nickstenning/honcho) 
+* [nat-server](https://github.com/nats-io/nats-server/releases)
 
 **Using Pre-compiled Wheels**
 
@@ -93,7 +89,9 @@ TODO(wangyulong)
 
 **From Source**
 
+_ubuntu20.04_
 ```bash
+
 apt update && apt-get install -y curl git python3 python3-dev python3-pip 
 
 export RUSTUP_HOME=/rust
@@ -105,24 +103,13 @@ git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA
 USE_CUDA=1 NATIVE=1 pip3 install persia
 ```
 
-TODO: @wangyulong what's the difference?
-
-> **NOTE** install from python setup.py
-> ```bash
-> pip3 install torch click colorlog colorama setuptools setuptools-rust setuptools_scm
-> # install cpu version
-> NATIVE=1 python3 setup.py install
-> # install cuda version
-> USE_CUDA=1 NATIVE=1 python3 setup.py install
-> ```
-
 **Run**
 
 After installing PERSIA Python package locally, you can launch the example adult income prediction task by:
 
 ```bash
 git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA/examples/honcho   # TODO: use dataset name for example dir
-CODE_BASE=../src/getting_started/ honcho start
+EXAMPLE=getting_started make run -e
 ```
 
 ## Deployment
