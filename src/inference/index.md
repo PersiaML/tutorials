@@ -1,4 +1,4 @@
-Deployment for Inference
+Inference
 ======
 
 To do inference for trained models, we need to deploy embedding worker, embedding parameter server, and [TorchServe] server.

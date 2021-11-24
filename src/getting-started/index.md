@@ -110,6 +110,6 @@ git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA/examples/honcho   
 EXAMPLE=getting_started make run -e
 ```
 
-## Deployment
+## Deploy Trained Model for Inference
 
-See [Deployment for Inference](../inference/index.md).
+See [Inference](../inference/index.md).
