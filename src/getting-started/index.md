@@ -41,9 +41,11 @@ To run a customized training task on your own dataset and models, we can customi
 - **Model definition configuration file:** A file that defines the neural network (NN) using PyTorch. This file is named as `train.py` by default. For more details see #model definition. TODO: @zhuxuefeng fix this link
 - **Data preprocessing configuration file:** A file that defines the data preprocessing. This file is named as `data_loader.py` by default. For more details see #train data. TODO: @zhuxuefeng fix this link
 
-To change the file name for these configuration files, we can remap the `embeddingConfigPath`, `globalConfigPath`, `nnWorkerPyEntryPath`, `dataLoaderPyEntryPath` in the Kubernetes PERSIA task definition file.
-
-For more details. See [Customization](../customize-a-persia-job/index.md).
+To change the file name for these configuration files, we can remap the
+`embeddingConfigPath`, `globalConfigPath`, `nnWorkerPyEntryPath`,
+`dataLoaderPyEntryPath` in the Kubernetes PERSIA task definition file. For more
+details on how to customize Kubernetes PERSIA task definitions, see
+[Customization](../customize-a-persia-job/index.md).
 
 ## Run Manually
 
