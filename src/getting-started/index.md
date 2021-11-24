@@ -54,15 +54,6 @@ For more details. See [Customization](../customize-a-persia-job/index.md).
 * [docker](https://docs.docker.com/engine/install/ubuntu/)
 * [docker-compose](https://docs.docker.com/compose/)
 
-**Installation**
-
-> **NOTE** These docker images can be built from 
-> ```bash
-> git clone https://github.com/PersiaML/PERSIA.git
-> # docker image name: persiaml/persia-cuda-runtime:dev
-> cd PERSIA && IMAGE_TAG=dev make build_cuda_runtime_image -e
-> ```
-
 **Run**
 
 We provide an adult income example `docker-compose.yml` file. Try below command to start your `PERSIA` task after install the `docker-compose` tools.
@@ -72,6 +63,14 @@ git clone https://github.com/PersiaML/PERSIA.git
 cd PERSIA/examples/docker-compose
 EXAMPLE=getting_started make run -e
 ```
+
+> **NOTE** These docker images used by docker-compose can be built from 
+> ```bash
+> git clone https://github.com/PersiaML/PERSIA.git
+> # docker image name: persiaml/persia-cuda-runtime:dev
+> cd PERSIA && IMAGE_TAG=dev make build_cuda_runtime_image -e
+> ```
+
 
 ### Using Python Package
 
