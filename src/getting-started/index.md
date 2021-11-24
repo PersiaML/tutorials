@@ -82,7 +82,7 @@ EXAMPLE=getting_started make run -e
 
 * [PERSIA python package](https://pypi.org/project/persia/) 
 * [honcho](https://github.com/nickstenning/honcho) 
-* [nat-server](https://github.com/nats-io/nats-server/releases)
+* [nats-server](https://github.com/nats-io/nats-server/releases)
 
 **Using Pre-compiled Wheels**
 
