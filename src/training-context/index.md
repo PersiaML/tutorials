@@ -1,5 +1,5 @@
 # Training Context
-Persia training context is a configurable context that help you to set the corresponding embedding training configuration.
+PERSIA training context is a configurable context that help you to set the corresponding embedding training configuration.
 
 There provide serval configuration that you may use during a distributed training.
 

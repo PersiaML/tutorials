@@ -55,7 +55,7 @@ _more advanced features: embedding_config_chapter.md_
 ### Labels
 Label data in PERSIA batch is a 2d `float32` tensor that support add the classification target and regression target.
 
-### Customize Persia Batch Data
+### Customize PERSIA Batch Data
 
 _[data_loader](https://github.com/PersiaML/PERSIA/blob/main/examples/src/getting_started/data_loader.py)_
 ```python (data_preprocessing.py)
@@ -189,7 +189,7 @@ more advanced features: See [Configuration](../configuration/index.md)
 
 ### k8s launcher
 
-The Persia Operator is a Kubernetes [custom resource definitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/). You can define your distributed persia task by an operator file.
+The PERSIA Operator is a Kubernetes [custom resource definitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/). You can define your distributed persia task by an operator file.
 
 Here is an example for an operator file
 

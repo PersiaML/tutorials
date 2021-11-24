@@ -2,7 +2,7 @@ Benchmark
 ======
 
 We perform a series of large-scale training experiments to demonstrate the
-scalability and speed of Persia on open-source benchmarks as well as production
+scalability and speed of PERSIA on open-source benchmarks as well as production
 recommendation workflows. Comparing to SOTA recommender systems, Persia
 provides significant boost to end-to-end training time, provide high training
 throughput and scale out well up to trillion-parameter scale models. 
@@ -11,7 +11,7 @@ throughput and scale out well up to trillion-parameter scale models.
 
 ### Benchmark Dataset
 
-We evaluate Persia over three open-source benchmarks and one real-world
+We evaluate PERSIA over three open-source benchmarks and one real-world
 production microvideo recommendation workflow at Kwai:
 
 * [Taobao-Ad](https://www.kaggle.com/pavansanagapati/ad-displayclick-data-on-taobaocom):
@@ -50,7 +50,7 @@ The figure above illustrates the convergence behaviors of different systems. We 
 <img src="img/scalability.png" width="1200">
 </center>
 
-Above figure illustrates significant performance improvements from Persia: e.g., for the Taobao-Ad benchmark, Persia is 7.12× and 8.4× faster than that of the synchronous and asynchronous modes of XDL, and 1.71× faster than PaddlePaddle–same level of speedup also appears in the Avazu-Ad and Criteo-Ad benchmark.
+Above figure illustrates significant performance improvements from Persia: e.g., for the Taobao-Ad benchmark, PERSIA is 7.12× and 8.4× faster than that of the synchronous and asynchronous modes of XDL, and 1.71× faster than PaddlePaddle–same level of speedup also appears in the Avazu-Ad and Criteo-Ad benchmark.
 
 ## Scalability: Number of Parameters
 
@@ -63,7 +63,7 @@ The intensive test of Persia’ capacity is conducted over Google cloud platform
 <img src="img/model_scalability.png" width="600">
 </center>
 
-We see that Persia shows stable training throughput when increasing the model size even up to 100 trillion parameters. For the 100 trillion-parameter model, Persia also achieves 2.6× higher throughput than the fully synchronous mode.
+We see that PERSIA shows stable training throughput when increasing the model size even up to 100 trillion parameters. For the 100 trillion-parameter model, PERSIA also achieves 2.6× higher throughput than the fully synchronous mode.
 
 
 [^1]: According to private communications we had with members of the PaddlePaddle development community.

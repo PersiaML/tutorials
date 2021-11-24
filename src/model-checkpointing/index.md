@@ -1,7 +1,7 @@
 Model Checkpointing
 ======
 
-A PERSIA model contains two parts: the dense part and the sparse part (embeddings). A checkpoint contains both the dense part and the sparse part can be saved together through Persia api or manually saved separately.
+A PERSIA model contains two parts: the dense part and the sparse part (embeddings). A checkpoint contains both the dense part and the sparse part can be saved together through PERSIA api or manually saved separately.
 
 ## Checkpointing together
 
