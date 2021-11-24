@@ -125,4 +125,4 @@ CODE_BASE=../src/getting_started/ honcho start
 
 ## Deployment
 
-see #Deployment for inference  TODO: @zhuxuefeng  fix the link
+See [Deployment for Inference](../inference/index.md).
