@@ -90,9 +90,9 @@ TODO(wangyulong)
 
 **From Source**
 
-_ubuntu20.04_
-```bash
+For example on Ubuntu 20.04:
 
+```bash
 apt update && apt-get install -y curl git python3 python3-dev python3-pip 
 
 export RUSTUP_HOME=/rust
@@ -101,15 +101,16 @@ export PATH=/cargo/bin:/rust/bin:$PATH
 curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly -y --profile default --no-modify-path
 
 git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA 
-USE_CUDA=1 NATIVE=1 pip3 install persia
+USE_CUDA=1 NATIVE=1 pip3 install .
 ```
 
 **Run**
 
-After installing PERSIA Python package locally, you can launch the example adult income prediction task by:
+After installing PERSIA Python package locally, you can launch the example adult income prediction task with:
 
 ```bash
-git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA/examples/honcho   # TODO: use dataset name for example dir
+ # TODO: use dataset name for example dir
+git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA/examples/honcho  
 EXAMPLE=getting_started make run -e
 ```
 
