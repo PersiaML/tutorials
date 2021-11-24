@@ -1,6 +1,7 @@
-# Customize a PERSIA Job
+# Customization
 
-## TODO: workflow diagram
+Before we introduce how to customize a PERSIA training task, let's take a look at how PERSIA's different components work together.
+The training process can be summarized by the following figure:
 
 <center>
 <img src="img/persia_workflow.png" width="600">
