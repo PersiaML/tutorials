@@ -3,7 +3,7 @@
 Debugging running task in distributed training can be difficult.We provide some general suggestions in this page.
 
 ## Investigate debug log
-PersiaML print the log according to different `LOG_LEVEL`.Set corresponding launch environment `LOG_LEVEL` when launch the *nn-worker*, *embedding-worker* and *embedding-parameter-server*. The value of *LOG_LEVEL* can be accepted include *debug*, *info*, *warn* and *error* can be accept, the default value is `info`.
+PersiaML print the log according to different `LOG_LEVEL`.Set corresponding launch environment `LOG_LEVEL` when launch the *nn-worker*, *embedding-worker* and *embedding-parameter-server*. The value of *LOG_LEVEL* can be accepted include *debug*, *info*, *warn* and *error* can be accepted, the default value is `info`.
 
 ## Investigate Grafana metrics
 We use the `Prometheus` to collect the metrics in training phase.You can find out the information such as current embedding staleness, current embedding_size or the time cost of embedding backward. Read the [Monitoring cheapter](../monitoring/index.md) for more metric.

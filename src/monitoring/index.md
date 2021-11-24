@@ -106,7 +106,7 @@ Details of how to setup in various environments can be found in for example [doc
 | `lookup_rpc_time_cost` | lookup embedding time cost on embedding worker for a batch, include lookup on embedding server and network transmission. |
 | `update_gradient_time_cost` | update gradient time cost on embedding worker for a batch. |
 | `summation_time_cost` | lookup postprocess time cost on embedding worker, mainly is embedding summation. |
-| `lookup_batched_time_cost` | lookup and pre/post process time cost on embedding worker. |
+| `lookup_batched_time_cost` | lookup, preprocess and postprocess time cost on embedding worker. |
 
 
 [Prometheus]: https://prometheus.io/docs/introduction/overview/

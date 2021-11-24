@@ -26,15 +26,13 @@
 
 **Run**
 
-To run a simple example training task (adult income prediction) TODO: @zhuxuefeng add hyperlink to the dataset, apply the following Kubernetes PERSIA task definition file:
+To run a simple example training task ([adult income prediction](https://archive.ics.uci.edu/ml/machine-learning-databases/adult/)), apply the following Kubernetes PERSIA task definition file:
 
 ```bash
-\$ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/example/k8s.train.yml
+\$ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/example/adult-income-prediction.train.yml
 ```
 
-TODO: @zhuxuefeng use adult-income-prediction.train.yml as file name
-
-This runs the adult income prediction training task defined by `k8s.train.yml`. `k8s.train.yml` defines the system configuration (e.g. resources limit, volume mounts, and environment variables) of a PERSIA training task.
+This runs the adult income prediction training task defined by `adult-income-prediction.train.yml`. This file defines the system configuration (e.g. resources limit, volume mounts, and environment variables) of a PERSIA training task.
 
 To run a customized training task on your own dataset and models, we can customize the following configuration files:
 
@@ -43,9 +41,9 @@ To run a customized training task on your own dataset and models, we can customi
 - **Model definition configuration file:** A file that defines the neural network (NN) using PyTorch. This file is named as `train.py` by default. For more details see #model definition. TODO: @zhuxuefeng fix this link
 - **Data preprocessing configuration file:** A file that defines the data preprocessing. This file is named as `data_loader.py` by default. For more details see #train data. TODO: @zhuxuefeng fix this link
 
-To change the file name for these configuration files, we can remap the `embeddingConfigPath`, `globalConfigPath`, `trainerPyEntryPath`, `dataLoaderPyEntryPath` in the Kubernetes PERSIA task definition file.
+To change the file name for these configuration files, we can remap the `embeddingConfigPath`, `globalConfigPath`, `nnWorkerPyEntryPath`, `dataLoaderPyEntryPath` in the Kubernetes PERSIA task definition file.
 
-For more details. See #customization. TODO: @zhuxuefeng fix this link
+For more details. See [Customization](../customize-a-persia-job/index.md)
 
 ## Run Manually
 
@@ -114,4 +112,4 @@ EXAMPLE=getting_started make run -e
 
 ## Deployment
 
-see #Deployment for inference  TODO: @zhuxuefeng  fix the link
+See [Deployment for Inference](../inference/index.md).

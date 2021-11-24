@@ -2,7 +2,9 @@
 
 ## TODO: workflow diagram
 
+<center>
 <img src="img/persia_workflow.png" width="600">
+</center>
 
 There are a few files you can customize in PERSIA:
 
