@@ -28,7 +28,7 @@ TODO: make all bash code consistent (with or without `\$`)
 
 **Run**
 
-To run a simple example training task ([adult income prediction](https://archive.ics.uci.edu/ml/machine-learning-databases/adult/)), apply the following Kubernetes PERSIA task definition file:
+To run a simple example training task ([adult income prediction](https://archive.ics.uci.edu/ml/machine-learning-databases/adult/) TODO: link to description of the dataset), apply the following Kubernetes PERSIA task definition file:
 
 ```bash
 \$ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/example/adult-income-prediction.train.yml
