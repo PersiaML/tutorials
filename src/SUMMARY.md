@@ -1,13 +1,13 @@
 # Summary
 
 * [Introduction](./introduction.md)
-* [Getting Started](./installation/index.md)
-* [Customization](./getting-started/index.md)
-* [Benchmark](./benchmark/index.md)  TODO: @xuefeng
+* [Getting Started](./getting-started/index.md)
+* [Customization](./customize-a-persia-job/index.md)
+* [Benchmark](./benchmark/index.md)
 * [Troubleshooting](./troubleshooting/index.md)
 
+# Advanced Tutorials
 
-Advanced: 
 * [Data Processing](./data-processing/index.md)
 * [Monitoring](./monitoring/index.md)
 * [Inference](./inference/index.md)
@@ -15,6 +15,6 @@ Advanced:
 * [Training Context](./training-context/index.md)
 * [Kubernetes Integration](./kubernetes-integration/index.md)
 
-Reference:
+# References
 
-* [Configuration](./configuration/index.md)
+* [Configuration Options References](./configuration/index.md)

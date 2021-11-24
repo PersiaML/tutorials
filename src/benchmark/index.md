@@ -12,7 +12,7 @@ We evaluate Persia over three open-source benchmarks and one real-world producti
 
 For the three open source advertisement CTR benchmarks, we include 80% of the records as training set and the rest 20% of the records as test set, we consider a fully connected feed forward neural network (FFNN) as the deep learning model with five hidden layer dimensions of 4096, 2048, 1024, 512 and 256. For the Kwai production microvideo recommendation task, 85% of the data are included in the training set while the rest 15% are considered as the test set, we also use FFNN as the model to predict multiple user behaviors.
 
-We include up to 64 Nvidia V100 GPUs, and 100 CPU instances (each with 52 cores and 480GB RAM). The instances are connected by a network with the bandwidth of 100 Gbps. The baseline systems (XDL and PaddlePaddle) are equipped with the same amount of computation resources for each individual setting.
+We include up to 64 Nvidia V100 GPUs, and 100 CPU instances (each with 52 cores and 480 GB RAM). The instances are connected by a network with the bandwidth of 100 Gbps. The baseline systems (XDL and PaddlePaddle) are equipped with the same amount of computation resources for each individual setting.
 
 ## End-to-end performance
 
@@ -32,8 +32,8 @@ Above figure illustrates significant performance improvements from Persia: e.g.,
 
 The intensive test of Persia’ capacity is conducted over Google cloud platform with a heterogeneous cluster including:
 * 8 a2-highgpu-8g instances (each with 8 Nvidia A100 GPUs) as NN workers;
-* 100 c2-standard-30 instances (each with 30vCPUs, 120GB RAM) as middleware servers;
-* 30 m2-ultramem-416 instances (each with 416vCPUs, 12TB RAM) as embedding PS.
+* 100 c2-standard-30 instances (each with 30 vCPUs, 120 GB RAM) as embedding workers;
+* 30 m2-ultramem-416 instances (each with 416 vCPUs, 12 TB RAM) as embedding PS.
 
 <img src="img/model_scalability.png" width="600">
 

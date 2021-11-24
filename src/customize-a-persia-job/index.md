@@ -13,7 +13,7 @@ TODO: keep order consistent with the following sections
 4. ...
 5. TODO: Launcher configuration:
     1. If you are using k8s, xxxx.yaml
-    2. if your are using docker compose
+    2. if you are using docker compose
     3. ...
 
 ## Training Data
@@ -27,11 +27,11 @@ TODO: make all naming consistent with paper
 ### Non-ID Type Features
 Non-ID Type Features is a tensor or vector that contains numerical data.For example the click_num, income, price, labor time or some numerical type data could be concat as the contiguous data and become a part of training data.
 
-In PERSIA batch data, contiguous data is alias as dense data.It is describe as a 2d tensor with float datatype. 
+In PERSIA batch data, contiguous data is alias as dense data.It is described as a 2d tensor with float datatype. 
 
 
 ### ID Type Features
-ID Type Features is a sparse tensor that contains variable length of discrete value. Such user_id, photo_id, client_id. There should at least exists categorical name and dimension to describe a categorical data.PERSIA parameter server will project the discrete value in categorical data to a vector and the dimension of vector is equal to the value you describe before.It is simple to adding one categorical data in PERSIA, modify the embedding config file and add the categorical name and its dimension.Both `middleware-server` and `embedding-server` will load the embedding config file to apply the categorical data configuration.
+ID Type Features is a sparse tensor that contains variable length of discrete value. Such user_id, photo_id, client_id. There should at least exists categorical name and dimension to describe a categorical data. PERSIA parameter server will project the discrete value in categorical data to a vector and the dimension of vector is equal to the value you describe before.It is simple to add one categorical data in PERSIA, modify the embedding config file and add the categorical name and its dimension.Both `embedding-worker` and `embedding-parameter-server` will load the embedding config file to apply the categorical data configuration.
 
 In below code, we define three categorical data.For each categorical data the requirement fields are category name and the embedding dimension.
 
@@ -111,7 +111,7 @@ class DNN(nn.Module):
 ```
 
 ### Modify Sparse Optimizer
-Here provide many sparse optimizer in `persia.sparse.optim` module.You can choose the suitable optimizer to adapt your requirement.
+Here provide many sparse optimizers in `persia.sparse.optim` module.You can choose the suitable optimizer to adapt your requirement.
 
 ### Customize PersiaML Training Context 
 Final step is create the training context to acquire dataloder and sparse embedding process
@@ -166,36 +166,22 @@ with TrainCtx(
 
 _more advanced features: [TrainCtx]("../training-context")_
 
-## Configuring Embedding Servers
+## Configuring Embedding Worker
 
-Embedding servers include middleware server and parameter server.
+An embedding worker runs asynchronous updating algorithm for getting the embedding parameters from the embedding parameter server; aggregating embedding vectors (potentially) and putting embedding gradients back to embedding parameter server. You can learn the details of the system design through 4.2 section in our [paper](https://arxiv.org/abs/2111.05897). Generally, you only need to adjust the number of instances and resources according to your workload.
 
-A embedding middleware server runs asynchronous updating algorithm for getting the embedding parameters from the embedding parameter server; aggregating embedding vectors (potentially) and putting embedding gradients back to embedding parameter server. You can learn the details of the system design through 4.2 section in our [paper](https://arxiv.org/abs/2111.05897). Generally, you only need to adjust the number of instances and resources according to your workload.
+## Configuring Embedding Parameter Server
 
-A embedding parameter server manages the storage and update of the embedding parameters according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies. So you need to configure capacity of the LRU cache in the configuration file according to your workload and available memory size. In addition, the capacity means the max number of embedding vectors, not the number of parameters.
+An embedding parameter server manages the storage and update of the embedding parameters according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies. So you need to configure capacity of the LRU cache in the configuration file according to your workload and available memory size. In addition, the capacity means the max number of embedding vectors, not the number of parameters.
 
 more advanced features: See [Configuration](../configuration/index.md)
 
-## Model Checkpointing
 
-You can call `load_checkpoint` or `dump_checkpoint` in a persia context, both the dense part and the sparse part will be saved into `checkpoint_dir`. The model will be saved to the local path by default, when the path start with `hdfs://`, it will be saved to hdfs path.
+## Launcher configuration
 
-```python
-with TrainCtx(
-    model=model,
-    sparse_optimizer=sparse_optimizer,
-    dense_optimizer=dense_optimizer,
-    device_id=device_id,
-    embedding_config=embedding_config,
-) as ctx:
-    ctx.load_checkpoint(checkpoint_dir)
-    if batch_idx % 10000 == 0:
-        ctx.dump_checkpoint(checkpoint_dir)
-```
+### docker compose launcher
 
-more advanced features: See [Model Checkpointing](../model-checkpointing/index.md)
-
-## Distributed Task
+### k8s launcher
 
 The Persia Operator is a Kubernetes [custom resource definitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/). You can define your distributed persia task by an operator file.
 
@@ -209,45 +195,29 @@ metadata:
   namespace: default  # k8s namespace to deploy to this job
 spec:
   # the following path are the path inside the container
-  globalConfigPath: /workspace/config/global_config_train.yml
-  embeddingConfigPath: /workspace/config/embedding_config.yml
-  trainerPyEntryPath: /workspace/train.py
-  dataLoaderPyEntryPath: /workspace/data_compose.py
-  # k8s volumes definition, see https://kubernetes.io/docs/concepts/storage/volumes/
-  volumes:
-    - name: workspace
-      hostPath:
-        path: /nfs/general/PersiaML/e2e/adult_income/
-        type: Directory
-  # global env, it will apply to all containers.
+  globalConfigPath: /home/PersiaML/examples/src/getting_started/config/global_config.yml
+  embeddingConfigPath: /home/PersiaML/examples/src/getting_started/config/embedding_config.yml
+  nnWorkerPyEntryPath: /home/PersiaML/examples/src/getting_started/train.py
+  dataLoaderPyEntryPath: /home/PersiaML/examples/src/getting_started/data_compose.py
   env:
     - name: PERSIA_NATS_IP
       value: nats://persia-nats-service:4222
 
-  # embedding server configurations.
-  embeddingServer:
-    replicas: 1  # num of instance
-    resources:   # resources of containers, see https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-      limits:
-        memory: "24Gi"
-        cpu: "4"
-    volumeMounts:  # volume mounts of containers, see https://kubernetes.io/docs/concepts/storage/volumes/
-      - name: workspace
-        mountPath: /workspace/
-
-  # middleware server configurations.
-  middlewareServer:
+  embeddingParameterServer:
     replicas: 1
     resources:
       limits:
         memory: "24Gi"
         cpu: "4"
-    volumeMounts:
-      - name: workspace
-        mountPath: /workspace/
 
-  # trainer configurations.
-  trainer:
+  embeddingWorker:
+    replicas: 1
+    resources:
+      limits:
+        memory: "24Gi"
+        cpu: "4"
+
+  nnWorker:
     replicas: 1
     nprocPerNode: 1
     resources:
@@ -255,23 +225,16 @@ spec:
         memory: "24Gi"
         cpu: "12"
         nvidia.com/gpu: "1"
-    volumeMounts:
-      - name: workspace
-        mountPath: /workspace/
     env:
       - name: CUBLAS_WORKSPACE_CONFIG
         value: :4096:8
 
-  # dataloader configurations.
   dataloader:
     replicas: 1
     resources:
       limits:
         memory: "8Gi"
         cpu: "1"
-    volumeMounts:
-      - name: workspace
-        mountPath: /workspace/
 
 ---
 # a nats operator
@@ -288,6 +251,8 @@ spec:
       memory: "8Gi"
       cpu: "2" 
 ```
+more advanced features: See [kubernetes-integration](../kubernetes-integration/index.md)
+
 
 ## Deployment for inference
 
