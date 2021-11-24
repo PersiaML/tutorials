@@ -14,21 +14,21 @@ For the three open source advertisement CTR benchmarks, we include 80% of the re
 
 We include up to 64 Nvidia V100 GPUs, and 100 CPU instances (each with 52 cores and 480 GB RAM). The instances are connected by a network with the bandwidth of 100 Gbps. The baseline systems (XDL and PaddlePaddle) are equipped with the same amount of computation resources for each individual setting.
 
-## End-to-end performance
+## End-to-end Performance
 
 <img src="img/convergence.png" width="1200">
 
 We see that the persia hybrid algorithm shows almost identical convergence when comparing with the fully synchronous mode. We see that test AUC gap between the hybrid mode and synchronous mode is always less than 0.1% in the three open-source benchmarks, and less than 0.001% in the production Kwai-video benchmark; by contrast, the gap between the asynchronous mode and the synchronous mode is much higher (from 0.5% to 1.0%); further, as we allow more aggressive asynchronicity in PaddlePaddle, the gap is more significant.
 
 
-## Scalability: number of workers
+## Scalability: Number of Workers
 
 <img src="img/scalability.png" width="1200">
 
 Above figure illustrates significant performance improvements from Persia: e.g., for the Taobao-Ad benchmark, Persia is 7.12× and 8.4× faster than that of the synchronous and asynchronous modes of XDL, and 1.71× faster than PaddlePaddle–same level of speedup also appears in the Avazu-Ad and Criteo-Ad benchmark.
 
 
-## Scalability: number of parameters
+## Scalability: Number of Parameters
 
 The intensive test of Persia’ capacity is conducted over Google cloud platform with a heterogeneous cluster including:
 * 8 a2-highgpu-8g instances (each with 8 Nvidia A100 GPUs) as NN workers;
