@@ -35,6 +35,7 @@ ID Type Features is a sparse tensor that contains variable length of discrete va
 
 In below code, we define three categorical data.For each categorical data the requirement fields are category name and the embedding dimension.
 
+_[yaml_config](https://github.com/PersiaML/PERSIA/blob/main/examples/src/getting_started/config/embedding_config.yml)_
 ```yml
 slot_configs:
   id:
@@ -53,7 +54,7 @@ Label data in PERSIA batch is a 2d `float32` tensor that support add the classif
 
 ### Customize Persia Batch Data
 
-*code example*
+_[data_loader](https://github.com/PersiaML/PERSIA/blob/main/examples/src/getting_started/data_loader.py)_
 ```python (data_preprocessing.py)
 import numpy as np
 
@@ -72,7 +73,7 @@ categorical_names = [
 batch_size = 1024
 dim = 256
 
-batch_data.add_dense(np.ones((batch_size, dim), dtype=np.float32))
+batch_data.add_non_id_type_feature(np.ones((batch_size, dim), dtype=np.float32))
 
 categorical_data_num = 3
 max_categorical_len = 65536
@@ -87,8 +88,8 @@ for categorical_idx in range(categorical_data_num):
     batch_categorical_data.append((categorical_names[categorical_idx], batch_sparse_data))
 
 # add mock sparse data into PyPersiaBatchData 
-batch_data.add_sparse(batch_categorical_data)
-batch_data.add_target(np.ones((1024, 2), dtype=np.float32))
+batch_data.add_id_type_features(batch_categorical_data)
+batch_data.add_label(np.ones((1024, 2), dtype=np.float32))
 ```
 
 more advanced features: ...
@@ -106,16 +107,17 @@ from typing import List
 import torch
 
 class DNN(nn.Module):
-    def forward(self, dense: torch.Tensor, sparse: List[torch.Tensor]):
+    def forward(self, non_id_tensors: List[torch.Tensor], embedding_tensors: List[torch.Tensor]):
         ...
 ```
 
-### Modify Sparse Optimizer
-Here provide many sparse optimizers in `persia.sparse.optim` module.You can choose the suitable optimizer to adapt your requirement.
+### Modify  Embedding Optimizer
+Here provide many sparse optimizers in `persia.embedding.optim` module.You can choose the suitable optimizer to adapt your requirement.
 
 ### Customize PersiaML Training Context 
 Final step is create the training context to acquire dataloder and sparse embedding process
 
+_[train](https://github.com/PersiaML/PERSIA/blob/main/examples/src/getting_started/train.py)_
 ```python
 from torch import nn
 from torch.optim import SGD
@@ -123,7 +125,7 @@ from torch.optim import SGD
 from persia.ctx import TrainCtx
 from persia.data import StreamDataset, Dataloader
 from persia.env import get_local_rank
-from persia.sparse.optim import Adagrad
+from persia.embedding.optim import Adagrad
 
 prefetch_size = 10
 dataset = StreamDataset(prefetch_size)
@@ -143,13 +145,13 @@ else:
 # DNN parameters optimizer
 dense_optimizer = SGD(model.parameters(), lr=0.1)
 # Embedding parameters optimizer
-sparse_optimizer = Adagrad(lr=1e-3)
+embedding_optimizer = Adagrad(lr=1e-3)
 
 loss_fn = nn.BCELoss()
 
 with TrainCtx(
     model=model,
-    sparse_optimizer=sparse_optimizer,
+    embedding_optimizer=embedding_optimizer,
     dense_optimizer=dense_optimizer,
     device_id=device_id,
     mixed_precision=mixed_precision
@@ -157,7 +159,8 @@ with TrainCtx(
 
     train_data_loader = Dataloader(dataset)
     for (batch_idx, data) in enumerate(loader):
-        output, target = ctx.forward(data)
+        output, labels = ctx.forward(data)
+        label = labels[0]
         loss= loss_fn(output, target)
         scaled_loss = ctx.backward(loss)
         logger.info(f"current idx: {batch_idx} loss: {loss}")
