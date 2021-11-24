@@ -29,12 +29,10 @@
 To run a simple example training task (adult income prediction) TODO: @zhuxuefeng add hyperlink to the dataset, apply the following Kubernetes PERSIA task definition file:
 
 ```bash
-\$ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/example/k8s.train.yml
+\$ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/example/adult-income-prediction.train.yml
 ```
 
-TODO: @zhuxuefeng use adult-income-prediction.train.yml as file name
-
-This runs the adult income prediction training task defined by `k8s.train.yml`. `k8s.train.yml` defines the system configuration (e.g. resources limit, volume mounts, and environment variables) of a PERSIA training task.
+This runs the adult income prediction training task defined by `adult-income-prediction.train.yml`. This file defines the system configuration (e.g. resources limit, volume mounts, and environment variables) of a PERSIA training task.
 
 To run a customized training task on your own dataset and models, we can customize the following configuration files:
 
