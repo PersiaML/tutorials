@@ -2,7 +2,7 @@
 
 * [Introduction](./introduction.md)
 * [Getting Started](./getting-started/index.md)
-* [Customization](./customize-a-persia-job/index.md)
+* [Customization](./customization/index.md)
 * [Benchmark](./benchmark/index.md)
 * [Troubleshooting](./troubleshooting/index.md)
 
