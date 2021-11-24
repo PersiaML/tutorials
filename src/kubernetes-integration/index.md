@@ -1,4 +1,4 @@
-Run Persia on Kubernetes
+Kubernetes Integration
 ===
 
 The Persia Operator is a Kubernetes [custom resource definitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/). You can define your distributed persia task by an operator file. We have learned the structure of an operator definition file in the [Customize a PERSIA Job](../customization/index.md) section. In following section, we will introduce more details about running PERSIA on a k8s cluster.
