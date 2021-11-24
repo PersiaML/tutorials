@@ -6,8 +6,8 @@ some general suggestions in this page.
 ## Debug Log
 
 You can set the logging verbosity with `LOG_LEVEL` environment variable when
-launching PERSIA. The value of *LOG_LEVEL* can be *debug*, *info*, *warn*, or
-*error*, the default value is *info*.
+launching PERSIA. The value of `LOG_LEVEL` can be `debug`, `info`, `warn`, or
+`error`, the default value is `info`.
 
 ## Grafana Metrics
 
