@@ -90,7 +90,7 @@ spec:
 
 ## Configuring PERSIA image
 
-PERSIA operator support to specify a image for modules, here is an example.
+PERSIA operator support to specify an image for modules, here is an example.
 
 ```yaml
 ...

@@ -101,7 +101,7 @@ Details of how to setup in various environments can be found in for example [doc
 |  Key   | Description  |
 |  ----  | ----  |
 | `lookup_mixed_batch_time_cost` | lookup embedding time cost on embedding server |
-| `num_pending_batches` | num batches already sent to embedding worker but still waiting for NN worker to trigger lookup. The pending batches will stored in forward buffer, which capacity is configurable by [`global_config.yaml`](https://github.com/PersiaML/tutorials/blob/docs/monitoring/src/configuring/index.md#embedding_worker_config). Once the buffer full, embedding worker may not accept new batches.|
+| `num_pending_batches` | num batches already sent to embedding worker but still waiting for NN worker to trigger lookup. The pending batches stored in forward buffer, which capacity is configurable by [`global_config.yaml`](https://github.com/PersiaML/tutorials/blob/docs/monitoring/src/configuring/index.md#embedding_worker_config). Once the buffer full, embedding worker may not accept new batches.|
 | `lookup_create_requests_time_cost` | lookup preprocess time cost on embedding worker. Include ID hashing, dividing id accroding feature groups and embedding servers.|
 | `lookup_rpc_time_cost` | lookup embedding time cost on embedding worker for a batch, include lookup on embedding server and network transmission. |
 | `update_gradient_time_cost` | update gradient time cost on embedding worker for a batch. |
