@@ -259,7 +259,7 @@ spec:
 more advanced features: See [kubernetes-integration](../kubernetes-integration/index.md)
 
 
-## Deployment for inference
+## Deploy Trained Model for inference
 
 see #Deployment for inference
 
