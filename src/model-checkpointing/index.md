@@ -24,7 +24,7 @@ with TrainCtx(
 
 Since PyTorch is used for defining the dense part, it can be used directly for saving the dense part, see [Saving and Loading Models](https://pytorch.org/tutorials/beginner/saving_loading_models.html).
 
-For the sparse part, you need to use PersiaML API to do model checkpointing.
+For the sparse part, you need to use PERSIA API to do model checkpointing.
 
 In a persia context, you can load or dump the sparse part checkpoint in a directory with the `load_embedding`, `dump_embedding` method:
 

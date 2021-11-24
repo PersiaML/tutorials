@@ -1,13 +1,13 @@
 Configuration
 ======
 
-In order to achieve the best performance on various training and inference jobs, PersiaML servers provide a handful of configuration options via two config files, a global configuration file usually named as `global_config.yaml`, and an embedding configuration file usually named as `embedding_config.yaml`. The global configuration allows one to define job type and general behaviors of servers, whereas embedding configuration provides definition of embedding details for individual sparse features.
+In order to achieve the best performance on various training and inference jobs, PERSIA servers provide a handful of configuration options via two config files, a global configuration file usually named as `global_config.yaml`, and an embedding configuration file usually named as `embedding_config.yaml`. The global configuration allows one to define job type and general behaviors of servers, whereas embedding configuration provides definition of embedding details for individual sparse features.
 
 
 
 ## Global Configuration
 
-Global configuration specifies the configuration of the current PersiaML job. The path to the global configuration file should be parsed as argument `--global-config` when launching embedding PS or embedding worker.
+Global configuration specifies the configuration of the current PERSIA job. The path to the global configuration file should be parsed as argument `--global-config` when launching embedding PS or embedding worker.
 
 Here is an example for `global_config.yaml`.
 
@@ -80,7 +80,7 @@ common_config:
 
 ## Embedding Config
 
-In addition to `global_config`, detailed settings related to sparse feature embeddings are provided in a separate embedding configuration file usually named `embedding_config.yaml`. The path to the embedding config file should be parsed as argument `--embedding-config` when running PersiaML servers.
+In addition to `global_config`, detailed settings related to sparse feature embeddings are provided in a separate embedding configuration file usually named `embedding_config.yaml`. The path to the embedding config file should be parsed as argument `--embedding-config` when running PERSIA servers.
 
 Here is an example for `embedding_config.yaml`.
 

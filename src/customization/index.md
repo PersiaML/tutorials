@@ -117,7 +117,7 @@ class DNN(nn.Module):
 ### Modify  Embedding Optimizer
 Here provide many sparse optimizers in `persia.embedding.optim` module.You can choose the suitable optimizer to adapt your requirement.
 
-### Customize PersiaML Training Context 
+### Customize PERSIA Training Context 
 Final step is create the training context to acquire dataloder and sparse embedding process
 
 _[train](https://github.com/PersiaML/PERSIA/blob/main/examples/src/getting_started/train.py)_
