@@ -43,7 +43,7 @@ To run a customized training task on your own dataset and models, we can customi
 
 To change the file name for these configuration files, we can remap the `embeddingConfigPath`, `globalConfigPath`, `nnWorkerPyEntryPath`, `dataLoaderPyEntryPath` in the Kubernetes PERSIA task definition file.
 
-For more details. See [Customization](../customize-a-persia-job/index.md)
+For more details. See [Customization](../customize-a-persia-job/index.md).
 
 ## Run Manually
 
