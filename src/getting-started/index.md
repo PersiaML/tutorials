@@ -24,6 +24,8 @@
 \$ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/resources/operator.persia.com.yaml
 ```
 
+TODO: make all bash code consistent (with or without `\$`)
+
 **Run**
 
 To run a simple example training task ([adult income prediction](https://archive.ics.uci.edu/ml/machine-learning-databases/adult/)), apply the following Kubernetes PERSIA task definition file:
