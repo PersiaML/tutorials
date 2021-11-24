@@ -24,7 +24,7 @@ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/reso
 kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/resources/operator.persia.com.yaml
 ```
 
-> **NOTE** It will take a few minutes to start the `operator` due to image pulling.
+> **NOTE** It will take a few minutes to start the `operator` due to container image pulling.
 
 **Run**
 
