@@ -3,9 +3,9 @@ Monitoring
 
 Monitoring and alerting is crucial for a distributed system, PERSIA provides integration with [Prometheus] for this purpose.
 
-Services in PerisaML push their metrics to a [PushGateway], the gateway then exposes these metrics to Prometheus.
+Services in PERSIA push their metrics to a [PushGateway], the gateway then exposes these metrics to Prometheus.
 
-## Step to enable metrics in PerisaML
+## Step to enable metrics in PERSIA
 
 1. Enable metrics in configuration
 
@@ -81,7 +81,7 @@ To collect metrics from the gateway, you need a prometheus service to do that fo
 
 Details of how to setup in various environments can be found in for example [docker_sd_config], [kubernetes_sd_config] or [dockerswarm_sd_config].
 
-## Metrics in PerisaML
+## Metrics in PERSIA
 
 1. Accuracy related
 

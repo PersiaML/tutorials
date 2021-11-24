@@ -5,7 +5,7 @@ To do inference for trained models, we need to deploy embedding worker, embeddin
 
 When a TorchServe inference server receives requests, it first looks up embeddings on PERSIA services, and then does the forward pass for the DNN part.
 
-[TorchServe] is a flexible framework for serving PyTorch models. In this page, we will introduce how to deploy a PerisaML model with it.
+[TorchServe] is a flexible framework for serving PyTorch models. In this page, we will introduce how to deploy a PERSIA model with it.
 
 In the following sections, we first introduce how to create a custom handler for TorchServe to query embeddings during inference. Next, we introduce how to save models during training and load models during inference. Then, we introduce how to deploy various services for inference. Finally, we introduce how to query the inference service to get the inference result.
 
@@ -57,7 +57,7 @@ class PersiaHandler(BaseHandler, ABC):
 
 ## 2. Save and load PERSIA model
 
-The sparse part and the dense part of a PerisaML model are saved separately.
+The sparse part and the dense part of a PERSIA model are saved separately.
 
 For the dense part, it is saved directly by PyTorch with [TorchScript]:
 
@@ -72,9 +72,9 @@ Then, to serve the dense part with TorchServe, use [torch-model-archiver] to pac
 torch-model-archiver --model-name you_model_name --version 1.0 --serialized-file /your/model/dir/you_model_name.pth --handler /your/model/dir/persia_handler.py
 ```
 
-Sparse model can be saved and loaded with PerisaML Python API, see [Model Checkpointing](../model-checkpointing/index.md) for details.
+Sparse model can be saved and loaded with PERSIA Python API, see [Model Checkpointing](../model-checkpointing/index.md) for details.
 
-## 3. Deploy PerisaML services and TorchServe
+## 3. Deploy PERSIA services and TorchServe
 
 TorchServe can be launched with:
 
