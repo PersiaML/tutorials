@@ -262,6 +262,6 @@ more advanced features: See [kubernetes-integration](../kubernetes-integration/i
 
 ## Deploy Trained Model for inference
 
-see #Deployment for inference  TODO: fix link
+See [Inference](../inference/index.md).
 
 
