@@ -16,14 +16,18 @@ We include up to 64 Nvidia V100 GPUs, and 100 CPU instances (each with 52 cores 
 
 ## End-to-end Performance
 
+<center>
 <img src="img/convergence.png" width="1200">
+</center>
 
 We see that the persia hybrid algorithm shows almost identical convergence when comparing with the fully synchronous mode. We see that test AUC gap between the hybrid mode and synchronous mode is always less than 0.1% in the three open-source benchmarks, and less than 0.001% in the production Kwai-video benchmark; by contrast, the gap between the asynchronous mode and the synchronous mode is much higher (from 0.5% to 1.0%); further, as we allow more aggressive asynchronicity in PaddlePaddle, the gap is more significant.
 
 
 ## Scalability: Number of Workers
 
+<center>
 <img src="img/scalability.png" width="1200">
+</center>
 
 Above figure illustrates significant performance improvements from Persia: e.g., for the Taobao-Ad benchmark, Persia is 7.12× and 8.4× faster than that of the synchronous and asynchronous modes of XDL, and 1.71× faster than PaddlePaddle–same level of speedup also appears in the Avazu-Ad and Criteo-Ad benchmark.
 
@@ -35,6 +39,8 @@ The intensive test of Persia’ capacity is conducted over Google cloud platform
 * 100 c2-standard-30 instances (each with 30 vCPUs, 120 GB RAM) as embedding workers;
 * 30 m2-ultramem-416 instances (each with 416 vCPUs, 12 TB RAM) as embedding PS.
 
+<center>
 <img src="img/model_scalability.png" width="600">
+</center>
 
 We see that Persia shows stable training throughput when increasing the model size even up to 100 trillion parameters. For the 100 trillion-parameter model, Persia also achieves 2.6× higher throughput than the fully synchronous mode.
