@@ -17,4 +17,4 @@
 
 # References
 
-* [Configuration Options References](./configuration/index.md)
+* [Configuration File References](./configuration/index.md)

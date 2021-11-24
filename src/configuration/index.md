@@ -1,4 +1,4 @@
-Configuration
+Configuration File References
 ======
 
 In order to achieve the best performance on various training and inference jobs, PERSIA servers provide a handful of configuration options via two config files, a global configuration file usually named as `global_config.yaml`, and an embedding configuration file usually named as `embedding_config.yaml`. The global configuration allows one to define job type and general behaviors of servers, whereas embedding configuration provides definition of embedding details for individual sparse features.
