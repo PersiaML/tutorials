@@ -194,6 +194,8 @@ The PERSIA Operator is a Kubernetes [custom resource definitions](https://kubern
 Here is an example for an operator file
 
 ```yaml
+# train.yaml
+
 apiVersion: persia.com/v1
 kind: PersiaJob
 metadata:
