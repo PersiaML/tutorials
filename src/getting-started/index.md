@@ -48,6 +48,7 @@ For more details. See [Customization](../customize-a-persia-job/index.md)
 ## Run Manually
 
 ### Using Docker-Compose
+TODO(wangyulong)
 
 **Requirements**
 
@@ -98,7 +99,7 @@ export PATH=/cargo/bin:/rust/bin:$PATH
 curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly -y --profile default --no-modify-path
 
 git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA 
-USE_CUDA=1 NATIVE=1 pip3 install persia
+USE_CUDA=1 NATIVE=1 pip3 install .
 ```
 
 **Run**

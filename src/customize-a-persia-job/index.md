@@ -21,9 +21,9 @@ TODO: keep order consistent with the following sections
 ## Training Data
 
 **PersiaBatch consists of three parts, contiguous data, categorical data and label data.**
-
+<center>
 <img src="./img/persia_batch_description.svg" width="80%" style="margin:auto">
-
+</center>
 TODO: make all naming consistent with paper
 
 ### Non-ID Type Features
@@ -56,10 +56,9 @@ Label data in PERSIA batch is a 2d `float32` tensor that support add the classif
 
 ### Customize Persia Batch Data
 
-_[data_loader](https://github.com/PersiaML/PERSIA/blob/main/examples/src/getting_started/data_loader.py)_
-```python (data_preprocessing.py)
+```python **data_preprocessing.py**
+# dataloader.py
 import numpy as np
-
 from persia.prelude import PyPersiaBatchData
 
 batch_data = PyPersiaBatchData()
@@ -184,7 +183,11 @@ more advanced features: See [Configuration](../configuration/index.md)
 
 ## Launcher configuration
 
-### docker compose launcher
+### Docker Compose Launcher
+TODO(wangyulong)
+
+### Honcho launcher
+TODO(wangyulong)
 
 ### k8s launcher
 
@@ -257,7 +260,6 @@ spec:
       cpu: "2" 
 ```
 more advanced features: See [kubernetes-integration](../kubernetes-integration/index.md)
-
 
 ## Deployment for inference
 
