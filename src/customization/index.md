@@ -1,6 +1,7 @@
-# Customize a PERSIA Job
+# Customization
 
-## TODO: workflow diagram
+Before we introduce how to customize a PERSIA training task, let's take a look at how PERSIA's different components work together.
+The training process can be summarized by the following figure:
 
 <center>
 <img src="img/persia_workflow.png" width="600">
@@ -9,12 +10,12 @@
 There are a few files you can customize in PERSIA:
 
 TODO: keep order consistent with the following sections
-1. data preprocessing file: xxx.py
-2. configuration file: xxxx.yml
-3. model definition: train.py
-4. ...
-5. TODO: Launcher configuration:
-    1. If you are using k8s, xxxx.yaml
+1. Data preprocessing configuration file: `data_loader.py`
+2. Model definition configuration file: `train.py`
+3. Embedding configuration file: `embedding_config.yaml`
+4. Embedding PS configuration file: `global_config.yaml`
+5. Launcher configuration:
+    1. If you are using k8s, `train.yaml`
     2. if you are using docker compose
     3. ...
 
@@ -54,7 +55,7 @@ _more advanced features: embedding_config_chapter.md_
 ### Labels
 Label data in PERSIA batch is a 2d `float32` tensor that support add the classification target and regression target.
 
-### Customize Persia Batch Data
+### Customize PERSIA Batch Data
 
 ```python **data_preprocessing.py**
 # dataloader.py
@@ -115,7 +116,7 @@ class DNN(nn.Module):
 ### Modify  Embedding Optimizer
 Here provide many sparse optimizers in `persia.embedding.optim` module.You can choose the suitable optimizer to adapt your requirement.
 
-### Customize PersiaML Training Context 
+### Customize PERSIA Training Context 
 Final step is create the training context to acquire dataloder and sparse embedding process
 
 _[train](https://github.com/PersiaML/PERSIA/blob/main/examples/src/getting_started/train.py)_
@@ -183,19 +184,15 @@ more advanced features: See [Configuration](../configuration/index.md)
 
 ## Launcher configuration
 
-### Docker Compose Launcher
-TODO(wangyulong)
-
-### Honcho launcher
-TODO(wangyulong)
-
 ### k8s launcher
 
-The Persia Operator is a Kubernetes [custom resource definitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/). You can define your distributed persia task by an operator file.
+The PERSIA Operator is a Kubernetes [custom resource definitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/). You can define your distributed persia task by an operator file.
 
 Here is an example for an operator file
 
 ```yaml
+# train.yaml
+
 apiVersion: persia.com/v1
 kind: PersiaJob
 metadata:
@@ -206,7 +203,7 @@ spec:
   globalConfigPath: /home/PersiaML/examples/src/getting_started/config/global_config.yml
   embeddingConfigPath: /home/PersiaML/examples/src/getting_started/config/embedding_config.yml
   nnWorkerPyEntryPath: /home/PersiaML/examples/src/getting_started/train.py
-  dataLoaderPyEntryPath: /home/PersiaML/examples/src/getting_started/data_compose.py
+  dataLoaderPyEntryPath: /home/PersiaML/examples/src/getting_started/data_loader.py
   env:
     - name: PERSIA_NATS_IP
       value: nats://persia-nats-service:4222
@@ -261,8 +258,23 @@ spec:
 ```
 more advanced features: See [kubernetes-integration](../kubernetes-integration/index.md)
 
-## Deployment for inference
+### Docker Compose Launcher
+TODO(wangyulong)
 
-see #Deployment for inference
+> **NOTE** These docker images used by docker-compose can be built from 
+> ```bash
+> git clone https://github.com/PersiaML/PERSIA.git
+> # docker image name: persiaml/persia-cuda-runtime:dev
+> cd PERSIA && IMAGE_TAG=dev make build_cuda_runtime_image -e
+> ```
+
+
+### Honcho launcher
+TODO(wangyulong)
+
+
+## Deploy Trained Model for inference
+
+See [Inference](../inference/index.md).
 
 

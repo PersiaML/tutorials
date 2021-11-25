@@ -1,21 +1,21 @@
-Deployment for Inference
+Inference
 ======
 
 To do inference for trained models, we need to deploy embedding worker, embedding parameter server, and [TorchServe] server.
 
 When a TorchServe inference server receives requests, it first looks up embeddings on PERSIA services, and then does the forward pass for the DNN part.
 
-[TorchServe] is a flexible framework for serving PyTorch models. In this page, we will introduce how to deploy a PerisaML model with it.
+[TorchServe] is a flexible framework for serving PyTorch models. In this page, we will introduce how to deploy a PERSIA model with it.
 
 In the following sections, we first introduce how to create a custom handler for TorchServe to query embeddings during inference. Next, we introduce how to save models during training and load models during inference. Then, we introduce how to deploy various services for inference. Finally, we introduce how to query the inference service to get the inference result.
 
-## 1. Create PersiaML handler for TorchServe
+## 1. Create PERSIA handler for TorchServe
 
 With TorchService, customized operations (like preprocess or postprocess) can be done with simple Python scripts, called [custom handler].
 
 There are ways to write custom handler, one of them is [custom-handler-with-class-level-entry-point].
 
-Here is an example to define a custom handler retrieving PersiaML embeddings:
+Here is an example to define a custom handler retrieving PERSIA embeddings:
 
 ```python
 from persia.ctx import InferCtx
@@ -55,9 +55,9 @@ class PersiaHandler(BaseHandler, ABC):
         return [data]
 ```
 
-## 2. Save and load PersiaML model
+## 2. Save and load PERSIA model
 
-The sparse part and the dense part of a PerisaML model are saved separately.
+The sparse part and the dense part of a PERSIA model are saved separately.
 
 For the dense part, it is saved directly by PyTorch with [TorchScript]:
 
@@ -72,9 +72,9 @@ Then, to serve the dense part with TorchServe, use [torch-model-archiver] to pac
 torch-model-archiver --model-name you_model_name --version 1.0 --serialized-file /your/model/dir/you_model_name.pth --handler /your/model/dir/persia_handler.py
 ```
 
-Sparse model can be saved and loaded with PerisaML Python API, see [Model Checkpointing](../model-checkpointing/index.md) for details.
+Sparse model can be saved and loaded with PERSIA Python API, see [Model Checkpointing](../model-checkpointing/index.md) for details.
 
-## 3. Deploy PerisaML services and TorchServe
+## 3. Deploy PERSIA services and TorchServe
 
 TorchServe can be launched with:
 
@@ -173,9 +173,9 @@ if __name__ == "__main__":
 
 ## 5. Model incremental update
 
-It is crucial to keep the model for inference up to date. For huge sparse models, PersiaML provides incremental updates, so that online prediction services only receives model differences during training to update the online model for inference. This dramatically reduces the model latency between training and inference.
+It is crucial to keep the model for inference up to date. For huge sparse models, PERSIA provides incremental updates, so that online prediction services only receives model differences during training to update the online model for inference. This dramatically reduces the model latency between training and inference.
 
-During training, an incremental update file will be dumped periodically. During inference, PersiaML services keep scanning a directory to find if there is a new incremental update file to load.
+During training, an incremental update file will be dumped periodically. During inference, PERSIA services keep scanning a directory to find if there is a new incremental update file to load.
 
 Relavant configurations in [`global_config.yaml`](https://github.com/PersiaML/tutorials/blob/docs/monitoring/src/configuring/index.md#global-config) are `enable_incremental_update`, `incremental_buffer_size` and `incremental_dir`.
 

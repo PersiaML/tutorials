@@ -18,32 +18,36 @@
 **Installation**
 
 ```bash
-\$ kubectl apply -f https://github.com/nats-io/nats-operator/releases/latest/download/00-prereqs.yaml
-\$ kubectl apply -f https://github.com/nats-io/nats-operator/releases/latest/download/10-deployment.yaml
-\$ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/resources/jobs.persia.com.yaml
-\$ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/resources/operator.persia.com.yaml
+kubectl apply -f https://github.com/nats-io/nats-operator/releases/latest/download/00-prereqs.yaml
+kubectl apply -f https://github.com/nats-io/nats-operator/releases/latest/download/10-deployment.yaml
+kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/resources/jobs.persia.com.yaml
+kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/resources/operator.persia.com.yaml
 ```
+
+> **NOTE** It will take a few minutes to start the `operator` due to container image pulling.
 
 **Run**
 
-To run a simple example training task ([adult income prediction](https://archive.ics.uci.edu/ml/machine-learning-databases/adult/)), apply the following Kubernetes PERSIA task definition file:
+To run a simple example training task ([adult income prediction](https://archive.ics.uci.edu/ml/datasets/census+income)), apply the following Kubernetes PERSIA task definition file:
 
 ```bash
-\$ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/example/adult-income-prediction.train.yml
+kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/example/adult-income-prediction.train.yml
 ```
 
 This runs the adult income prediction training task defined by `adult-income-prediction.train.yml`. This file defines the system configuration (e.g. resources limit, volume mounts, and environment variables) of a PERSIA training task.
 
 To run a customized training task on your own dataset and models, we can customize the following configuration files:
 
-- **Embedding configuration file:** A file defining the embedding configurations (e.g. embedding dimension, and sum pooling). This file is named as `embedding_config.yaml` by default. For more details see #embedding config. TODO: @zhuxuefeng fix this link
-- **Embedding PS configuration file:** Configuration of embedding parameter servers, e.g. max capacity of embedding parameter servers. This file is named as `global_config.yaml` by default. For more details see #global config. TODO: @zhuxuefeng fix this link
-- **Model definition configuration file:** A file that defines the neural network (NN) using PyTorch. This file is named as `train.py` by default. For more details see #model definition. TODO: @zhuxuefeng fix this link
-- **Data preprocessing configuration file:** A file that defines the data preprocessing. This file is named as `data_loader.py` by default. For more details see #train data. TODO: @zhuxuefeng fix this link
+- **Embedding configuration file:** A file defining the embedding configurations (e.g. embedding dimension, and sum pooling). This file is named as `embedding_config.yaml` by default. For more details see [embedding config](../configuration/index.md#embedding-config).
+- **Embedding PS configuration file:** Configuration of embedding parameter servers, e.g. max capacity of embedding parameter servers. This file is named as `global_config.yaml` by default. For more details see [global config](../configuration/index.md#global-configuration).
+- **Model definition configuration file:** A file that defines the neural network (NN) using PyTorch. This file is named as `train.py` by default. For more details see [model definition](../customization/index.md#model-definition).
+- **Data preprocessing configuration file:** A file that defines the data preprocessing. This file is named as `data_loader.py` by default. For more details see [train data](../customization/index.md#training-data).
 
-To change the file name for these configuration files, we can remap the `embeddingConfigPath`, `globalConfigPath`, `nnWorkerPyEntryPath`, `dataLoaderPyEntryPath` in the Kubernetes PERSIA task definition file.
-
-For more details. See [Customization](../customize-a-persia-job/index.md)
+To change the file name for these configuration files, we can remap the
+`embeddingConfigPath`, `globalConfigPath`, `nnWorkerPyEntryPath`,
+`dataLoaderPyEntryPath` in the Kubernetes PERSIA task definition file. For more
+details on how to customize Kubernetes PERSIA task definitions, see
+[Customization](../customization/index.md#k8s-launcher).
 
 ## Run Manually
 
@@ -54,15 +58,6 @@ TODO(wangyulong)
 
 * [docker](https://docs.docker.com/engine/install/ubuntu/)
 * [docker-compose](https://docs.docker.com/compose/)
-
-**Installation**
-
-> **NOTE** These docker images can be built from 
-> ```bash
-> git clone https://github.com/PersiaML/PERSIA.git
-> # docker image name: persiaml/persia-cuda-runtime:dev
-> cd PERSIA && IMAGE_TAG=dev make build_cuda_runtime_image -e
-> ```
 
 **Run**
 
@@ -75,12 +70,13 @@ EXAMPLE=getting_started make run -e
 ```
 
 ### Using Python Package
+TODO(wangyulong)
 
 **Requirements**
 
 * [PERSIA python package](https://pypi.org/project/persia/) 
 * [honcho](https://github.com/nickstenning/honcho) 
-* [nat-server](https://github.com/nats-io/nats-server/releases)
+* [nats-server release page](https://github.com/nats-io/nats-server/releases) or [installation page](https://docs.nats.io/running-a-nats-service/introduction/installation)
 
 **Using Pre-compiled Wheels**
 
@@ -88,10 +84,10 @@ TODO(wangyulong)
 
 **From Source**
 
-_ubuntu20.04_
-```bash
+For example on Ubuntu 20.04:
 
-apt update && apt-get install -y curl git python3 python3-dev python3-pip 
+```bash
+apt update && apt-get install -y curl build-essential git python3 python3-dev python3-pip 
 
 export RUSTUP_HOME=/rust
 export CARGO_HOME=/cargo
@@ -104,13 +100,14 @@ USE_CUDA=1 NATIVE=1 pip3 install .
 
 **Run**
 
-After installing PERSIA Python package locally, you can launch the example adult income prediction task by:
+After installing PERSIA Python package locally, you can launch the example adult income prediction task with:
 
 ```bash
-git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA/examples/honcho   # TODO: use dataset name for example dir
+ # TODO: use dataset name for example dir
+git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA/examples/honcho  
 EXAMPLE=getting_started make run -e
 ```
 
-## Deployment
+## Deploy Trained Model for Inference
 
-See [Deployment for Inference](../inference/index.md).
+See [Inference](../inference/index.md).

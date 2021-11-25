@@ -1,11 +1,11 @@
 Monitoring
 ======
 
-Monitoring and alerting is crucial for a distributed system, PersiaML provides integration with [Prometheus] for this purpose.
+Monitoring and alerting is crucial for a distributed system, PERSIA provides integration with [Prometheus] for this purpose.
 
-Services in PerisaML push their metrics to a [PushGateway], the gateway then exposes these metrics to Prometheus.
+Services in PERSIA push their metrics to a [PushGateway], the gateway then exposes these metrics to Prometheus.
 
-## Step to enable metrics in PerisaML
+## Step to enable metrics in PERSIA
 
 1. Enable metrics in configuration
 
@@ -23,7 +23,7 @@ PersiaMetricsConfig:
 
 See [official documentation](https://github.com/prometheus/pushgateway) for details. Here is an example for deploying gateway by [docker-compose].
 
-The default push address on PersiaML services is `metrics_gateway:9091`, which can be override by the environment variable `PERSIA_METRICS_GATEWAY_ADDR`.
+The default push address on PERSIA services is `metrics_gateway:9091`, which can be override by the environment variable `PERSIA_METRICS_GATEWAY_ADDR`.
 
 ```yaml
 version: "3.3"
@@ -81,7 +81,7 @@ To collect metrics from the gateway, you need a prometheus service to do that fo
 
 Details of how to setup in various environments can be found in for example [docker_sd_config], [kubernetes_sd_config] or [dockerswarm_sd_config].
 
-## Metrics in PerisaML
+## Metrics in PERSIA
 
 1. Accuracy related
 

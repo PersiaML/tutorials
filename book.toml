@@ -1,6 +1,6 @@
 [book]
 title = "PERSIA Tutorials"
-description = "Guide on how to use PersiaML, a large scale sparse model training framework"
+description = "Guide on how to use PERSIA, a large scale sparse model training framework"
 author = "Kuaishou AI Platform <admin@mail.xrlian.com>"
 
 [preprocessor.open-git-repo]
