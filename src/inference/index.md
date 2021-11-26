@@ -57,7 +57,7 @@ class PersiaHandler(BaseHandler, ABC):
 
 ## 2. Save and load PERSIA model
 
-The sparse part and the dense part of a PERSIA model are saved separately.
+The sparse part and the dense part of a PERSIA model should be saved separately when doing inference.
 
 For the dense part, it is saved directly by PyTorch with [TorchScript]:
 
