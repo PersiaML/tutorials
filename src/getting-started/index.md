@@ -51,8 +51,18 @@ details on how to customize Kubernetes PERSIA task definitions, see
 
 ## Run Manually
 
+To launch the PERSIA adult income task manually, the first step is to download the corresponding dataset and preprocess the train data and test data.We already prepare the script to help you finish this step.
+
+```bash
+git clone https://github.com/PersiaML/PERSIA.git
+cd examples/src/getting_started/data && ./prepare_data.sh
+```
+
+After download the adult income data.You can choose below launcher to start your first PERSIA task.
+
 ### Using Docker-Compose
-TODO(wangyulong)
+Docker-compose is a container manager tool that launch multiple service once time. By edit the `docker-compose.yml` file, you can configure the PERSIA training environment such as cuda-runtime-image or cpu-runtime-image, gpu_num, service_replica_num, etc. see docker-compose [configuration](../customization/index.md#docker-compose-launcher) for more detail.
+
 
 **Requirements**
 
@@ -64,23 +74,26 @@ TODO(wangyulong)
 We provide an adult income example `docker-compose.yml` file. Try below command to start your `PERSIA` task after install the `docker-compose` tools.
 
 ```bash
-git clone https://github.com/PersiaML/PERSIA.git
-cd PERSIA/examples/docker-compose
-EXAMPLE=getting_started make run -e
+cd examples/src/getting_started && make run
 ```
 
 ### Using Python Package
-TODO(wangyulong)
 
 **Requirements**
 
 * [PERSIA python package](https://pypi.org/project/persia/) 
 * [honcho](https://github.com/nickstenning/honcho) 
-* [nats-server release page](https://github.com/nats-io/nats-server/releases) or [installation page](https://docs.nats.io/running-a-nats-service/introduction/installation)
+* nats-server [release page](https://github.com/nats-io/nats-server/releases) or [installation page](https://docs.nats.io/running-a-nats-service/introduction/installation)
 
 **Using Pre-compiled Wheels**
 
-TODO(wangyulong)
+We provide pre-compiled wheels for linux platform.If your python3 version is greater than 3.6 and cuda version greater than cuda10.2.You can install the PERSIA package directly by specific cuda version. 
+
+```bash
+pip3 install persia-cuda102 # install cuda102
+pip3 install persia-cuda111 # install cuda111
+pip3 install persia-cuda113 # install cuda113
+```
 
 **From Source**
 

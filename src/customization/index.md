@@ -25,21 +25,14 @@ TODO: keep order consistent with the following sections
 <center>
 <img src="./img/persia_batch_description.svg" width="80%" style="margin:auto">
 </center>
-TODO: make all naming consistent with paper
-
-### Non-ID Type Features
-Non-ID Type Features is a tensor or vector that contains numerical data.For example the click_num, income, price, labor time or some numerical type data could be concat as the contiguous data and become a part of training data.
-
-In PERSIA batch data, contiguous data is alias as dense data.It is described as a 2d tensor with float datatype. 
-
 
 ### ID Type Features
-ID Type Features is a sparse tensor that contains variable length of discrete value. Such user_id, photo_id, client_id. There should at least exists categorical name and dimension to describe a categorical data. PERSIA parameter server will project the discrete value in categorical data to a vector and the dimension of vector is equal to the value you describe before.It is simple to add one categorical data in PERSIA, modify the embedding config file and add the categorical name and its dimension.Both `embedding-worker` and `embedding-parameter-server` will load the embedding config file to apply the categorical data configuration.
+ID Type Features is a sparse tensor that contains variable length of discrete value. Such user_id, photo_id, client_id. There should at least exists categorical name and dimension to describe a categorical data. PERSIA parameter server will project the discrete value in categorical data to a vector and the dimension of vector is equal to the value you describe before. It is simple to add one categorical data in PERSIA, modify the embedding config file and add the categorical name and its dimension.Both `embedding-worker` and `embedding-parameter-server` will load the embedding config file to apply the categorical data configuration.
 
 In below code, we define three categorical data.For each categorical data the requirement fields are category name and the embedding dimension.
 
-_[yaml_config](https://github.com/PersiaML/PERSIA/blob/main/examples/src/getting_started/config/embedding_config.yml)_
 ```yml
+# embedding_config.yml
 slot_configs:
   id:
     dim: 8
@@ -50,14 +43,25 @@ slot_configs:
     dim: 8
 ```
 
-_more advanced features: embedding_config_chapter.md_
+
+### Non-ID Type Features
+Non-ID type features is a tensor or vector that contains numerical data.For example the click_num, income, price, labor time or some numerical type data could be concat as the contiguous data and become a part of training data.
+
+In PERSIA batch data, non_id_type_features support the datatype that [pytorch](https://pytorch.org/docs/stable/tensors.html) support. You can add multiple non_id_type_feature with different datatype and different shape.For every one Non-ID type_feature your adding, you can concat multiple tensors as one tensor that have same datatype or for more readable reason to add the Non-ID type feature one by one.
+
+All Non-ID type
+```python
+import numpy as np
+
+
+```
 
 ### Labels
 Label data in PERSIA batch is a 2d `float32` tensor that support add the classification target and regression target.
 
 ### Customize PERSIA Batch Data
 
-```python **data_preprocessing.py**
+```python 
 # dataloader.py
 import numpy as np
 from persia.prelude import PyPersiaBatchData
@@ -94,9 +98,7 @@ batch_data.add_id_type_features(batch_categorical_data)
 batch_data.add_label(np.ones((1024, 2), dtype=np.float32))
 ```
 
-more advanced features: ...
-
-- advanced 1 (under construction)
+_more advanced features: [data_processing](../data-processing/index.md)_
 
 ## Model Definition
 
