@@ -47,7 +47,7 @@ To change the file name for these configuration files, we can remap the
 `embeddingConfigPath`, `globalConfigPath`, `nnWorkerPyEntryPath`,
 `dataLoaderPyEntryPath` in the Kubernetes PERSIA task definition file. For more
 details on how to customize Kubernetes PERSIA task definitions, see
-[Customization](../customization/index.md#k8s-launcher).
+[k8s launcher customization](../customization/index.md#k8s-launcher).
 
 ## Run Manually
 

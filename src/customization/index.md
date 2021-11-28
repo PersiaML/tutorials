@@ -4,7 +4,7 @@ Before we introduce how to customize a PERSIA training task, let's take a look a
 The training process can be summarized by the following figure:
 
 <center>
-<img src="img/persia_workflow.png" width="600">
+<img src="img/persia_workflow.png" width="1000">
 </center>
 
 There are a few files you can customize in PERSIA:
