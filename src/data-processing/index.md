@@ -1,5 +1,5 @@
 # Data Processing Advanced
-To adapt most of recommendation scene, the scene that data come from different way, different datatype and shape, PERSIA provide the `PersiaBatch` to resolve this problem.
+To adapt most recommendation scene, the scene that data come from different way, different datatype and shape, PERSIA provide the `PersiaBatch` to resolve this problem.
 
 It can receive the multiple datatype and dynamic shape of numerical data and 
 
@@ -10,7 +10,7 @@ ID type feature is the sparse 2d vector that define as the list of list with a f
 
 **Process the Fix length ID-Type-Feature**
 
-Almost all public recommendation dataset concat multiple id_type_features in one `numpy.array`.For each on of id_type_feature it have one id for each sample.Below code help you understand how to process such kind of dataset and add the id_type_feature into `PersiaBatch`.
+Almost all public recommendation dataset concat multiple id_type_features in one `numpy.array`.For each on of id_type_feature it have one ID for each sample.Below code help you understand how to process such kind of dataset and add the id_type_feature into `PersiaBatch`.
 
 ```python
 import numpy as np
@@ -45,7 +45,7 @@ persia_batch = PersiaBatch(id_type_features)
 
 **Process the Variable Length ID-Type-Feature**
 
-Variable length of id_type_feature is not usually show on public recommendation dataset but it is very important for the people when owns the huge amount of user interactive data especially for some huge Internet company.And this type of feature will be assigned the §max_variable_lengthed§ in most framework. It is hard to increase the id_type_feature length to inifinitly but always keep the training speed dropdown slightly.The id_type_feature can improve the DNN result significant as the §max_variable_length§ increase.Below code help you understand how to process id_type_feature which has the variable length.
+Variable length of id_type_feature is not usually show on public recommendation dataset, but it is very important for the people when owns the huge amount of user interactive data especially for some huge Internet company.And this type of feature will be assigned the §max_variable_lengthed§ in most framework. It is hard to increase the id_type_feature length to inifinitly but always keep the training speed dropdown slightly.The id_type_feature can improve the DNN result significant as the §max_variable_length§ increase.Below code help you understand how to process id_type_feature which has the variable length.
 
 ```python
 import numpy as np

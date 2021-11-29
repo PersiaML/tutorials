@@ -23,7 +23,7 @@ PersiaMetricsConfig:
 
 See [official documentation](https://github.com/prometheus/pushgateway) for details. Here is an example for deploying gateway by [docker-compose].
 
-The default push address on PERSIA services is `metrics_gateway:9091`, which can be override by the environment variable `PERSIA_METRICS_GATEWAY_ADDR`.
+The default push address on PERSIA services is `metrics_gateway:9091`, which can be overridden by the environment variable `PERSIA_METRICS_GATEWAY_ADDR`.
 
 ```yaml
 version: "3.3"

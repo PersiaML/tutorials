@@ -25,7 +25,7 @@ TrainCtx(
 ```
 ## Mixed Precision Training
 
-Notice that the mixed_precision feature in PERSIA training is only support on gpu nn_worker because of the feature is supported by `torch.amp`.And it only improve the speed of the dense model training and reduce the corresponding device memory cost.It won increase or reduce the data for the embedding.
+Notice that the mixed_precision feature in PERSIA training is only support on gpu nn_worker because of the feature is supported by `torch.amp`.And it only improves the speed of the dense model training and reduce the corresponding device memory cost.It won increase or reduce the data for the embedding.
 
 ## Distributed Option
 Distributed training in PERSIA is easy to configuration.We already integrated two distributed option for you to use.
