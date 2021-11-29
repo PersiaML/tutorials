@@ -62,7 +62,7 @@ spec:
 ...
 ```
 
-## Mount Volumes
+## Mounting Volumes
 
 Kubernetes supports many types of volumes (refer to [k8s doc](https://kubernetes.io/docs/concepts/storage/volumes/)), you can mount these volumes to your containers in a PERSIA job. Here is an example.
 
@@ -88,7 +88,7 @@ spec:
 ...
 ```
 
-## Configuring PERSIA image
+## Configuring PERSIA Image
 
 PERSIA operator support to specify an image for modules, here is an example.
 
@@ -106,7 +106,7 @@ spec:
 ...
 ```
 
-## Nats Operator
+## Configuring Nats Operator
 
 While starting a PERSIA training task, we usually need to start a nats service, which can be achieved through its [operator](https://github.com/nats-io/nats-operator). PERSIA transmits ID type feature through nats, so you need to ensure that its `maxPayload` is large enough. Please note that global environment variable `PERSIA_NATS_IP` should be set to `nats://your-nats-operator-name:4222`, e.g. `nats://persia-nats-service:4222` for the following example.
 

@@ -56,7 +56,7 @@ git clone https://github.com/PersiaML/PERSIA.git
 cd PERSIA/examples/src/adult-income/data && ./prepare_data.sh
 ```
 
-After download the adult income data.You can choose below launcher to start your first PERSIA task.
+After download the adult income data. You can choose below launcher to start your first PERSIA task.
 
 ### Using Docker-Compose
 Docker-compose is a container manager tool that launch multiple services at once time. By edit the `docker-compose.yml` file, you can configure the PERSIA training environment such as docker-image, gpu_num, service_replica_num, etc. see PERSIA docker-compose [configuration](../customization/index.md#docker-compose-launcher) for more detail.
