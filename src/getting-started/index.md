@@ -1,14 +1,12 @@
 # Getting Started
 
-<!-- - [Use Docker Images](#use-docker-images)
-    - [Using pre-built images](#using-pre-built-images)
-    - [Building the image locally](#building-the-image-locally)
-- [Install Manually](#install-manually)
-    - [Common Requirements](#common-requirements)
-    - [Install from Pip](#install-from-pip)
-    - [Install from source](#install-from-source) -->
 
-## Run on Kubernetes with PERSIA Operator (Recommended)
+- [Run on Kubernetes with PERSIA Operator(Recommended)](#run-on-kubernetes-with-persia-operator)
+- [Run Manually](#run-manually)
+    - [docker-compose](#using-docker-compose)
+    - [python-package](#using-python-package)
+
+## Run on Kubernetes with PERSIA Operator
 
 **Requirements**
 
@@ -55,13 +53,13 @@ To launch the PERSIA adult income task manually, the first step is to download t
 
 ```bash
 git clone https://github.com/PersiaML/PERSIA.git
-cd examples/src/adult-income/data && ./prepare_data.sh
+cd PERSIA/examples/src/adult-income/data && ./prepare_data.sh
 ```
 
 After download the adult income data.You can choose below launcher to start your first PERSIA task.
 
 ### Using Docker-Compose
-Docker-compose is a container manager tool that launch multiple service once time. By edit the `docker-compose.yml` file, you can configure the PERSIA training environment such as cuda-runtime-image or cpu-runtime-image, gpu_num, service_replica_num, etc. see docker-compose [configuration](../customization/index.md#docker-compose-launcher) for more detail.
+Docker-compose is a container manager tool that launch multiple services at once time. By edit the `docker-compose.yml` file, you can configure the PERSIA training environment such as docker-image, gpu_num, service_replica_num, etc. see PERSIA docker-compose [configuration](../customization/index.md#docker-compose-launcher) for more detail.
 
 
 **Requirements**
@@ -71,13 +69,15 @@ Docker-compose is a container manager tool that launch multiple service once tim
 
 **Run**
 
-We provide an adult income example `docker-compose.yml` file. Try below command to start your `PERSIA` task after install the `docker-compose` tools.
+We already provide the `docker-compose.yml` and `.docker.env` for adult income example. Try below command to start your `PERSIA` task after install the requirements.
 
 ```bash
 cd examples/src/adult-income && make run
 ```
 
 ### Using Python Package
+Using the PERSIA python package can help you improve development experience, you can explore the PERSIA docstring and modify the PERSIA python code to cover the debug requirement if currently log cannot satisfy your requirements.You can even to modify the PERSIA rust source code to contribute this project.
+
 
 **Requirements**
 
@@ -87,7 +87,7 @@ cd examples/src/adult-income && make run
 
 **Using Pre-compiled Wheels**
 
-We provide pre-compiled wheels for linux platform.If your python3 version is greater than 3.6 and cuda version greater than cuda10.2.You can install the PERSIA package directly by specific cuda version. 
+We provide pre-compiled wheels for linux platform.If your python version is greater than 3.6. You can install the PERSIA package with specific cuda version suffix. 
 
 ```bash
 pip3 install persia-cuda102 # install cuda102
@@ -97,7 +97,10 @@ pip3 install persia-cuda113 # install cuda113
 
 **From Source**
 
+If you wanna build PERSIA cuda version, you should specific the environment `USE_CUDA=1` to include the cuda dependency.And don't forget to add system cuda runtime path into **LD_LIBRARY_PATH**.
+
 For example on Ubuntu 20.04:
+
 
 ```bash
 apt update && apt-get install -y curl build-essential git python3 python3-dev python3-pip 
@@ -108,18 +111,27 @@ export PATH=/cargo/bin:/rust/bin:$PATH
 curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly -y --profile default --no-modify-path
 
 git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA 
+
+# for PERSIA cuda-version
 USE_CUDA=1 NATIVE=1 pip3 install .
+
+# for PERSIA cpu-version
+NATIVE=1 pip3 install .
 ```
+
+For Windows10:
+
+Python3 and Perl are required.Download the [perl](https://strawberryperl.com/) requirements to avoid build failure.But
 
 **Run**
 
 After installing PERSIA Python package locally, you can launch the example adult income prediction task with:
 
 ```bash
-git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA/examples/honcho  
-EXAMPLE=adult-income make run -e
+examples/src/adult-income
+honcho start -e .honcho.env
 ```
-
+For more Python package configuration can review this [chapter](../customization/index.md#honcho-launcher) for more detail.
 ## Deploy Trained Model for Inference
 
 See [Inference](../inference/index.md).

@@ -1,4 +1,6 @@
+
 # Customization
+
 
 Before we introduce how to customize a PERSIA training task, let's take a look at how PERSIA's different components work together.
 The training process can be summarized by the following figure:
@@ -18,6 +20,23 @@ TODO: keep order consistent with the following sections
     1. If you are using k8s, `k8s.train.yaml`
     2. If you are using docker compose
     3. If you are using honcho
+
+* [Training Data](#training-data)
+  * [Add ID Type Features](#id-type-features)
+  * [Add Non-ID Type Features](#non-id-type-features)
+  * [Add Labels](#Labels)
+  * [Customize PERSIA Batch Data](#customize-persia-batch-data)
+* [Model Definition](#model-definition)
+  * [Define DNN model](#define-dnn-model)
+  * [Define Embedding Optimizer](modify-embedding-optimizer)
+  * [Customize PERSIA Training Context](customize-persia-training-context)
+* [Configuring Embedding Worker](configuring-embedding-worker)
+* [Configuring Embedding Parameter Server](configuring-embedding-parameter-server)
+* [Launcher configuration](launcher-configuration)
+  * [K8s launcher](k8s-launcher)
+  * [Honcho Launcher](honcho-launcher)
+  * [Docker Compose Launcher](docker-compose-launcher)
+* [Deploy Trained Model for inference](deploy-trained-model-for-inference)
 
 ## Training Data
 
@@ -117,13 +136,12 @@ class DNN(nn.Module):
         ...
 ```
 
-### Modify  Embedding Optimizer
+### Modify Embedding Optimizer
 Here provide many sparse optimizers in `persia.embedding.optim` module.You can choose the suitable optimizer to adapt your requirement.
 
 ### Customize PERSIA Training Context 
 Final step is create the training context to acquire dataloder and sparse embedding process
 
-_[train](https://github.com/PersiaML/PERSIA/blob/main/examples/src/getting_started/train.py)_
 ```python
 # train.py
 
@@ -284,7 +302,7 @@ TODO(wangyulong)
 > ```
 
 
-### Honcho launcher
+### Honcho Launcher
 TODO(wangyulong)
 
 
