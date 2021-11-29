@@ -194,7 +194,7 @@ embedding_parameter_server_config:
   capacity: 1000000
 ```
 
-_more advanced features: See [Configuration](../configuration/index.md)_
+_more advanced features: See [Configuration](../configuration/index.md#global-configuration)_
 
 
 ## Launcher configuration
