@@ -55,7 +55,7 @@ To launch the PERSIA adult income task manually, the first step is to download t
 
 ```bash
 git clone https://github.com/PersiaML/PERSIA.git
-cd examples/src/getting_started/data && ./prepare_data.sh
+cd examples/src/adult-income/data && ./prepare_data.sh
 ```
 
 After download the adult income data.You can choose below launcher to start your first PERSIA task.
@@ -74,7 +74,7 @@ Docker-compose is a container manager tool that launch multiple service once tim
 We provide an adult income example `docker-compose.yml` file. Try below command to start your `PERSIA` task after install the `docker-compose` tools.
 
 ```bash
-cd examples/src/getting_started && make run
+cd examples/src/adult-income && make run
 ```
 
 ### Using Python Package
@@ -118,7 +118,7 @@ After installing PERSIA Python package locally, you can launch the example adult
 ```bash
  # TODO: use dataset name for example dir
 git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA/examples/honcho  
-EXAMPLE=getting_started make run -e
+EXAMPLE=adult-income make run -e
 ```
 
 ## Deploy Trained Model for Inference
