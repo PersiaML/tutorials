@@ -16,8 +16,8 @@ TODO: keep order consistent with the following sections
 4. Embedding PS configuration file: `global_config.yaml`
 5. Launcher configuration:
     1. If you are using k8s, `k8s.train.yaml`
-    2. If you are using docker compose
-    3. If you are using honcho
+    2. If you are using docker compose, TODO(wangyulong): file name
+    3. If you are using honcho, TODO(wangyulong): file name
 
 ## Training Data
 
@@ -46,14 +46,14 @@ slot_configs:
 
 
 ### Non-ID Type Features
-Non-ID type features is a tensor or vector that contains numerical data.For example the click_num, income, price, labor time or some numerical type data could be concat as the contiguous data and become a part of training data.
+Non-ID type features is a tensor or vector that contains numerical data. For example the click_num, income, price, labor time or some numerical type data could be concat as the contiguous data and become a part of training data.
 
-In PERSIA batch data, non_id_type_features support the datatype that [pytorch](https://pytorch.org/docs/stable/tensors.html) support. You can add multiple non_id_type_feature with different datatype and different shape.For every one Non-ID type_feature your adding, you can concat multiple tensors as one tensor that have same datatype or for more readable reason to add the Non-ID type feature one by one.
+In PERSIA batch data, non_id_type_features support the datatype that [pytorch](https://pytorch.org/docs/stable/tensors.html) support. You can add multiple non_id_type_feature with different datatype and different shape. For every one Non-ID type_feature your adding, you can concat multiple tensors as one tensor that have same datatype or for more readable reason to add the Non-ID type feature one by one.
 
 All Non-ID type
 ```python
 import numpy as np
-
+TODO(wangyulong): missing code
 
 ```
 
@@ -105,7 +105,7 @@ _more advanced features: [data_processing](../data-processing/index.md)_
 ## Model Definition
 
 ### Define DNN model
-For DNN model definition, you can design any model structure as you wanted.The only restriction is to set the DNN model forward function signature as below form.
+For DNN model definition, you can design any model structure as you wanted. The only restriction is to set the DNN model forward function signature as below form.
 
 ```python
 from typing import List
