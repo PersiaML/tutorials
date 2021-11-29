@@ -187,6 +187,7 @@ An embedding parameter server manages the storage and update of the embedding pa
 
 ```yaml
 # global_config.yaml
+
 common_config:
   job_type: Train
 embedding_parameter_server_config:
