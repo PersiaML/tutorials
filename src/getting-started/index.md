@@ -116,7 +116,6 @@ USE_CUDA=1 NATIVE=1 pip3 install .
 After installing PERSIA Python package locally, you can launch the example adult income prediction task with:
 
 ```bash
- # TODO: use dataset name for example dir
 git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA/examples/honcho  
 EXAMPLE=adult-income make run -e
 ```
