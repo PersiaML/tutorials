@@ -88,7 +88,7 @@ spec:
 ...
 ```
 
-## Configuring PERSIA image
+## Configuring PERSIA Image
 
 PERSIA operator support to specify an image for modules, here is an example.
 
