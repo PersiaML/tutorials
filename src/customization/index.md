@@ -15,7 +15,7 @@ TODO: keep order consistent with the following sections
 3. Embedding configuration file: `embedding_config.yaml`
 4. Embedding PS configuration file: `global_config.yaml`
 5. Launcher configuration:
-    1. If you are using k8s, `train.yaml`
+    1. If you are using k8s, `k8s.train.yaml`
     2. if you are using docker compose
     3. ...
 
@@ -62,7 +62,7 @@ Label data in PERSIA batch is a 2d `float32` tensor that support add the classif
 ### Customize PERSIA Batch Data
 
 ```python 
-# dataloader.py
+# data_loader.py
 import numpy as np
 from persia.prelude import PyPersiaBatchData
 
@@ -175,11 +175,19 @@ _more advanced features: [TrainCtx]("../training-context")_
 
 ## Configuring Embedding Worker
 
-An embedding worker runs asynchronous updating algorithm for getting the embedding parameters from the embedding parameter server; aggregating embedding vectors (potentially) and putting embedding gradients back to embedding parameter server. You can learn the details of the system design through 4.2 section in our [paper](https://arxiv.org/abs/2111.05897). Generally, you only need to adjust the number of instances and resources according to your workload.
+An embedding worker runs asynchronous updating algorithm for getting the embedding parameters from the embedding parameter server; aggregating embedding vectors (potentially) and putting embedding gradients back to embedding parameter server. You can learn the details of the system design through 4.2 section in our [paper](https://arxiv.org/abs/2111.05897). Generally, you only need to adjust the number of instances and resources according to your workload. See [k8s launcher](#k8s-launcher).
 
 ## Configuring Embedding Parameter Server
 
-An embedding parameter server manages the storage and update of the embedding parameters according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies. So you need to configure capacity of the LRU cache in the configuration file according to your workload and available memory size. In addition, the capacity means the max number of embedding vectors, not the number of parameters.
+An embedding parameter server manages the storage and update of the embedding parameters according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies. So you need to configure capacity of the LRU cache in the configuration file according to your workload and available memory size. In addition, the capacity means the max number of embedding vectors, not the number of parameters. Here is an example.
+
+```yaml
+# global_config.yaml
+common_config:
+  job_type: Train
+embedding_parameter_server_config:
+  capacity: 1000000
+```
 
 more advanced features: See [Configuration](../configuration/index.md)
 
@@ -193,7 +201,7 @@ The PERSIA Operator is a Kubernetes [custom resource definitions](https://kubern
 Here is an example for an operator file
 
 ```yaml
-# train.yaml
+# k8s.train.yaml
 
 apiVersion: persia.com/v1
 kind: PersiaJob
@@ -202,10 +210,10 @@ metadata:
   namespace: default  # k8s namespace to deploy to this job
 spec:
   # the following path are the path inside the container
-  globalConfigPath: /home/PersiaML/examples/src/getting_started/config/global_config.yml
-  embeddingConfigPath: /home/PersiaML/examples/src/getting_started/config/embedding_config.yml
-  nnWorkerPyEntryPath: /home/PersiaML/examples/src/getting_started/train.py
-  dataLoaderPyEntryPath: /home/PersiaML/examples/src/getting_started/data_loader.py
+  globalConfigPath: /home/PersiaML/examples/src/adult-income/config/global_config.yml
+  embeddingConfigPath: /home/PersiaML/examples/src/adult-income/config/embedding_config.yml
+  nnWorkerPyEntryPath: /home/PersiaML/examples/src/adult-income/train.py
+  dataLoaderPyEntryPath: /home/PersiaML/examples/src/adult-income/data_loader.py
   env:
     - name: PERSIA_NATS_IP
       value: nats://persia-nats-service:4222
