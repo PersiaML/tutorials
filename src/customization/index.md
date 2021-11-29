@@ -16,8 +16,8 @@ TODO: keep order consistent with the following sections
 4. Embedding PS configuration file: `global_config.yaml`
 5. Launcher configuration:
     1. If you are using k8s, `k8s.train.yaml`
-    2. if you are using docker compose
-    3. ...
+    2. If you are using docker compose
+    3. If you are using honcho
 
 ## Training Data
 
