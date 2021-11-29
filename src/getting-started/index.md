@@ -3,8 +3,8 @@
 
 - [Run on Kubernetes with PERSIA Operator(Recommended)](#run-on-kubernetes-with-persia-operator)
 - [Run Manually](#run-manually)
-    - [docker-compose](#using-docker-compose)
-    - [python-package](#using-python-package)
+    - [Docker Compose](#using-docker-compose)
+    - [Python Package](#using-python-package)
 
 ## Run on Kubernetes with PERSIA Operator
 
@@ -86,7 +86,7 @@ Using the PERSIA python package can help you improve development experience, you
 * nats-server [release page](https://github.com/nats-io/nats-server/releases) or [installation page](https://docs.nats.io/running-a-nats-service/introduction/installation)
 
 **Using Pre-compiled Wheels**
-
+ 
 We provide pre-compiled wheels for linux platform.If your python version is greater than 3.6. You can install the PERSIA package with specific cuda version suffix. 
 
 ```bash
@@ -121,7 +121,7 @@ NATIVE=1 pip3 install .
 
 For Windows10:
 
-Python3 and Perl are required.Download the [perl](https://strawberryperl.com/) requirements to avoid build failure.But
+Python3 and Perl are required.Download the [perl](https://strawberryperl.com/) requirements to avoid build failure.
 
 **Run**
 

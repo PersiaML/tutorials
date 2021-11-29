@@ -10,10 +10,9 @@ You can call `load_checkpoint` or `dump_checkpoint` in a persia context, both th
 ```python
 with TrainCtx(
     model=model,
-    sparse_optimizer=sparse_optimizer,
+    embedding_optimizer=embedding_optimizer,
     dense_optimizer=dense_optimizer,
     device_id=device_id,
-    embedding_config=embedding_config,
 ) as ctx:
     ctx.load_checkpoint(checkpoint_dir)
     if batch_idx % 10000 == 0:
@@ -31,10 +30,9 @@ In a persia context, you can load or dump the sparse part checkpoint in a direct
 ```python
 with TrainCtx(
     model=model,
-    sparse_optimizer=sparse_optimizer,
+    embedding_optimizer=embedding_optimizer,
     dense_optimizer=dense_optimizer,
     device_id=device_id,
-    embedding_config=embedding_config,
 ) as ctx:
     ctx.load_embedding(checkpoint_dir, True)
     if batch_idx % 10000 == 0:

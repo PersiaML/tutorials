@@ -24,19 +24,19 @@ TODO: keep order consistent with the following sections
 * [Training Data](#training-data)
   * [Add ID Type Features](#id-type-features)
   * [Add Non-ID Type Features](#non-id-type-features)
-  * [Add Labels](#Labels)
+  * [Add Labels](#labels)
   * [Customize PERSIA Batch Data](#customize-persia-batch-data)
 * [Model Definition](#model-definition)
   * [Define DNN model](#define-dnn-model)
-  * [Define Embedding Optimizer](modify-embedding-optimizer)
-  * [Customize PERSIA Training Context](customize-persia-training-context)
-* [Configuring Embedding Worker](configuring-embedding-worker)
-* [Configuring Embedding Parameter Server](configuring-embedding-parameter-server)
-* [Launcher configuration](launcher-configuration)
-  * [K8s launcher](k8s-launcher)
-  * [Honcho Launcher](honcho-launcher)
-  * [Docker Compose Launcher](docker-compose-launcher)
-* [Deploy Trained Model for inference](deploy-trained-model-for-inference)
+  * [Define Embedding Optimizer](#modify-embedding-optimizer)
+  * [Customize PERSIA Training Context](#customize-persia-training-context)
+* [Configuring Embedding Worker](#configuring-embedding-worker)
+* [Configuring Embedding Parameter Server](#configuring-embedding-parameter-server)
+* [Launcher configuration](#launcher-configuration)
+  * [K8s launcher](#k8s-launcher)
+  * [Honcho Launcher](#honcho-launcher)
+  * [Docker Compose Launcher](#docker-compose-launcher)
+* [Deploy Trained Model for inference](#deploy-trained-model-for-inference)
 
 ## Training Data
 
@@ -193,7 +193,7 @@ with TrainCtx(
 
 ```
 
-_more advanced features: [TrainCtx]("../training-context")_
+_more advanced features: [TrainCtx](../training-context/index.md)_
 
 ## Configuring Embedding Worker
 
