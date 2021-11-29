@@ -33,6 +33,7 @@ In below code, we define three categorical data.For each categorical data the re
 
 ```yml
 # embedding_config.yml
+
 slot_configs:
   id:
     dim: 8
@@ -63,6 +64,7 @@ Label data in PERSIA batch is a 2d `float32` tensor that support add the classif
 
 ```python 
 # data_loader.py
+
 import numpy as np
 from persia.prelude import PyPersiaBatchData
 
@@ -123,6 +125,8 @@ Final step is create the training context to acquire dataloder and sparse embedd
 
 _[train](https://github.com/PersiaML/PERSIA/blob/main/examples/src/getting_started/train.py)_
 ```python
+# train.py
+
 from torch import nn
 from torch.optim import SGD
 
