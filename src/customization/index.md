@@ -193,7 +193,7 @@ embedding_parameter_server_config:
   capacity: 1000000
 ```
 
-more advanced features: See [Configuration](../configuration/index.md)
+_more advanced features: See [Configuration](../configuration/index.md)_
 
 
 ## Launcher configuration
@@ -270,7 +270,7 @@ spec:
       memory: "8Gi"
       cpu: "2" 
 ```
-more advanced features: See [kubernetes-integration](../kubernetes-integration/index.md)
+_more advanced features: See [kubernetes-integration](../kubernetes-integration/index.md)_
 
 ### Docker Compose Launcher
 TODO(wangyulong)
