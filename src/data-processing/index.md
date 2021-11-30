@@ -4,14 +4,14 @@ To adapt most recommendation scene, the scene that data come from different way,
 
 <img src="./img/persia_batch_description.svg" width="100%">
 
-- [ID Type Features](#id-type-feature)
-    - [Processing the Variable length ID Type Feature](#processing-the-variable-length-id-type-feature)
-    - [Processing the one element length ID Type Feature](#processing-the-one-element-length-id-type-feature)
-- [Non-ID Type Feature and Label](#non-id-type-feature-and-label)
-- [Meta Data](#meta-info)
+- [Processing ID Type Features](#id-type-feature)
+    - [Variable Length ID Type Feature](#variable-length-id-type-feature)
+    - [One Element Length ID Type Feature](#processing-the-one-element-length-id-type-feature)
+- [Processing Non-ID Type Feature and Label](#non-id-type-feature-and-label)
+- [Processing Meta Data](#processing-meta-data)
 - [PersiaBatch Processing Integration Example](#persia-batch-processing-integration-example)
 
-## ID Type Feature
+## Processing ID Type Feature
 
 ID Type Features is a sparse tensor that contains variable length of discrete value. Such user_id, photo_id, client_id. There should at least exists categorical name and dimension to describe a categorical data. PERSIA parameter server will lookup the discrete `id`  to a vector and the dimension of vector is equal to the value you describe before. It is simple to add one categorical data in PERSIA, modify the embedding config file and add the categorical name and its dimension.Both `embedding-worker` and `embedding-parameter-server` will load the embedding config file to apply the categorical data configuration.
 
@@ -19,7 +19,7 @@ ID type feature is the sparse 2d vector that define as the list of list with a f
 
 `PersiaBatch` only accept  ID type feature with the `np.uint64` datatype.
 
-### Processing the Variable Length ID Type Feature
+### Variable Length ID Type Feature
 
 Variable length of id_type_feature is not usually show on public recommendation dataset, but it is very important for the people when owns the huge amount of user interactive data especially for some huge Internet company.And this type of feature will be assigned the §max_variable_lengthed§ in most framework. It is hard to increase the id_type_feature length to inifinitly but always keep the training speed dropdown slightly.The id_type_feature can improve the DNN result significant as the §max_variable_length§ increase.Below code help you understand how to process id_type_feature which has the variable length.
 
@@ -71,7 +71,7 @@ for id_type_feature_idx, id_type_feature_name in enumerate(id_type_feature_names
     id_type_features.append(IDTypeFeatureSparse(id_type_feature_name, id_type_feature))
 ```
 
-### Processing the One Element Length ID Type Feature
+### One Element Length ID Type Feature
 
 Almost all public recommendation dataset concat multiple id_type_features in one `numpy.array`.For every id_type_feature it have only one ID for each sample.Below code help you understand how to process such kind of dataset and add the id_type_feature into `PersiaBatch`.
 
@@ -138,7 +138,8 @@ labels.append(Label(np.ones((batch_size, 4), dtype=np.bool)))
 labels.append(Label(np.ones((batch_size), dtype=np.float32)))
 ```
 
-## Meta Data
+## Processing Meta Data
+
 `PersiaBatch` provide the meta field to store unstructured data, you can use serialize the object into bytes and add it into `PersiaBatch`.
 
 ```python
@@ -165,6 +166,7 @@ meta_pickle_bytes = pickle.dumps(meta_info)
 
 
 ## PersiaBatch Processing Integration Example
+
 We provide a integration example for you to understand how to generate a `PersiaBatch` from origin data.
 
 ```python 
