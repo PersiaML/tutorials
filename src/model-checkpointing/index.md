@@ -3,7 +3,7 @@ Model Checkpointing
 
 A PERSIA model contains two parts: the dense part and the sparse part (embeddings). A checkpoint contains both the dense part and the sparse part can be saved together through PERSIA api or manually saved separately.
 
-## Checkpointing together
+## Checkpointing Together
 
 You can call `load_checkpoint` or `dump_checkpoint` in a persia context, both the dense part and the sparse part will be saved into `checkpoint_dir`.The model will be saved to the local path by default, when the path start with `hdfs://`, it will be saved to hdfs path.
 
@@ -19,7 +19,7 @@ with TrainCtx(
         ctx.dump_checkpoint(checkpoint_dir)
 ```
 
-## Checkpointing separately
+## Checkpointing Separately
 
 Since PyTorch is used for defining the dense part, it can be used directly for saving the dense part, see [Saving and Loading Models](https://pytorch.org/tutorials/beginner/saving_loading_models.html).
 
