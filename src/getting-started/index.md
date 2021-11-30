@@ -121,7 +121,7 @@ NATIVE=1 pip3 install .
 
 For Windows10:
 
-Python3 and Perl are required.Download the [perl](https://strawberryperl.com/) requirements to avoid build failure.
+Python3 and Perl are required. Download the [perl](https://strawberryperl.com/) requirements to avoid build failure.
 
 **Run**
 
