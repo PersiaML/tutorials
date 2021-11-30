@@ -1,24 +1,25 @@
-# Data Processing Advanced
+# Data Processing
+
 To adapt most recommendation scene, the scene that data come from different way, different datatype and shape, PERSIA provide the `PersiaBatch` to resolve this problem.
 
 <img src="./img/persia_batch_description.svg" width="100%">
 
 - [ID Type Features](#id-type-feature)
-    - [Processing the Variable length ID Type Feature](#processing-the-variable-length-idtypefeature)
-    - [Processing the one element length ID Type Feature](#processing-the-one-element-length-idtypefeature)
+    - [Processing the Variable length ID Type Feature](#processing-the-variable-length-id-type-feature)
+    - [Processing the one element length ID Type Feature](#processing-the-one-element-length-id-type-feature)
 - [Non-ID Type Feature and Label](#non-id-type-feature-and-label)
 - [Meta Data](#meta-info)
 - [PersiaBatch Processing Integration Example](#persia-batch-processing-integration-example)
 
 ## ID Type Feature
 
-ID Type Features is a sparse tensor that contains variable length of discrete value. Such user_id, photo_id, client_id. There should at least exists categorical name and dimension to describe a categorical data. PERSIA parameter server will project the discrete value in categorical data to a vector and the dimension of vector is equal to the value you describe before. It is simple to add one categorical data in PERSIA, modify the embedding config file and add the categorical name and its dimension.Both `embedding-worker` and `embedding-parameter-server` will load the embedding config file to apply the categorical data configuration.
+ID Type Features is a sparse tensor that contains variable length of discrete value. Such user_id, photo_id, client_id. There should at least exists categorical name and dimension to describe a categorical data. PERSIA parameter server will lookup the discrete `id`  to a vector and the dimension of vector is equal to the value you describe before. It is simple to add one categorical data in PERSIA, modify the embedding config file and add the categorical name and its dimension.Both `embedding-worker` and `embedding-parameter-server` will load the embedding config file to apply the categorical data configuration.
 
 ID type feature is the sparse 2d vector that define as the list of list with a feature_name in PERSIA(`Tuple[str, List[List]]`) .Each sample in the id_type_feature can be variable length.
 
 `PersiaBatch` only accept  ID type feature with the `np.uint64` datatype.
 
-### Processing the Variable Length IDTypeFeature
+### Processing the Variable Length ID Type Feature
 
 Variable length of id_type_feature is not usually show on public recommendation dataset, but it is very important for the people when owns the huge amount of user interactive data especially for some huge Internet company.And this type of feature will be assigned the §max_variable_lengthed§ in most framework. It is hard to increase the id_type_feature length to inifinitly but always keep the training speed dropdown slightly.The id_type_feature can improve the DNN result significant as the §max_variable_length§ increase.Below code help you understand how to process id_type_feature which has the variable length.
 
@@ -70,9 +71,9 @@ for id_type_feature_idx, id_type_feature_name in enumerate(id_type_feature_names
     id_type_features.append(IDTypeFeatureSparse(id_type_feature_name, id_type_feature))
 ```
 
-### Processing the one element length IDTypeFeature
+### Processing the One Element Length ID Type Feature
 
-Almost all public recommendation dataset concat multiple id_type_features in one `numpy.array`.For each on of id_type_feature it have one ID for each sample.Below code help you understand how to process such kind of dataset and add the id_type_feature into `PersiaBatch`.
+Almost all public recommendation dataset concat multiple id_type_features in one `numpy.array`.For every id_type_feature it have only one ID for each sample.Below code help you understand how to process such kind of dataset and add the id_type_feature into `PersiaBatch`.
 
 ```python
 import numpy as np
