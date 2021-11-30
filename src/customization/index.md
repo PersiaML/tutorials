@@ -44,7 +44,7 @@ PersiaBatch consists of three parts, contiguous data, categorical data and label
 
 
 ### ID Type Feature
-IDTypeFeature contains variable length of categorical data.In PERSIA IDTypeFeature store the `List[np.array]` data that indeed is a list of list form of sparse matrix.And it only accept the `np.uint64` element.You can add the  user_id, photo_id.
+IDTypeFeature contains variable length of categorical data. In PERSIA IDTypeFeature store the `List[np.array]` data that indeed is a list of list form of sparse matrix. And it only accept the `np.uint64` element. You can add the `user_id`, `photo_id`.
 
 ```python
 import numpy as np
@@ -76,14 +76,14 @@ photo_id_batch_data = [
 id_type_features.append(IDTypeFeatureSparse(photo_id_batch_data, "photo_id"))
 ```
 
-After finish adding IDTypeFeature, you should add corresponding id_type_feature config in `embedding_config.yml`.Review [configuration](../configuration/index.md) chapter for more detail about how to config the id_type_feature, such as dim, sqrt_scaling, etc.
+After finish adding IDTypeFeature, you should add corresponding `id_type_feature` config in `embedding_config.yml`. Review [configuration](../configuration/index.md) chapter for more detail about how to config the `id_type_feature`, such as `dim`, `sqrt_scaling`, etc.
 
 _more advanced [id_type_feature processing](../data-processing/index.md#id-type-feature)_
 
 
 ### Non-ID Type Feature
 
-We can add multiple NonIDTypeFeature into `PersiaBatch` with various datatype.Concat multiple non_id_type_features with same datatype into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example you want to add height, income or even image data.
+We can add multiple NonIDTypeFeature into `PersiaBatch` with various datatype. Concat multiple `non_id_type_features` with same datatype into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example you want to add height, income or even image data.
 
 ```python
 import numpy as np
@@ -124,7 +124,7 @@ non_id_type_features.append(NonIDTypeFeature(income_batch_data, name="LSVR_image
 ```
 
 ### Label
-Label is as same as the NonIDTypeFeature, you can add different datatype label data such as click_or_not, income, etc.
+Adding label is as same as the NonIDTypeFeature, you can add different datatype label data such as `click_or_not`, `income`, etc.
 
 ```python
 import numpy as np
@@ -174,7 +174,7 @@ class DNN(nn.Module):
 ```
 
 ### Modify Embedding Optimizer
-Here provide many sparse optimizers in `persia.embedding.optim` module.You can choose the suitable optimizer to adapt your requirement.
+Here provide many sparse optimizers in `persia.embedding.optim` module. You can choose the suitable optimizer to adapt your requirement.
 
 ### Customize PERSIA Training Context 
 Final step is create the training context to acquire dataloder and sparse embedding process
@@ -257,7 +257,7 @@ For different user, we provide the different launcher to satisfy your requiremen
 
 - k8s launcher: Kubernetes launcher is easy to deploy large scale training. 
 - docker-compose launcher: Docker compose is the other way like `k8s` but is more lightweight.
-- honcho launcher: A Profile manager that need to build PERSIA in manually(Currently persia can build in linux, macos, windows10.). It is hard for inexperienced person to install the requirement.But is friendly to developer to develop and debug.
+- honcho launcher: A Profile manager that need to build PERSIA in manually(Currently persia can build in linux, macOS, windows10.). It is hard for inexperienced person to install the requirement. But is friendly to developer to develop and debug.
 
 ### K8s Launcher
 
@@ -458,11 +458,11 @@ services:
 ```
 
 ### Honcho Launcher
-Honcho launcher is suitable to test or debug PERSIA task in locally.You can simulating distributed environment for `data_loader` `embedding-worker` and `embedding-server` by editing the `Procfile` and `.honcho.env` file.But for `nn_worker` only support multiple-gpu training.
+Honcho launcher is suitable to test or debug PERSIA tasks in locally. You can simulate distributed environment for `data_loader` `embedding-worker` and `embedding-server` by editing the `Procfile` and `.honcho.env` file.But for `nn_worker` only support multiple-gpu training.
 
 **Configuring Env**
 
-There are some required fields that must be exists when launch the PERSIA task.
+There are some required fields that must exist when launch the PERSIA task.
 
 Required fields in `.honcho.env`
 
@@ -477,10 +477,10 @@ Optional fields in `.honcho.env`
 ```env
 # .honcho.env
 
-HONCHO=1 # required by persia.env to determined the rank
+HONCHO=1 # required by persia.env to determine the rank
 
-REPLICA_INDEX=0 # required by persia.env to determined the replica_index for data_loader
-REPLICA_SIZE=1 # required by persia.env to determined the replica_size for data_loader
+REPLICA_INDEX=0 # required by persia.env to determine the replica_index for data_loader
+REPLICA_SIZE=1 # required by persia.env to determine the replica_size for data_loader
 
 ENABLE_CUDA=0 # enable cuda or not
 NPROC_PER_NODE=1 # how many gpu or cpu core use in training
