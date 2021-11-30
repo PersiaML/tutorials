@@ -35,6 +35,7 @@ TODO: keep order consistent with the following sections
   * [K8s launcher](#k8s-launcher)
   * [Honcho Launcher](#honcho-launcher)
   * [Docker Compose Launcher](#docker-compose-launcher)
+* [Build PERSIA Runtime Image Locally](#biuld-persia-runtime-image-locally)
 * [Deploy Trained Model for inference](#deploy-trained-model-for-inference)
 
 ## Training Data
@@ -258,7 +259,7 @@ For different user, we provide the different launcher to satisfy your requiremen
 - docker-compose launcher: Docker compose is the other way like `k8s` but is more lightweight.
 - honcho launcher: A Profile manager that need to build PERSIA in manually(Currently persia can build in linux, macos, windows10.). It is hard for inexperienced person to install the requirement.But is friendly to developer to develop and debug.
 
-### k8s launcher
+### K8s Launcher
 
 The PERSIA Operator is a Kubernetes [custom resource definitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/). You can define your distributed persia task by an operator file.
 
@@ -456,16 +457,6 @@ services:
         target: /workspace
 ```
 
-**Build PERSIA runtime image locallly**
-
-> **NOTE** These docker images used by docker-compose can be built by Makefile command
-> ```bash
-> git clone https://github.com/PersiaML/PERSIA.git
-> # docker image name: persiaml/persia-cuda-runtime:dev
-> cd PERSIA && IMAGE_TAG=dev make build_cuda_runtime_image -e
-> ```
-
-
 ### Honcho Launcher
 Honcho launcher is suitable to test or debug PERSIA task in locally.You can simulating distributed environment for `data_loader` `embedding-worker` and `embedding-server` by editing the `Procfile` and `.honcho.env` file.But for `nn_worker` only support multiple-gpu training.
 
@@ -503,7 +494,7 @@ PERSIA_NATS_IP=nats://0.0.0.0:4222
 ```
 **Configuring Procfile**
 
-We can add the replica service as we want in `Procfile`. In below file  by adding `embedding_server{replica_num}` and `embedding_worker{replica_num}`
+We can add multiple replica service as we want in `Procfile`. In below file by adding `embedding_server{replica_num}` and `embedding_worker{replica_num}` there launch three `embedding-parameter-server` and two `embedding-worker` subprocesses.
 
 ```bash
 # Procfile
@@ -517,12 +508,24 @@ embedding_server0: persia-launcher embedding-parameter-server --embedding-config
 embedding_server1: persia-launcher embedding-parameter-server --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 1 --replica-size 3 --port 10001
 embedding_server2: persia-launcher embedding-parameter-server --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 2 --replica-size 3 --port 10002
 # launch two subprocess of embedding worker server
-embedding_worker1: persia-launcher embedding-worker --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 0 --replica-size 2 --port 90000
-embedding_worker2: persia-launcher embedding-worker --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 1 --replica-size 2 --port 90001
+embedding_worker1: persia-launcher embedding-worker --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 0 --replica-size 2 --port 9000
+embedding_worker2: persia-launcher embedding-worker --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 1 --replica-size 2 --port 9001
 # nats_server
 nats_server: nats-server 
 
 ```
+## Build PERSIA Runtime Image Locally
+
+Persia runtime image can biuld from locally to replace the dockerhub official version when you need to modify the source code.Both kubernetes and docker-compose can replace the original persia-runtime-image.
+
+Use below code to build persia-runtime-image by Makefile command.
+
+```bash
+git clone https://github.com/PersiaML/PERSIA.git
+# docker image name: persiaml/persia-cuda-runtime:dev
+cd PERSIA && IMAGE_TAG=dev make build_cuda_runtime_image -e
+```
+
 ## Deploy Trained Model for inference
 
 See [Inference](../inference/index.md).
