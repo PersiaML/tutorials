@@ -256,7 +256,7 @@ For different user, we provide the different launcher to satisfy your requiremen
 
 - k8s launcher: Kubernetes launcher is easy to deploy large scale training. 
 - docker-compose launcher: Docker compose is the other way like `k8s` but is more lightweight.
-- honcho launcher: A Profile manager that need to build PERSIA in manually(Currently persia can build in linux, macos, windows10.). It is hard for inexperienced person to install the requirement. But is friendly to developer to develop and debug.
+- honcho launcher: A Profile manager that need to build PERSIA in manually(Currently persia can build in linux, macOS, windows10.). It is hard for inexperienced person to install the requirement. But is friendly to developer to develop and debug.
 
 ### k8s launcher
 
@@ -467,11 +467,11 @@ services:
 
 
 ### Honcho Launcher
-Honcho launcher is suitable to test or debug PERSIA task in locally.You can simulating distributed environment for `data_loader` `embedding-worker` and `embedding-server` by editing the `Procfile` and `.honcho.env` file.But for `nn_worker` only support multiple-gpu training.
+Honcho launcher is suitable to test or debug PERSIA tasks in locally. You can simulate distributed environment for `data_loader` `embedding-worker` and `embedding-server` by editing the `Procfile` and `.honcho.env` file.But for `nn_worker` only support multiple-gpu training.
 
 **Configuring Env**
 
-There are some required fields that must be exists when launch the PERSIA task.
+There are some required fields that must exist when launch the PERSIA task.
 
 Required fields in `.honcho.env`
 
@@ -486,10 +486,10 @@ Optional fields in `.honcho.env`
 ```env
 # .honcho.env
 
-HONCHO=1 # required by persia.env to determined the rank
+HONCHO=1 # required by persia.env to determine the rank
 
-REPLICA_INDEX=0 # required by persia.env to determined the replica_index for data_loader
-REPLICA_SIZE=1 # required by persia.env to determined the replica_size for data_loader
+REPLICA_INDEX=0 # required by persia.env to determine the replica_index for data_loader
+REPLICA_SIZE=1 # required by persia.env to determine the replica_size for data_loader
 
 ENABLE_CUDA=0 # enable cuda or not
 NPROC_PER_NODE=1 # how many gpu or cpu core use in training
