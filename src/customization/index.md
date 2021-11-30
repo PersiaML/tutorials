@@ -18,8 +18,8 @@ TODO: keep order consistent with the following sections
 4. Embedding PS configuration file: `global_config.yaml`
 5. Launcher configuration:
     1. If you are using k8s, `k8s.train.yaml`
-    2. If you are using docker compose, TODO(wangyulong): file name
-    3. If you are using honcho, TODO(wangyulong): file name
+    2. If you are using docker compose, `docker-compose.yml` and `.docker.env`
+    3. If you are using honcho, `Procfile` and `.honcho.env`
 
 * [Training Data](#training-data)
   * [Add ID Type Features](#id-type-feature)
@@ -171,12 +171,26 @@ from typing import List
 import torch
 
 class DNN(nn.Module):
-    def forward(self, non_id_tensors: List[torch.Tensor], embedding_tensors: List[torch.Tensor]):
+    def forward(
+      self, 
+      non_id_type_feature_tensors: List[torch.Tensor],
+      id_type_feature_embedding_tensors: List[torch.Tensor]
+    ):
         ...
 ```
 
 ### Modify Embedding Optimizer
-Here provide many sparse optimizers in `persia.embedding.optim` module. You can choose the suitable optimizer to adapt your requirement.
+PERSIA provide the common embedding optimizer for Deep Learning scene.Review our [api doc](https://persiaml.pages.dev/main/autoapi/persia/embedding/optim/) to choose the suitable embedding optimizer for you training.
+
+```python
+from persia.embedding.optim import SGD, Adagrad, Adam
+from persia.ctx import TrainCtx
+
+lr = 1e-3
+sgd_embedding_optimizer = SGD(lr)
+adagrad_embedding_optimizer = Adagrad(lr)
+adam_embedding_optimizer = Adam(lr)
+```
 
 ### Customize PERSIA Training Context 
 Final step is create the training context to acquire dataloder and sparse embedding process
@@ -197,15 +211,9 @@ dataset = StreamDataset(prefetch_size)
 
 local_rank = get_local_rank()
 
-use_cuda = True
-if use_cuda:
-    device_id = get_local_rank()
-    torch.cuda.set_device(device_id)
-    model.cuda(device_id)
-    mixed_precision = True
-else:
-    mixed_precision = False
-    device_id = None
+device_id = get_local_rank()
+torch.cuda.set_device(device_id)
+model.cuda(device_id)
 
 # DNN parameters optimizer
 dense_optimizer = SGD(model.parameters(), lr=0.1)
@@ -219,7 +227,6 @@ with TrainCtx(
     embedding_optimizer=embedding_optimizer,
     dense_optimizer=dense_optimizer,
     device_id=device_id,
-    mixed_precision=mixed_precision
 ) as ctx:
 
     train_data_loader = Dataloader(dataset)
