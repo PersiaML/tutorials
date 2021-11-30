@@ -44,7 +44,9 @@ PersiaBatch consists of three parts, contiguous data, categorical data and label
 
 
 ### ID Type Feature
-IDTypeFeature contains variable length of categorical data. In PERSIA IDTypeFeature store the `List[np.array]` data that indeed is a list of list form of sparse matrix. And it only accept the `np.uint64` element. You can add the `user_id`, `photo_id`.
+IDTypeFeature contains variable length of categorical data. In PERSIA, IDTypeFeature store the `List[np.array]` data that is a list of list form of sparse matrix. And it only accept the `np.uint64` element. 
+
+For example, we adding user_id and photo_id data into IDTypeFeatureSparse.
 
 ```python
 import numpy as np
