@@ -75,7 +75,7 @@ photo_id_batch_data = [
 id_type_features.append(IDTypeFeatureSparse(photo_id_batch_data, "photo_id"))
 ```
 
-After finish adding IDTypeFeature, you should add corresponding `id_type_feature` config in `embedding_config.yml`. Review [configuration](../configuration/index.md) chapter for more detail about how to config the `id_type_feature`, such as `dim`, `sqrt_scaling` and etc.
+After finish adding IDTypeFeature, you should add corresponding `id_type_feature` config in `embedding_config.yml`. Review [configuration](../configuration/index.md) chapter for more detail about how to config the `id_type_feature`, such as `dim`, `sqrt_scaling`, etc.
 
 _more advanced [id_type_feature processing](../data-processing/index.md#id-type-feature)_
 
@@ -123,7 +123,7 @@ non_id_type_features.append(NonIDTypeFeature(income_batch_data, name="LSVR_image
 ```
 
 ### Label
-Adding label is as same as the NonIDTypeFeature, you can add different datatype label data such as `click_or_not`, `income` and etc.
+Adding label is as same as the NonIDTypeFeature, you can add different datatype label data such as `click_or_not`, `income`, etc.
 
 ```python
 import numpy as np
