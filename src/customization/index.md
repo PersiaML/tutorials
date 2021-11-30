@@ -254,9 +254,9 @@ _more advanced features: See [Configuration](../configuration/index.md#global-co
 ## Launcher configuration
 For different user, we provide the different launcher to satisfy your requirements.The below launcher can run the PERSIA task in different handy level.
 
-- k8s launcher: Kubernetes launcher is easy to deploy large scale training but it is hard to modify the source code.
-- docker-compose launcher: Docker compose is the other way like `k8s` but is more lightweight. It is easy to launch the multiple services but also hard to modify the source code.
-- honcho launcher: A Profile manager that need to build PERSIA in manually. It is hard for inexperienced person to install the requirement.But is friendly to developer to develop and debug.
+- k8s launcher: Kubernetes launcher is easy to deploy large scale training. 
+- docker-compose launcher: Docker compose is the other way like `k8s` but is more lightweight.
+- honcho launcher: A Profile manager that need to build PERSIA in manually(Currently persia can build in linux, macos, windows10.). It is hard for inexperienced person to install the requirement.But is friendly to developer to develop and debug.
 
 ### k8s launcher
 
@@ -346,6 +346,8 @@ Optional fields in `.docker.env`
 * `ENABLE_CUDA`: Use cuda or not
 
 ```env
+# .docker.env file
+
 DOCKER_COMPOSE=1
 
 ENABLE_CUDA=1
@@ -356,6 +358,7 @@ RUST_BACKTRACE=full
 ```
 
 **Configuring docker-compose File**
+
 Required fields in `docker-compose.yml`
 
 * `TASK_SLOT_ID`: This fields is required for all service in `docker-compose.yml`. The docker engine will use regex to extract docker slot_id into `TASK_SLOT_ID` and `persia.env` will read it as `REPLICA_INDEX`.
@@ -367,6 +370,8 @@ Optional fields in `docker-compose.yml`
 * `ENABLE_CUDA`: use cuda or not
 
 ```yaml
+# docker-compose.yml
+
 version: "3.2"
 services:
   persia_nats_service:
@@ -479,6 +484,8 @@ Optional fields in `.honcho.env`
 * `ENABLE_CUDA`: use cuda or not
 
 ```env
+# .honcho.env
+
 HONCHO=1 # required by persia.env to determined the rank
 
 REPLICA_INDEX=0 # required by persia.env to determined the replica_index for data_loader
@@ -499,9 +506,9 @@ PERSIA_NATS_IP=nats://0.0.0.0:4222
 We can add the replica service as we want in `Procfile`. In below file  by adding `embedding_server{replica_num}` and `embedding_worker{replica_num}`
 
 ```bash
-# Profile
+# Procfile
 
-# dataloader
+# data_loader
 data_loader: python3 data_loader.py && cat 
 # nn_worker
 nn_worker: persia-launcher nn-worker train.py --nproc-per-node=NPROC_PER_NODE --node-rank=0 --nnodes=1
