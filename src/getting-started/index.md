@@ -49,7 +49,7 @@ details on how to customize Kubernetes PERSIA task definitions, see
 
 ## Run Manually
 
-To launch the PERSIA adult income task manually, the first step is to download the corresponding dataset and preprocess the train data and test data.We already prepare the script to help you finish this step.
+To launch the PERSIA adult income task manually, the first step is to download the corresponding dataset and preprocess the train data and test data. We already prepare the script to help you finish this step.
 
 ```bash
 git clone https://github.com/PersiaML/PERSIA.git
@@ -76,7 +76,7 @@ cd examples/src/adult-income && make run
 ```
 
 ### Using Python Package
-Using the PERSIA python package can help you improve development experience, you can explore the PERSIA docstring and modify the PERSIA python code to cover the debug requirement if currently log cannot satisfy your requirements.You can even to modify the PERSIA rust source code to contribute this project.
+Using the PERSIA python package can help you improve development experience, you can explore the PERSIA docstring and modify the PERSIA python code to cover the debug requirement if currently log cannot satisfy your requirements. You can even to modify the PERSIA rust source code to contribute this project.
 
 
 **Requirements**
@@ -87,7 +87,7 @@ Using the PERSIA python package can help you improve development experience, you
 
 **Using Pre-compiled Wheels**
  
-We provide pre-compiled wheels for linux platform.If your python version is greater than 3.6. You can install the PERSIA package with specific cuda version suffix. 
+We provide pre-compiled wheels for linux platform. If your python version is greater than 3.6. You can install the PERSIA package with specific cuda version suffix. 
 
 ```bash
 pip3 install persia-cuda102 # install cuda102
@@ -97,7 +97,7 @@ pip3 install persia-cuda113 # install cuda113
 
 **From Source**
 
-If you wanna build PERSIA cuda version, you should specific the environment `USE_CUDA=1` to include the cuda dependency.And don't forget to add system cuda runtime path into **LD_LIBRARY_PATH**.
+If you wanna build PERSIA cuda version, you should specific the environment `USE_CUDA=1` to include the cuda dependency. And don't forget to add system cuda runtime path into **LD_LIBRARY_PATH**.
 
 For example on Ubuntu 20.04:
 
