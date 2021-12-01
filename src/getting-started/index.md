@@ -101,9 +101,11 @@ pip3 install persia-cuda113 # install cuda113
 
 **From Source**
 
-We provide the following script to build PERSIA Python packages from source on Ubuntu 20.04. It should be similar on other OSes.
+We provide the following instructions to build PERSIA Python packages from source (Ubuntu 20.04 & Windows 10. It should be similar on other OSes).
 
-> **Note**: You need to provide environment variable `USE_CUDA=1` to add CUDA support (for GPU training). In this case, the CUDA runtime path should be already present in **LD_LIBRARY_PATH**.
+> **Note**: You need to provide environment variable `USE_CUDA=1` to add CUDA support (for GPU training). In this case, the CUDA runtime path should be already present in `LD_LIBRARY_PATH`.
+
+**Ubuntu 20.04:**
 
 ```bash
 apt update && apt-get install -y curl build-essential git python3 python3-dev python3-pip 
@@ -122,19 +124,27 @@ USE_CUDA=1 NATIVE=1 pip3 install .
 NATIVE=1 pip3 install .
 ```
 
-For Windows10:
+**Windows 10:**
 
-Python3 and Perl are required. Download the [perl](https://strawberryperl.com/) requirements to avoid build failure.
+Python3 and [Perl](https://strawberryperl.com/) are required.
+
+TODO: @wangyulong
+
+```bash
+
+```
 
 **Run**
 
-After installing PERSIA Python package locally, you can launch the example adult income prediction task with:
+After installing PERSIA Python package locally, you can launch the example adult income prediction training task with:
 
 ```bash
-examples/src/adult-income
+cd examples/src/adult-income
 honcho start -e .honcho.env
 ```
-For more Python package configuration can review this [chapter](../customization/index.md#honcho-launcher) for more detail.
+
+For more configuration options see [Customization](../customization/index.md#honcho-launcher).
+
 ## Deploy Trained Model for Inference
 
 See [Inference](../inference/index.md).
