@@ -101,10 +101,9 @@ pip3 install persia-cuda113 # install cuda113
 
 **From Source**
 
-If you wanna build PERSIA cuda version, you should specific the environment `USE_CUDA=1` to include the cuda dependency. And don't forget to add system cuda runtime path into **LD_LIBRARY_PATH**.
+We provide the following script to build PERSIA Python packages from source on Ubuntu 20.04. It should be similar on other OSes.
 
-For example on Ubuntu 20.04:
-
+> **Note**: You need to provide environment variable `USE_CUDA=1` to add CUDA support (for GPU training). In this case, the CUDA runtime path should be already present in **LD_LIBRARY_PATH**.
 
 ```bash
 apt update && apt-get install -y curl build-essential git python3 python3-dev python3-pip 
