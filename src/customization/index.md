@@ -399,7 +399,7 @@ services:
       - nn_worker
       - embedding_worker
       - persia_nats_service
-    image: ${IMAGE_PREFIX}persia-cuda-runtime:${IMAGE_TAG}
+    image: \${IMAGE_PREFIX}persia-cuda-runtime:\${IMAGE_TAG}
     command: persia-launcher data-loader /workspace/data_loader.py
     volumes:
       - type: bind
@@ -418,8 +418,8 @@ services:
       NCCL_SOCKET_IFNAME: eth0
       CUBLAS_WORKSPACE_CONFIG: :4096:8
       REPLICAS: 1
-    image: ${IMAGE_PREFIX}persia-cuda-runtime:${IMAGE_TAG}
-    command: bash -c "persia-launcher nn-worker /workspace/train.py --nproc-per-node $$NPROC_PER_NODE --node-rank $$(($$TASK_SLOT_ID - 1)) --nnodes 1"
+    image: \${IMAGE_PREFIX}persia-cuda-runtime:\${IMAGE_TAG}
+    command: bash -c "persia-launcher nn-worker /workspace/train.py --nproc-per-node \$\$NPROC_PER_NODE --node-rank \$\$((\$\$TASK_SLOT_ID - 1)) --nnodes 1"
     volumes:
       - type: bind
         source: .
@@ -437,7 +437,7 @@ services:
       REPLICAS: 1
     depends_on:
       - server
-    image: ${IMAGE_PREFIX}persia-cuda-runtime:${IMAGE_TAG}
+    image: \${IMAGE_PREFIX}persia-cuda-runtime:\${IMAGE_TAG}
     command: persia-launcher embedding-worker --embedding-config /workspace/config/embedding_config.yml --global-config /workspace/config/global_config.yml
     deploy:
       replicas: 1
@@ -454,7 +454,7 @@ services:
     environment:
       TASK_SLOT_ID: "{{.Task.Slot}}"
       REPLICAS: 1
-    image: ${IMAGE_PREFIX}persia-cuda-runtime:${IMAGE_TAG}
+    image: \${IMAGE_PREFIX}persia-cuda-runtime:\${IMAGE_TAG}
     command: persia-launcher embedding-parameter-server --embedding-config /workspace/config/embedding_config.yml --global-config /workspace/config/global_config.yml
     deploy:
       replicas: 1

@@ -91,13 +91,11 @@ Alternatively, you can use PERSIA's Python packages directly to run a PERSIA tas
  
 We provide pre-compiled wheels for linux platform. If your Python version is greater than 3.6. You can install pre-compiled PERSIA packages with:
 
-TODO: use a table @wangyulong https://github.com/BaguaSys/bagua#installation
-
-```bash
-pip3 install persia-cuda102 # install cuda102
-pip3 install persia-cuda111 # install cuda111
-pip3 install persia-cuda113 # install cuda113
-```
+|CUDA Toolkit version|Installation command|
+|-|-|
+|>=v10.2|`pip3 install persia-cuda102`|
+|>=11.1|`pip3 install persia-cuda111`|
+|>=11.3|`pip3 install persia-cuda113`|
 
 **From Source**
 
@@ -128,10 +126,14 @@ NATIVE=1 pip3 install .
 
 Python3 and [Perl](https://strawberryperl.com/) are required.
 
-TODO: @wangyulong
-
 ```bash
+git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA 
 
+# To install CUDA version
+USE_CUDA=1 NATIVE=1 pip3 install .
+
+# To install CPU version
+NATIVE=1 pip3 install .
 ```
 
 **Run**
