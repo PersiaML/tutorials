@@ -362,9 +362,6 @@ DOCKER_COMPOSE=1
 
 ENABLE_CUDA=1
 NPROC_PER_NODE=1
-
-LOG_LEVEL=info
-RUST_BACKTRACE=full
 ```
 
 **Configuring docker-compose File**
@@ -399,7 +396,7 @@ services:
       - nn_worker
       - embedding_worker
       - persia_nats_service
-    image: \${IMAGE_PREFIX}persia-cuda-runtime:\${IMAGE_TAG}
+    image: persiaml/persia-cuda-runtime:latest
     command: persia-launcher data-loader /workspace/data_loader.py
     volumes:
       - type: bind
@@ -418,7 +415,7 @@ services:
       NCCL_SOCKET_IFNAME: eth0
       CUBLAS_WORKSPACE_CONFIG: :4096:8
       REPLICAS: 1
-    image: \${IMAGE_PREFIX}persia-cuda-runtime:\${IMAGE_TAG}
+    image: persiaml/persia-cuda-runtime:latest
     command: bash -c "persia-launcher nn-worker /workspace/train.py --nproc-per-node \$\$NPROC_PER_NODE --node-rank \$\$((\$\$TASK_SLOT_ID - 1)) --nnodes 1"
     volumes:
       - type: bind
@@ -437,7 +434,7 @@ services:
       REPLICAS: 1
     depends_on:
       - server
-    image: \${IMAGE_PREFIX}persia-cuda-runtime:\${IMAGE_TAG}
+    image: persiaml/persia-cuda-runtime:latest
     command: persia-launcher embedding-worker --embedding-config /workspace/config/embedding_config.yml --global-config /workspace/config/global_config.yml
     deploy:
       replicas: 1
@@ -454,7 +451,7 @@ services:
     environment:
       TASK_SLOT_ID: "{{.Task.Slot}}"
       REPLICAS: 1
-    image: \${IMAGE_PREFIX}persia-cuda-runtime:\${IMAGE_TAG}
+    image: persiaml/persia-cuda-runtime:latest
     command: persia-launcher embedding-parameter-server --embedding-config /workspace/config/embedding_config.yml --global-config /workspace/config/global_config.yml
     deploy:
       replicas: 1
@@ -493,9 +490,6 @@ REPLICA_SIZE=1 # required by persia.env to determine the replica_size for data_l
 
 ENABLE_CUDA=0 # enable cuda or not
 NPROC_PER_NODE=1 # how many gpu or cpu core use in training
-
-LOG_LEVEL=info # persia rust log_level
-RUST_BACKTRACE=full # rust backtrace
 
 # default nats_server ip address
 # set it 
