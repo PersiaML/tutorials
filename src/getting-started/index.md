@@ -85,7 +85,7 @@ Alternatively, you can use PERSIA's Python packages directly to run a PERSIA tas
 
 * [PERSIA python package](https://pypi.org/project/persia/) 
 * [honcho](https://github.com/nickstenning/honcho) 
-* nats-server [release page](https://github.com/nats-io/nats-server/releases) or [installation page](https://docs.nats.io/running-a-nats-service/introduction/installation)
+* [nats-server](https://docs.nats.io/running-a-nats-service/introduction/installation)
 
 **Using Pre-compiled Wheels**
  
