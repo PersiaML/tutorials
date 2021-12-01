@@ -59,8 +59,9 @@ cd PERSIA/examples/src/adult-income/data && ./prepare_data.sh
 After downloading the adult income dataset. You can choose from the following two methods to start your first PERSIA task.
 
 ### Using Docker-Compose
-[Docker-compose](https://docs.docker.com/compose/) is a container management tool that launch multiple services at once time. By edit the `docker-compose.yml` file, you can configure the PERSIA training environment such as `docker-image`, `gpu_num`, `service_replica_num`, etc. see PERSIA docker-compose [configuration](../customization/index.md#docker-compose-launcher) for more detail.
+[Docker-compose](https://docs.docker.com/compose/) is a container management tool that can launch multiple services at once. By editing the `docker-compose.yml` file, you can customize the PERSIA training task (such as `docker-image`, `gpu_num`, and `service_replica_num`). See PERSIA docker-compose [configuration](../customization/index.md#docker-compose-launcher) for more detail.
 
+TODO: fix content consistency @wangyulong
 
 **Requirements**
 
