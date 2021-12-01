@@ -115,10 +115,10 @@ curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly -y --profi
 
 git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA 
 
-# for PERSIA cuda-version
+# To install CUDA version
 USE_CUDA=1 NATIVE=1 pip3 install .
 
-# for PERSIA cpu-version
+# To install CPU version
 NATIVE=1 pip3 install .
 ```
 
