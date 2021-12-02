@@ -271,13 +271,18 @@ _more advanced features: See [Configuration](../configuration/index.md#global-co
 
 
 ## Launcher configuration
-For different user, we provide the different launcher to satisfy your requirements.The below launcher can run the PERSIA task in different handy level.
 
-- k8s launcher: Kubernetes launcher is easy to deploy large scale training. 
+There are launchers to help you launch a PERSIA training task.
+<!-- 
+We provide the different launcher to satisfy your requirements. The below launchers can run the PERSIA task in different handy level. -->
+
+- K8S launcher: Kubernetes launcher is easy to deploy large scale training. 
 - docker-compose launcher: Docker compose is the other way like `k8s` but is more lightweight.
 - honcho launcher: A Profile manager that need to build PERSIA in manually(Currently persia can build in linux, macOS, windows10.). It is hard for inexperienced person to install the requirement. But is friendly to developer to develop and debug.
 
-### K8s Launcher
+All of these launchers use environment variables(`PERSIA_GLOBAL_CONFIG`, `PERSIA_EMBEDDING_CONFIG`, `PERSIA_NN_WORKER_ENTRY`, `PERSIA_DATALOADER_ENTRY`) to assign the path of the PERSIA configuration files.
+
+### K8S Launcher
 
 The PERSIA Operator is a Kubernetes [custom resource definitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/). You can define your distributed persia task by an operator file.
 
@@ -292,8 +297,8 @@ metadata:
   name: adult-income  # persia job name, need to be globally unique
   namespace: default  # k8s namespace to deploy to this job
 spec:
+  # path of PERSIA configuration files.
   persiaEnv:
-    # the following path are the path inside the container
     PERSIA_GLOBAL_CONFIG: /home/PERSIA/examples/src/adult-income/config/global_config.yml
     PERSIA_EMBEDDING_CONFIG: /home/PERSIA/examples/src/adult-income/config/embedding_config.yml
     PERSIA_NN_WORKER_ENTRY: /home/PERSIA/examples/src/adult-income/train.py
@@ -355,6 +360,9 @@ spec:
 _more advanced features: See [kubernetes-integration](../kubernetes-integration/index.md)_
 
 ### Docker Compose Launcher
+
+TODO(wangyulong): add description
+
 Docker compose can use docker-image directly
 
 **Configuring ENV**
@@ -476,6 +484,7 @@ services:
 ```
 
 ### Honcho Launcher
+
 Honcho launcher is suitable to test or debug PERSIA tasks in locally. You can simulate distributed environment for `data_loader` `embedding-worker` and `embedding-server` by editing the `Procfile` and `.honcho.env` file.But for `nn_worker` only support multiple-gpu training.
 
 **Configuring Env**
