@@ -518,6 +518,7 @@ Optional fields in `.honcho.env`
 
 * `NPROC_PER_NODE`: number of processes per node to specify.
 * `ENABLE_CUDA`: use cuda or not.
+* `PERSIA_NATS_IP`: set this environment to 
 
 ```env
 # .honcho.env
@@ -529,9 +530,9 @@ REPLICA_SIZE=1 # required by PERSIA to determine the replica_size for data_loade
 
 ENABLE_CUDA=0 # enable cuda or not
 NPROC_PER_NODE=1 # number of processes per node to specify.
+ENABLE_CUDA=0 # enable cuda or not
 
 # default nats_server ip address
-# set it 
 PERSIA_NATS_IP=nats://0.0.0.0:4222 
 ```
 **Configuring Procfile**
@@ -542,7 +543,7 @@ We can add multiple replica service as we want in `Procfile`. In below file by a
 # Procfile
 
 # data_loader
-data_loader: python3 data_loader.py && cat 
+data_loader: REPLICA_SIZE=1 REPLICA_INDEX=0 python3 data_loader.py && cat 
 # nn_worker
 nn_worker: persia-launcher nn-worker train.py --nproc-per-node=NPROC_PER_NODE --node-rank=0 --nnodes=1
 # launch three subprocesses of embedding parameter server
