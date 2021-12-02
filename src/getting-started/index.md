@@ -65,7 +65,7 @@ Now you can start your first PERSIA training task with one of the following meth
 
 ### Using Docker-Compose
 
-[Docker-compose](https://docs.docker.com/compose/) is a container management tool that can launch multiple services at once. By editing the `docker-compose.yml` file, you can customize the PERSIA training task (such as `image`, `replicas`). See PERSIA docker-compose [configuration](../customization/index.md#docker-compose-launcher) for more details.
+[Docker-compose](https://docs.docker.com/compose/) is a tool for defining and running multi-container Docker applications. By editing the `docker-compose.yml` file, you can customize the PERSIA training task (such as `image`, `replicas`). See PERSIA docker-compose [configuration](../customization/index.md#docker-compose-launcher) for more details.
 
 TODO: fix content consistency @wangyulong
 
