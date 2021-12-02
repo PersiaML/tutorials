@@ -176,7 +176,6 @@ id_type_features = [
 persia_batch = PersiaBatch(
   id_type_features=id_type_features,
   requires_grad=False
-
 )
 
 with DataCtx() as ctx:
@@ -298,6 +297,7 @@ We provide the different launcher to satisfy your requirements. The below launch
 
 All of these launchers use environment variables(`PERSIA_GLOBAL_CONFIG`, `PERSIA_EMBEDDING_CONFIG`, `PERSIA_NN_WORKER_ENTRY`, `PERSIA_DATALOADER_ENTRY`) to assign the path of the PERSIA configuration files.
 
+
 ### K8S Launcher
 
 The PERSIA Operator is a Kubernetes [custom resource definitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/). You can define your distributed persia task by an operator file.
@@ -377,9 +377,7 @@ _more advanced features: See [kubernetes-integration](../kubernetes-integration/
 
 ### Docker Compose Launcher
 
-TODO(wangyulong): add description
-
-Docker compose can use docker-image directly
+We already prepare the `.docker.env` and `docker-compose.yml` files for you to launch PERSIA training task. Following below steps to update the PERSIA task.
 
 **Configuring ENV**
 Required fields in `.docker.env`
@@ -471,7 +469,7 @@ services:
     depends_on:
       - server
     image: persiaml/persia-cuda-runtime:latest
-    command: persia-launcher embedding-worker --embedding-config /workspace/config/embedding_config.yml --global-config /workspace/config/global_config.yml
+    command: persia-launcher embedding-worker --embedding-config /workspace/config/embedding_config.yml --global-config /workspace/config/global_config.yml 
     deploy:
       replicas: 1
       restart_policy:
