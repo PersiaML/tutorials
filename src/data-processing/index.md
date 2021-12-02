@@ -190,7 +190,7 @@ meta_pickle_bytes = pickle.dumps(meta_info)
 
 ## PersiaBatch Processing Integration Example
 
-We provide a integration example for you to understand how to generate a `PersiaBatch` from origin data.
+We provide an integration example for you to understand how to generate a `PersiaBatch` from origin data.
 
 ```python 
 import json
