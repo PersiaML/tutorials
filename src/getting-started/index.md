@@ -61,7 +61,7 @@ After downloading the adult income dataset. You can choose from the following tw
 
 ### Using Docker-Compose
 
-[Docker-compose](https://docs.docker.com/compose/) is a container management tool that can launch multiple services at once. By editing the `docker-compose.yml` file, you can customize the PERSIA training task (such as `docker-image`, `gpu_num`, and `service_replica_num`). See PERSIA docker-compose [configuration](../customization/index.md#docker-compose-launcher) for more detail.
+[Docker-compose](https://docs.docker.com/compose/) is a container management tool that can launch multiple services at once. By editing the `docker-compose.yml` file, you can customize the PERSIA training task (such as `image`, `replicas`). See PERSIA docker-compose [configuration](../customization/index.md#docker-compose-launcher) for more details.
 
 TODO: fix content consistency @wangyulong
 
@@ -94,6 +94,7 @@ We provide pre-compiled wheels for linux platform. If your Python version is gre
 
 |CUDA Toolkit version|Installation command|
 |-|-|
+|None|`pip3 install persia`|
 |>=v10.2|`pip3 install persia-cuda102`|
 |>=11.1|`pip3 install persia-cuda111`|
 |>=11.3|`pip3 install persia-cuda113`|
