@@ -261,11 +261,11 @@ _more advanced features: [TrainCtx](../training-context/index.md)_
 
 ## Configuring Embedding Worker
 
-An embedding worker runs asynchronous updating algorithm for getting the embedding parameters from the embedding parameter server; aggregating embedding vectors (potentially) and putting embedding gradients back to embedding parameter server. You can learn the details of the system design through 4.2 section in our [paper](https://arxiv.org/abs/2111.05897). Generally, you only need to adjust the number of instances and resources according to your workload. See [K8S launcher](#k8s-launcher).
+An embedding worker runs an asynchronous updating algorithm for getting the embedding parameters from the embedding parameter server; aggregating embedding vectors (potentially) and putting embedding gradients back to the embedding parameter server. You can learn the details of the system design through 4.2 section in our [paper](https://arxiv.org/abs/2111.05897). Generally, you only need to adjust the number of instances and resources according to your workload. See [K8S launcher](#k8s-launcher).
 
 ## Configuring Embedding Parameter Server
 
-An embedding parameter server manages the storage and update of the embedding parameters according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies. So you need to configure capacity of the LRU cache in the configuration file according to your workload and available memory size. In addition, the capacity means the max number of embedding vectors, not the number of parameters. Here is an example.
+An embedding parameter server manages the storage and update of the embedding parameters according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies. So you need to configure the capacity of the LRU cache in the configuration file according to your workload and available memory size. In addition, the capacity means the max number of embedding vectors, not the number of parameters. Here is an example.
 
 ```yaml
 # global_config.yaml
@@ -281,13 +281,11 @@ _more advanced features: See [Configuration](../configuration/index.md#global-co
 
 ## Launcher configuration
 
-There are launchers to help you launch a PERSIA training task.
-<!-- 
-We provide the different launcher to satisfy your requirements. The below launchers can run the PERSIA task in different handy level. -->
+There are several launchers to help you launch a PERSIA training task.
 
-- K8S launcher: Kubernetes launcher is easy to deploy large scale training.
-- docker-compose launcher: Docker compose is the other way like `K8S` but is more lightweight.
-- honcho launcher: A Procfile manager that need to build PERSIA in manually(Currently persia can build in linux, macOS, windows10.). It is hard for inexperienced ones to install the requirement. But is friendly for developers to develop and debug.
+- K8S launcher: Kubernetes launcher is easy to deploy large-scale training.
+- docker-compose launcher: Docker-compose is the other way like `K8S` but is more lightweight.
+- honcho launcher: A Procfile manager thats need to build PERSIA manually(Currently Persia can build in Linux, MacOS, Windows10.). It is hard for inexperienced ones to install the requirement. But is friendly for developers to develop and debug.
 
 All of these launchers use environment variables(`PERSIA_GLOBAL_CONFIG`, `PERSIA_EMBEDDING_CONFIG`, `PERSIA_NN_WORKER_ENTRY`, `PERSIA_DATALOADER_ENTRY`) to assign the path of the PERSIA configuration files.
 
@@ -371,19 +369,21 @@ _more advanced features: See [kubernetes-integration](../kubernetes-integration/
 
 ### Docker Compose Launcher
 
-We have prepared the `.docker.env` and `docker-compose.yml` files for you to launch PERSIA training task with docker compose. Following are steps to update the PERSIA task.
+We have prepared the `.docker.env` and `docker-compose.yml` files for you to launch the PERSIA training task with docker-compose. Following are steps to update the PERSIA task.
 
 **Configuring Environment**
 
-We can set [environment varialbes](https://docs.docker.com/compose/environment-variables/) 
+We can set PERSIA task environment variables following the Docker official [docs](https://docs.docker.com/compose/environment-variables/).
 
+The Environment definition:
 
-* `PERSIA_EMBEDDING_CONFIG`: persia embedding config path.
-* `PERSIA_GLOBAL_CONFIG`: persia global config path.
-* `LOG_LEVEL`: set log_level for `embedding-worker` and `embedding-parameter-server`.
+* `PERSIA_EMBEDDING_CONFIG`: PERSIA embedding config path.
+* `PERSIA_GLOBAL_CONFIG`: PERSIA global config path.
+* `LOG_LEVEL`: set log level for `embedding-worker` and `embedding-parameter-server`.
 
 ```env
 # .docker.env file
+
 PERSIA_EMBEDDING_CONFIG=/workspace/config/embedding_config.yml 
 PERSIA_GLOBAL_CONFIG=/workspace/config/global_config.yml.yml
 
