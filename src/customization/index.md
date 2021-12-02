@@ -411,7 +411,7 @@ Required fields in `docker-compose.yml`
 Optional fields in `docker-compose.yml`
 * `NPROC_PER_NODE`: number of processes per node to specify.
 * `REPLICA_NUM`: replica num for PERSIA modules.
-* `ENABLE_CUDA`: use cuda or not
+* `ENABLE_CUDA`: use cuda or not.
 
 ```yaml
 # docker-compose.yml
@@ -502,32 +502,33 @@ services:
 
 ### Honcho Launcher
 
-Honcho launcher is suitable to test or debug PERSIA tasks in locally. You can simulate distributed environment for `data_loader` `embedding-worker` and `embedding-server` by editing the `Procfile` and `.honcho.env` file.But for `nn_worker` only support multiple-gpu training.
+Honcho launcher is convenient for debug. You can simulate distributed environment by editing the `Procfile` and `.honcho.env` file.
 
 **Configuring Env**
 
-There are some required fields that must exist when launch the PERSIA task.
+There are fields when launch the PERSIA task:
 
 Required fields in `.honcho.env`
 
-* `HONCHO` must set to any value to ensure the PERSIA can know the task is launch by `honcho`
-* `REPLICA_INDEX`: replica_index for `persia.env`
-* `REPLICA_SIZE`: replica_size  for `persia.env`
+* `HONCHO` must set to `1`.
+* `REPLICA_INDEX`: `replica_index` for PERSIA modules.
+* `REPLICA_SIZE`: `replica_size`  for PERSIA modules.
 
 Optional fields in `.honcho.env`
-* `NPROC_PER_NODE`: how many gpu or cpu to use.Requires by `persia.launcher` and can manually set this value in bash command.
-* `ENABLE_CUDA`: use cuda or not
+
+* `NPROC_PER_NODE`: number of processes per node to specify.
+* `ENABLE_CUDA`: use cuda or not.
 
 ```env
 # .honcho.env
 
-HONCHO=1 # required by persia.env to determine the rank
+HONCHO=1 # required by PERSIA to determine the rank
 
-REPLICA_INDEX=0 # required by persia.env to determine the replica_index for data_loader
-REPLICA_SIZE=1 # required by persia.env to determine the replica_size for data_loader
+REPLICA_INDEX=0 # required by PERSIA to determine the replica_index for data_loader
+REPLICA_SIZE=1 # required by PERSIA to determine the replica_size for data_loader
 
 ENABLE_CUDA=0 # enable cuda or not
-NPROC_PER_NODE=1 # how many gpu or cpu core use in training
+NPROC_PER_NODE=1 # number of processes per node to specify.
 
 # default nats_server ip address
 # set it 
@@ -535,7 +536,7 @@ PERSIA_NATS_IP=nats://0.0.0.0:4222
 ```
 **Configuring Procfile**
 
-We can add multiple replica service as we want in `Procfile`. In below file by adding `embedding_server{replica_num}` and `embedding_worker{replica_num}` there launch three `embedding-parameter-server` and two `embedding-worker` subprocesses.
+We can add multiple replica service as we want in `Procfile`. In below file by adding `embedding_server{replica_num}` and `embedding_worker{replica_num}` there launch three `embedding-parameter-server` and two `embedding-worker` subprocesses. TODO(wnagyulong): fix
 
 ```bash
 # Procfile
