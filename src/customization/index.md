@@ -24,7 +24,7 @@ There are a few files you can customize in PERSIA:
   * [Add ID Type Features](#add-id-type-feature)
   * [Add Non-ID Type Features](#add-non-id-type-feature)
   * [Add Labels](#add-label)
-  * [Send PersiaBatch](#send-persia-batch)
+  * [Send PersiaBatch](#send-persiabatch)
 * [Model Definition](#model-definition)
   * [Define DNN model](#define-dnn-model)
   * [Define Embedding Optimizer](#modify-embedding-optimizer)
@@ -33,8 +33,8 @@ There are a few files you can customize in PERSIA:
 * [Configuring Embedding Parameter Server](#configuring-embedding-parameter-server)
 * [Launcher configuration](#launcher-configuration)
   * [K8s launcher](#k8s-launcher)
-  * [Honcho Launcher](#honcho-launcher)
   * [Docker Compose Launcher](#docker-compose-launcher)
+  * [Honcho Launcher](#honcho-launcher)
 * [Build PERSIA Runtime Image Locally](#biuld-persia-runtime-image-locally)
 * [Deploy Trained Model for inference](#deploy-trained-model-for-inference)
 
@@ -382,7 +382,7 @@ The Environment definition:
 * `LOG_LEVEL`: set log level for `embedding-worker` and `embedding-parameter-server`.
 
 ```env
-# .docker.env file
+# .docker.env
 
 PERSIA_EMBEDDING_CONFIG=/workspace/config/embedding_config.yml 
 PERSIA_GLOBAL_CONFIG=/workspace/config/global_config.yml.yml
@@ -392,19 +392,12 @@ LOG_LEVEL=info
 
 **Configuring docker-compose File**
 
-Required fields in `docker-compose.yml`
+You can adding multiple `data_loader`, `embedding_worker` and `embedding_parameter_server` services following the below configuration.
 
 ```yaml
-# docker-compose.yml
-
 version: "3.2"
 services:
-  persia_nats_service:
-    image: nats:latest
-    deploy:
-      replicas: 1
-          
-  data_loader:
+  data_loader1:
     env_file:
       - .docker.env
     depends_on:
@@ -412,70 +405,33 @@ services:
       - embedding_worker
       - persia_nats_service
     image: persiaml/persia-cuda-runtime:latest
-    command: persia-launcher data-loader /workspace/data_loader.py --replica-index 0 --replica-size 1
+    command: persia-launcher data-loader /workspace/data_loader.py --replica-index 0 --replica-size 2
     volumes:
       - type: bind
         source: . # mount current directory into container
         target: /workspace
     deploy:
-      replicas: 1
       restart_policy:
         condition: on-failure
 
-  nn_worker:
-    env_file:
-      - .docker.env
-    environment:
-      NCCL_SOCKET_IFNAME: eth0
-      CUBLAS_WORKSPACE_CONFIG: :4096:8
-      ENABLE_CUDA: 1
-    image: persiaml/persia-cuda-runtime:latest
-    command: persia-launcher nn-worker /workspace/train.py --nproc-per-node 1 --nnodes 1 --node-rank 0
-    volumes:
-      - type: bind
-        source: .
-        target: /workspace
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-
-  embedding_worker:
+  data_loader2:
     env_file:
       - .docker.env
     depends_on:
-      - server
+      - nn_worker
+      - embedding_worker
+      - persia_nats_service
     image: persiaml/persia-cuda-runtime:latest
-    command: >
-      bash -c "persia-launcher embedding-worker --embedding-config \$\$PERSIA_EMBEDDING_CONFIG 
-        --global-config \$\$PERSIA_GLOBAL_CONFIG 
-        --replica-index 0 --replica-size 1"
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
+    command: persia-launcher data-loader /workspace/data_loader.py --replica-index 1 --replica-size 2
     volumes:
       - type: bind
-        source: .
+        source: . # mount current directory into container
         target: /workspace
-
-  server:
-    env_file:
-      - .docker.env
-    image: persiaml/persia-cuda-runtime:latest
-    command: >
-      bash -c "persia-launcher embedding_parameter_server --embedding-config \$\$PERSIA_EMBEDDING_CONFIG 
-        --global-config \$\$PERSIA_GLOBAL_CONFIG 
-        --replica-index 0 --replica-size 1"
     deploy:
-      replicas: 1
       restart_policy:
         condition: on-failure
-    volumes:
-      - type: bind
-        source: .
-        target: /workspace
 ```
+> **NOTE:** You can also use the `replcias` keyword in docker-compose swarm mode to launch multiple services once. But there need to parse the [.TASK.SLOT](https://docs.docker.com/engine/reference/commandline/service_create/#create-services-using-templates) into `replcia_index` and feed it to `data-loader`.
 
 ### Honcho Launcher
 
@@ -490,7 +446,6 @@ Required fields in `.honcho.env`
 * `PERSIA_NATS_IP`: set for nats-server ip address.
 * `LOG_LEVEL`: set log_level for `embedding-worker` and `embedding-parameter-server`.
 
-
 ```env
 # .honcho.env
 # default nats_server ip address
@@ -500,32 +455,22 @@ LOG_LEVEL=info
 ```
 **Configuring Procfile**
 
-You can add multiple replica of PERSIA modules as you want in `Procfile`.
-For example, by adding `embedding_server{replica_num}` and `embedding_worker{replica_num}`, you can launch three `embedding-parameter-server` and two `embedding-worker` subprocesses.
+You can add multiple replicas of PERSIA modules as you want in `Procfile`.
+For example, by adding `embedding_parameter_server0`, `embedding_parameter_server1` and `embedding_parameter_server2`, you can launch three subprocess of `embedding_parameter_server` in different web server port.And it is the same for `data_laoder` and `embedding_worker`.
 
 ```bash
 # Procfile
 
-# data_loader
-data_loader: persia-launcher data-loader data_loader.py --replica-index 0 --replica-size 1 && cat 
-# nn_worker
-nn_worker: persia-launcher nn-worker train.py --nproc-per-node=1 --node-rank=0 --nnodes=1
 # launch three subprocesses of embedding parameter server
-embedding_server0: persia-launcher embedding-parameter-server --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 0 --replica-size 3 --port 10000
-embedding_server1: persia-launcher embedding-parameter-server --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 1 --replica-size 3 --port 10001
-embedding_server2: persia-launcher embedding-parameter-server --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 2 --replica-size 3 --port 10002
-# launch two subprocess of embedding worker server
-embedding_worker1: persia-launcher embedding-worker --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 0 --replica-size 2 --port 9000
-embedding_worker2: persia-launcher embedding-worker --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 1 --replica-size 2 --port 9001
-# nats_server
-nats_server: nats-server 
-
+embedding_parameter_server0: persia-launcher embedding-parameter-server --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 0 --replica-size 3 --port 10000
+embedding_parameter_server1: persia-launcher embedding-parameter-server --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 1 --replica-size 3 --port 10001
+embedding_parameter_server2: persia-launcher embedding-parameter-server --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 2 --replica-size 3 --port 10002
 ```
 ## Build PERSIA Runtime Image Locally
 
-PERSIA runtime image can be built from local. You can use your customized docker image to launch a PERSIA training task by both kubernetes and docker-compose.
+PERSIA runtime image can be built from local. You can use your customized docker image to launch a PERSIA training task by both Kubernetes and docker-compose.
 
-Use following instructions to build persia-runtime-image:
+Use the following instructions to build persia-runtime-image:
 
 ```bash
 git clone https://github.com/PersiaML/PERSIA.git

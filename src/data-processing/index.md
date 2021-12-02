@@ -21,7 +21,6 @@ In addition, `PersiaBatch` only accepts  `IDTypeFeature` or `IDTypeFeatureWithSi
 
 ### ID Type Feature with Variable Length
 
-
 It is hard to increase the id_type_feature length to inifinitly but always keep the training speed dropdown slightly.The id_type_feature can improve the DNN result significant as the §max_variable_length§ increase.Below code help you understand how to process id_type_feature which has the variable length.
 
 ```python
@@ -79,9 +78,9 @@ for id_type_feature_idx, id_type_feature_name in enumerate(id_type_feature_names
     )
 ```
 
-### ID Type Feature with One Element Sample
+### ID Type Feature with Single ID
 
-Almost all public recommendation dataset concat multiple id_type_features in one `numpy.array`. For every id_type_feature it have only one ID for each sample.Below code help you understand how to process such kind of dataset and add the id_type_feature into `PersiaBatch`.
+Almost all public recommendation datasets concat multiple id_type_features in one `numpy.array`. This kind of id_type_feature has only one ID for each sample. The below code helps you understand how to process such a kind of dataset and add the id_type_feature into `PersiaBatch`.
 
 ```python
 import numpy as np
@@ -102,23 +101,24 @@ id_type_feature_data = np.array([
 ], dtype=np.uint64)
 
 batch_size = 5
+start = 0
 id_type_features = []
 
 for id_type_feature_idx, id_type_feature_name in enumerate(id_type_feature_names):
     id_type_feature = []
-    for batch_idx in range(batch_size):
-        id_type_feature.append(
-            id_type_feature_data[batch_idx: batch_idx + 1, id_type_feature_idx].reshape(-1)
+    id_type_features.append(
+        IDTypeFeatureWithSingleID(
+            id_type_feature_name, 
+            id_type_feature_data[start: start + batch_size,id_type_feature_idx]
         )
-    id_type_features.append(IDTypeFeatureWithSingleID(id_type_feature_name, id_type_feature))
+    )
 ```
 
 
 
 ## Non-ID Type Feature and Label
 
-Non-ID type features and Labels are tensors with various data type and shape who has the same batch size with `id_type_feature` in a `PersiaBatch`.
-<!-- You can use any type of data in `non_id_type_features`, as long as it is supported by [pytorch](https://pytorch.org/docs/stable/tensors.html). -->
+Non-ID type features and Labels are tensors with various data type and shape that has the same batch size with `id_type_feature` in a `PersiaBatch`.
 
 <!-- Non-ID type features and Labels can be variable datatype and shape. The restrictions to them is to check the datatype support or not and the batch_size is same as id_type_feature or not.Below code help you understand adding these two type of data. -->
 
@@ -171,7 +171,7 @@ labels.append(Label(np.ones((batch_size), dtype=np.float32)))
 
 ## Processing Meta Data
 
-`PersiaBatch` provide the meta field to store unstructured data, you can use serialize the object into bytes and add it into `PersiaBatch`.
+`PersiaBatch` provides the meta field to store unstructured data. You can serialize the object into bytes and add it into `PersiaBatch`.
 
 ```python
 import json
@@ -206,7 +206,7 @@ PersiaBatch(
 
 <!-- We provide an integration example for you to understand how to generate a `PersiaBatch` from origin data. -->
 
-Here is an example about how to generate a `PersiaBatch` from raw data:
+Here is an example of how to generate a `PersiaBatch` from raw data:
 
 ```python 
 import json
