@@ -394,9 +394,6 @@ Optional fields in `.docker.env`
 
 ```env
 # .docker.env file
-
-DOCKER_COMPOSE=1
-
 ENABLE_CUDA=1
 NPROC_PER_NODE=1
 ```
@@ -409,8 +406,6 @@ Required fields in `docker-compose.yml`
 * `REPLICAS`: This fields is required for all service in `docker-compose.yml`. PERSIA will read it as `REPLICA_SIZE`.
 
 Optional fields in `docker-compose.yml`
-* `NPROC_PER_NODE`: number of processes per node to specify.
-* `REPLICA_NUM`: replica num for PERSIA modules.
 * `ENABLE_CUDA`: use cuda or not
 
 ```yaml
@@ -426,9 +421,6 @@ services:
   data_loader:
     env_file:
       - .docker.env
-    environment:
-        TASK_SLOT_ID: "{{.Task.Slot}}"
-        REPLICAS: 1
     depends_on:
       - nn_worker
       - embedding_worker
@@ -448,12 +440,10 @@ services:
     env_file:
       - .docker.env
     environment:
-      TASK_SLOT_ID: "{{.Task.Slot}}"
       NCCL_SOCKET_IFNAME: eth0
       CUBLAS_WORKSPACE_CONFIG: :4096:8
-      REPLICAS: 1
     image: persiaml/persia-cuda-runtime:latest
-    command: bash -c "persia-launcher nn-worker /workspace/train.py --nproc-per-node \$\$NPROC_PER_NODE --node-rank \$\$((\$\$TASK_SLOT_ID - 1)) --nnodes 1"
+    command: persia-launcher nn-worker /workspace/train.py
     volumes:
       - type: bind
         source: .
@@ -466,13 +456,10 @@ services:
   embedding_worker:
     env_file:
       - .docker.env
-    environment:
-      TASK_SLOT_ID: "{{.Task.Slot}}" 
-      REPLICAS: 1
     depends_on:
       - server
     image: persiaml/persia-cuda-runtime:latest
-    command: persia-launcher embedding-worker --embedding-config /workspace/config/embedding_config.yml --global-config /workspace/config/global_config.yml 
+    command: persia-launcher embedding-worker --embedding-config $$PERSIA_EMBEDDING_CONFIG --global-config $$PERSIA_GLOBAL_CONFIG
     deploy:
       replicas: 1
       restart_policy:
@@ -485,11 +472,8 @@ services:
   server:
     env_file:
       - .docker.env
-    environment:
-      TASK_SLOT_ID: "{{.Task.Slot}}"
-      REPLICAS: 1
     image: persiaml/persia-cuda-runtime:latest
-    command: persia-launcher embedding-parameter-server --embedding-config /workspace/config/embedding_config.yml --global-config /workspace/config/global_config.yml
+    command: persia-launcher embedding-server --embedding-config $$PERSIA_EMBEDDING_CONFIG --global-config $$PERSIA_GLOBAL_CONFIG
     deploy:
       replicas: 1
       restart_policy:
@@ -502,7 +486,7 @@ services:
 
 ### Honcho Launcher
 
-Honcho launcher is suitable to test or debug PERSIA tasks in locally. You can simulate distributed environment for `data_loader` `embedding-worker` and `embedding-server` by editing the `Procfile` and `.honcho.env` file.But for `nn_worker` only support multiple-gpu training.
+Honcho launcher is suitable to test or debug PERSIA tasks in locally. You can simulate distributed environment for `data_loader` `embedding-worker` and `embedding-server` by editing the `Procfile` and `.honcho.env` file. For `nn_worker`, it only support multiple-gpu training for single gpu machine.
 
 **Configuring Env**
 

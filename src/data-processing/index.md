@@ -21,7 +21,9 @@ ID Type Features is a sparse matrix that contains variable length of discrete va
 
 ### ID Type Feature with Variable Length
 
-ID Type Feature with variable length is not usually show on public recommendation dataset. But it is very important for the people when owns the huge amount of user interactive data especially for some huge Internet company.And this type of feature will be assigned the §max_variable_lengthed§ in most framework. It is hard to increase the id_type_feature length to inifinitly but always keep the training speed dropdown slightly.The id_type_feature can improve the DNN result significant as the §max_variable_length§ increase.Below code help you understand how to process id_type_feature which has the variable length.
+`IDTypeFeature` is 
+
+It is hard to increase the id_type_feature length to inifinitly but always keep the training speed dropdown slightly.The id_type_feature can improve the DNN result significant as the §max_variable_length§ increase.Below code help you understand how to process id_type_feature which has the variable length.
 
 ```python
 import numpy as np
@@ -80,7 +82,7 @@ for id_type_feature_idx, id_type_feature_name in enumerate(id_type_feature_names
 
 ### ID Type Feature with One Element Sample
 
-Almost all public recommendation dataset concat multiple id_type_features in one `numpy.array`.For every id_type_feature it have only one ID for each sample.Below code help you understand how to process such kind of dataset and add the id_type_feature into `PersiaBatch`.
+Almost all public recommendation dataset concat multiple id_type_features in one `numpy.array`. For every id_type_feature it have only one ID for each sample.Below code help you understand how to process such kind of dataset and add the id_type_feature into `PersiaBatch`.
 
 ```python
 import numpy as np
@@ -121,7 +123,19 @@ Non-ID type features is a tensor or vector that contains numerical data. For exa
 
 In PERSIA batch data, non_id_type_features support the datatype that [pytorch](https://pytorch.org/docs/stable/tensors.html) support. You can add multiple non_id_type_feature with different datatype and different shape. For every one Non-ID type_feature your adding, you can concat multiple tensors as one tensor that have same datatype or for more readable reason to add the Non-ID type feature one by one.
 
-TODO(wangyulong): add support datatype
+`NonIDTypeFeature` and `Label` support datatype:
+
+|numpy.dtype|
+|-|
+|np.bool|
+|np.int8|
+|np.int16|
+|np.int32|
+|np.int64|
+|np.float32|
+|np.float64|
+|np.uint8|
+
 ```python
 import numpy as np
 
