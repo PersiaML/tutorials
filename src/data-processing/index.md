@@ -17,11 +17,12 @@ You can use `PersiaBatch` to state a batch of data in various types, shapes and 
 
 An ID type feature is a sparse matrix that contains variable length of discrete values. PERSIA converts these discrete `id`s to embeddings by looking up from `embedding-worker`. The conversion rules are different for different `id_type_feature`, see [embedding_config](#../configuration/index.md#embedding-config) for more details.
 
+
 In addition, `PersiaBatch` only accepts  `IDTypeFeature` or `IDTypeFeatureWithSingleID` with the `np.uint64` datatype.
 
 ### ID Type Feature with Variable Length
 
-It is hard to increase the id_type_feature length to inifinitly but always keep the training speed dropdown slightly.The id_type_feature can improve the DNN result significant as the §max_variable_length§ increase.Below code help you understand how to process id_type_feature which has the variable length.
+It is hard to keep the training speed stable with the id_typ_feature sample length increasing, especially using the fixed sample size. The following code helps you understand how to process the id_type_feature to `LIL` sparse matrix that is variable length.
 
 ```python
 import numpy as np
