@@ -379,7 +379,7 @@ _more advanced features: See [kubernetes-integration](../kubernetes-integration/
 
 ### Docker Compose Launcher
 
-We already prepare the `.docker.env` and `docker-compose.yml` files for you to launch PERSIA training task. Following below steps to update the PERSIA task.
+We have prepared the `.docker.env` and `docker-compose.yml` files for you to launch PERSIA training task with docker compose. Following are steps to update the PERSIA task.
 
 **Configuring ENV**
 
