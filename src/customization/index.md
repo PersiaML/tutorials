@@ -389,7 +389,7 @@ Required fields in `.docker.env`
 * `REPLICA_SIZE`: `Replica_size`  for `persia.env`
 
 Optional fields in `.docker.env`
-* `NPROC_PER_NODE`: How many gpu or cpu to use.Requires by `persia.launcher` and can manually set this value in bash command.
+* `NPROC_PER_NODE`: number of processes per node to specify.
 * `ENABLE_CUDA`: Use cuda or not
 
 ```env
@@ -405,12 +405,12 @@ NPROC_PER_NODE=1
 
 Required fields in `docker-compose.yml`
 
-* `TASK_SLOT_ID`: This fields is required for all service in `docker-compose.yml`. The docker engine will use regex to extract docker slot_id into `TASK_SLOT_ID` and `persia.env` will read it as `REPLICA_INDEX`.
-* `REPLICAS`: This fields is required for all service in `docker-compose.yml`.And `persia.env` will read it as `REPLICA_SIZE`.
+* `TASK_SLOT_ID`: This fields is required for all service in `docker-compose.yml`. The docker engine will use regex to extract docker `slot_id` into `TASK_SLOT_ID`. PERSIA will read it as `REPLICA_INDEX`.
+* `REPLICAS`: This fields is required for all service in `docker-compose.yml`. PERSIA will read it as `REPLICA_SIZE`.
 
 Optional fields in `docker-compose.yml`
-* `NPROC_PER_NODE`: how many gpu or cpu to use.
-* `REPLICA_NUM`: replica num for 
+* `NPROC_PER_NODE`: number of processes per node to specify.
+* `REPLICA_NUM`: replica num for PERSIA modules.
 * `ENABLE_CUDA`: use cuda or not
 
 ```yaml
