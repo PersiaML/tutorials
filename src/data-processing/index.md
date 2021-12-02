@@ -6,9 +6,9 @@ You can use `PersiaBatch` to state a batch of data in various types, shapes and 
 
 <img src="./img/persia_batch_description.svg" width="100%">
 
-- [Processing ID Type Features](#id-type-feature)
+- [Processing ID Type Features](#processing-id-type-feature)
     - [ID Type Feature with Variable Length](#id-type-feature-with-variable-length)
-    - [ID Type Feature with One Elmenet Sample](#id-type-feature-with-one-element-sample)
+    - [ID Type Feature with Single ID](#id-type-feature-with-one-element-sample)
 - [Processing Non-ID Type Feature and Label](#non-id-type-feature-and-label)
 - [Processing Meta Data](#processing-meta-data)
 - [PersiaBatch Processing Integration Example](#persia-batch-processing-integration-example)
@@ -21,7 +21,6 @@ In addition, `PersiaBatch` only accepts  `IDTypeFeature` or `IDTypeFeatureWithSi
 
 ### ID Type Feature with Variable Length
 
-`IDTypeFeature` is 
 
 It is hard to increase the id_type_feature length to inifinitly but always keep the training speed dropdown slightly.The id_type_feature can improve the DNN result significant as the §max_variable_length§ increase.Below code help you understand how to process id_type_feature which has the variable length.
 

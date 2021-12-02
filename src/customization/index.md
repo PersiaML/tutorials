@@ -40,12 +40,12 @@ There are a few files you can customize in PERSIA:
 
 ## Training Data
 
-A `PersiaBatch` is consists of three parts: contiguous data, categorical data and label data.
+A `PersiaBatch` is consists of three parts: ID Type Feature, Non-ID Type Feature and Label.
 
 ### Add ID Type Feature
-`IDTypeFeature` contains variable length of categorical data. `IDTypeFeature` store the `List[np.array]` data which is a list of sparse matrix. Note that it only accepts `np.uint64` elements.
+`IDTypeFeature` contains the variable length of categorical data. `IDTypeFeature` store the `List[np.array]` data which is a [lil](https://scipy-lectures.org/advanced/scipy_sparse/lil_matrix.html) format sparse matrix. Note that it only accepts `np.uint64` elements.
 
-For example, you can add `user_id` and `photo_id` data into a `IDTypeFeature`.
+For example, you can add `user_id` or `photo_id` data into `IDTypeFeature`.
 
 ```python
 import numpy as np
@@ -62,7 +62,6 @@ user_id_batch_data = [
   np.array([1000, 1001, 1024], dtype=np.uint64),
   np.array([1000,] * 200, dtype=np.uint64),
 ]
-
 id_type_features.append(IDTypeFeature(user_id_batch_data, "user_id"))
 
 # add photo_id data
@@ -73,18 +72,17 @@ photo_id_batch_data = [
   np.array([4000, 1001, 1024], dtype=np.uint64),
   np.array([4096,] * 200, dtype=np.uint64),
 ]
-
 id_type_features.append(IDTypeFeature(photo_id_batch_data, "photo_id"))
 ```
 
-After adding `IDTypeFeature`, you have to add corresponding `id_type_feature` config in `embedding_config.yml`. See [configuration](../configuration/index.md) for more details about how to config the `id_type_feature`, such as `dim`, `sqrt_scaling`, etc.
+After adding `IDTypeFeature`, you have to add the corresponding `id_type_feature` config in `embedding_config.yml`. See [configuration](../configuration/index.md) for more details about how to config the `id_type_feature`, such as `dim`, `sqrt_scaling`, etc.
 
 _more advanced [id_type_feature processing](../data-processing/index.md#id-type-feature)_
 
 
 ### Add Non-ID Type Feature
 
-You are also able to add multiple `NonIDTypeFeature` into `PersiaBatch` with various datatype. Concatting multiple `non_id_type_features` with same datatype into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example, you are able to add `float32` or `uint8` data.
+You are also able to add multiple `NonIDTypeFeature` into `PersiaBatch` with the various datatype. Stacking multiple `non_id_type_features` with the same datatype horizontally into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example, you can add `float32` or `uint8` data.
 
 ```python
 import numpy as np
