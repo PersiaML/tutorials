@@ -67,8 +67,15 @@ id_type_features = []
 for id_type_feature_idx, id_type_feature_name in enumerate(id_type_feature_names):
     id_type_feature = []
     for batch_idx in range(batch_size):
-        id_type_feature.append(np.array(id_type_feature_data[id_type_feature_idx][batch_idx: batch_idx + 1], dtype=np.uint64).reshape(-1))
-    id_type_features.append(IDTypeFeatureSparse(id_type_feature_name, id_type_feature))
+        id_type_feature.append(
+            np.array(
+                id_type_feature_data[id_type_feature_idx][batch_idx: batch_idx + 1],
+                 dtype=np.uint64
+            ).reshape(-1)
+        )
+    id_type_features.append(
+        IDTypeFeatureSparse(id_type_feature_name, id_type_feature)
+    )
 ```
 
 ### One Element Length ID Type Feature
@@ -99,7 +106,9 @@ id_type_features = []
 for id_type_feature_idx, id_type_feature_name in enumerate(id_type_feature_names):
     id_type_feature = []
     for batch_idx in range(batch_size):
-        id_type_feature.append(id_type_feature_data[batch_idx: batch_idx + 1, id_type_feature_idx].reshape(-1))
+        id_type_feature.append(
+            id_type_feature_data[batch_idx: batch_idx + 1, id_type_feature_idx].reshape(-1)
+        )
     id_type_features.append(IDTypeFeature(id_type_feature_name, id_type_feature))
 ```
 
@@ -216,7 +225,12 @@ id_type_features = []
 for id_type_feature_idx, id_type_feature_name in enumerate(id_type_feature_names):
     id_type_feature = []
     for batch_idx in range(batch_size):
-        id_type_feature.append(np.array(id_type_feature_data[id_type_feature_idx][batch_idx: batch_idx + 1], dtype=np.uint64).reshape(-1))
+        id_type_feature.append(
+            np.array(
+                id_type_feature_data[id_type_feature_idx][batch_idx: batch_idx + 1], 
+                dtype=np.uint64
+            ).reshape(-1)
+        )
     id_type_features.append(IDTypeFeatureSparse(id_type_feature_name, id_type_feature))
 
 
