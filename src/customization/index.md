@@ -16,7 +16,7 @@ There are a few files you can customize in PERSIA:
 3. Embedding configuration file: `embedding_config.yaml`
 4. Embedding PS configuration file: `global_config.yaml`
 5. Launcher configuration:
-    1. If you are using k8s, `k8s.train.yaml`
+    1. If you are using K8S, `k8s.train.yaml`
     2. If you are using docker compose, `docker-compose.yml` and `.docker.env`
     3. If you are using honcho, `Procfile` and `.honcho.env`
 
@@ -267,7 +267,7 @@ _more advanced features: [TrainCtx](../training-context/index.md)_
 
 ## Configuring Embedding Worker
 
-An embedding worker runs asynchronous updating algorithm for getting the embedding parameters from the embedding parameter server; aggregating embedding vectors (potentially) and putting embedding gradients back to embedding parameter server. You can learn the details of the system design through 4.2 section in our [paper](https://arxiv.org/abs/2111.05897). Generally, you only need to adjust the number of instances and resources according to your workload. See [k8s launcher](#k8s-launcher).
+An embedding worker runs asynchronous updating algorithm for getting the embedding parameters from the embedding parameter server; aggregating embedding vectors (potentially) and putting embedding gradients back to embedding parameter server. You can learn the details of the system design through 4.2 section in our [paper](https://arxiv.org/abs/2111.05897). Generally, you only need to adjust the number of instances and resources according to your workload. See [K8S launcher](#k8s-launcher).
 
 ## Configuring Embedding Parameter Server
 
@@ -292,7 +292,7 @@ There are launchers to help you launch a PERSIA training task.
 We provide the different launcher to satisfy your requirements. The below launchers can run the PERSIA task in different handy level. -->
 
 - K8S launcher: Kubernetes launcher is easy to deploy large scale training.
-- docker-compose launcher: Docker compose is the other way like `k8s` but is more lightweight.
+- docker-compose launcher: Docker compose is the other way like `K8S` but is more lightweight.
 - honcho launcher: A Procfile manager that need to build PERSIA in manually(Currently persia can build in linux, macOS, windows10.). It is hard for inexperienced ones to install the requirement. But is friendly for developers to develop and debug.
 
 All of these launchers use environment variables(`PERSIA_GLOBAL_CONFIG`, `PERSIA_EMBEDDING_CONFIG`, `PERSIA_NN_WORKER_ENTRY`, `PERSIA_DATALOADER_ENTRY`) to assign the path of the PERSIA configuration files.
