@@ -34,33 +34,38 @@ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/exam
 
 This runs the adult income prediction training task defined by `adult-income-prediction.train.yml`. This file defines the system configuration (e.g. resources limit, volume mounts, and environment variables) of a PERSIA training task.
 
-To run a customized training task on your own dataset and models, we can customize the following configuration files:
+To run a customized training task on your own dataset and models, you can customize the following configuration files:
 
-- **Embedding configuration file:** A file defining the embedding configurations (e.g. embedding dimension, and sum pooling). This file is named as `embedding_config.yaml` by default. For more details see [embedding config](../configuration/index.md#embedding-config). TODO: @zhuxuefeng introduce each config file env variables
+- **Embedding configuration file:** A file defining the embedding configurations (e.g. embedding dimension, and sum pooling). This file is named as `embedding_config.yaml` by default. For more details see [embedding config](../configuration/index.md#embedding-config).
 - **Embedding PS configuration file:** Configuration of embedding parameter servers, e.g. max capacity of embedding parameter servers. This file is named as `global_config.yaml` by default. For more details see [global config](../configuration/index.md#global-configuration).
 - **Model definition configuration file:** A file that defines the neural network (NN) using PyTorch. This file is named as `train.py` by default. For more details see [model definition](../customization/index.md#model-definition).
 - **Data preprocessing configuration file:** A file that defines the data preprocessing. This file is named as `data_loader.py` by default. For more details see [training data](../customization/index.md#training-data).
 
-To change the file name for these configuration files, we can remap the
-`embeddingConfigPath`, `globalConfigPath`, `nnWorkerPyEntryPath`,
-`dataLoaderPyEntryPath` in the Kubernetes PERSIA task definition file. For more
-details on how to customize Kubernetes PERSIA task definitions, see
-[K8S launcher customization](../customization/index.md#k8s-launcher).
+
+To assign the file path for these configuration files, we can set the environment variables
+`PERSIA_EMBEDDING_CONFIG`, `PERSIA_GLOBAL_CONFIG`, `PERSIA_NN_WORKER_ENTRY`,
+`PERSIA_DATALOADER_ENTRY` by PERSIA launchers. For more
+details on how to set these environment variables, see
+[launcher configuration](../customization/index.md#launcher-configuration).
 
 ## Run Manually
 
-To launch the PERSIA adult income task manually, the first step is to download the corresponding dataset and preprocess the train data and test data. We already prepare the script to help you finish this step.
+The data of adult income should be downloaded and preprocessed before we getting started to run the example PERSIA training task:
+
+<!-- To launch the PERSIA adult income prediction task  manually, the first step is to download the corresponding dataset and preprocess the train data and test data. We already prepare the script to help you finish this step. -->
 
 ```bash
 git clone https://github.com/PersiaML/PERSIA.git
 cd PERSIA/examples/src/adult-income/data && ./prepare_data.sh
 ```
 
-After downloading the adult income dataset. You can choose from the following two methods to start your first PERSIA task.
+<!-- After downloading the adult income dataset. You can choose from the following two methods to start your first PERSIA task. -->
+
+Now you can start your first PERSIA training task with one of the following methods.
 
 ### Using Docker-Compose
 
-[Docker-compose](https://docs.docker.com/compose/) is a container management tool that can launch multiple services at once. By editing the `docker-compose.yml` file, you can customize the PERSIA training task (such as `image`, `replicas`). See PERSIA docker-compose [configuration](../customization/index.md#docker-compose-launcher) for more details.
+[Docker-compose](https://docs.docker.com/compose/) is a tool for defining and running multi-container Docker applications. By editing the `docker-compose.yml` file, you can customize the PERSIA training task (such as `image`, `replicas`). See PERSIA docker-compose [configuration](../customization/index.md#docker-compose-launcher) for more details.
 
 TODO: fix content consistency @wangyulong
 
@@ -71,7 +76,8 @@ TODO: fix content consistency @wangyulong
 
 **Run**
 
-We already provide the `docker-compose.yml` and `.docker.env` for adult income example. Try below command to start your `PERSIA` task after install the requirements.
+<!-- We already provide the `docker-compose.yml` and `.docker.env` for adult income example.  -->
+Try below command to start your `PERSIA` task after install the requirements.
 
 ```bash
 cd examples/src/adult-income && make run
@@ -79,7 +85,7 @@ cd examples/src/adult-income && make run
 
 ### Using Python Package
 
-Alternatively, you can use PERSIA's Python packages directly to run a PERSIA task. In this way, users have the maximum flexibility (and you are free to modify source code to build and use your customized PERSIA Python packages).
+Alternatively, you can use PERSIA's Python packages directly to run a PERSIA task. In this way, you have the maximum flexibility (and you are free to modify source code to build and use your customized PERSIA Python packages).
 
 **Requirements**
 
@@ -89,7 +95,9 @@ Alternatively, you can use PERSIA's Python packages directly to run a PERSIA tas
 
 **Using Pre-compiled Wheels**
  
-We provide pre-compiled wheels for linux platform. If your Python version is greater than 3.6. You can install pre-compiled PERSIA packages with:
+<!-- We provide pre-compiled wheels for linux platform. If your Python version is greater than 3.6. You can install pre-compiled PERSIA packages with: -->
+
+Wheels (precompiled binary packages) are available for Linux (x86_64). Package names are different depending on your CUDA Toolkit version (CUDA Toolkit version is shown in` nvcc --version`). All of these precompiled binary packages needs Python greater than 3.6.
 
 |CUDA Toolkit version|Installation command|
 |-|-|

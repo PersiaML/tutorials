@@ -41,13 +41,13 @@ TODO: keep order consistent with the following sections
 
 ## Training Data
 
-PersiaBatch consists of three parts, contiguous data, categorical data and label data.
+PersiaBatch consists of three parts: contiguous data, categorical data and label data.
 
 
 ### Add ID Type Feature
-IDTypeFeature contains variable length of categorical data. In PERSIA, IDTypeFeature store the `List[np.array]` data that is a list of list form of sparse matrix. And it only accept the `np.uint64` element. 
+IDTypeFeature contains variable length of categorical data. In PERSIA, `IDTypeFeature` store the `List[np.array]` data that is a list of list form of sparse matrix. And it only accept the `np.uint64` element. 
 
-For example, we adding user_id and photo_id data into IDTypeFeatureSparse.
+For example, you can add `user_id` and `photo_id` data into a `IDTypeFeatureSparse`.
 
 ```python
 import numpy as np
@@ -71,7 +71,7 @@ id_type_features.append(IDTypeFeatureSparse(user_id_batch_data, "user_id"))
 photo_id_batch_data = [
   np.array([2000, 1001], dtype=np.uint64),
   np.array([3000,], dtype=np.uint64),
-  np.array([5001], dtype=np.uint64), # allow empty sample
+  np.array([5001], dtype=np.uint64), 
   np.array([4000, 1001, 1024], dtype=np.uint64),
   np.array([4096,] * 200, dtype=np.uint64),
 ]
@@ -79,14 +79,14 @@ photo_id_batch_data = [
 id_type_features.append(IDTypeFeatureSparse(photo_id_batch_data, "photo_id"))
 ```
 
-After finish adding IDTypeFeature, you should add corresponding `id_type_feature` config in `embedding_config.yml`. Review [configuration](../configuration/index.md) chapter for more detail about how to config the `id_type_feature`, such as `dim`, `sqrt_scaling`, etc.
+After adding `IDTypeFeature`, you should add corresponding `id_type_feature` config in `embedding_config.yml`. Review [configuration](../configuration/index.md) chapter for more details about how to config the `id_type_feature`, such as `dim`, `sqrt_scaling`, etc.
 
 _more advanced [id_type_feature processing](../data-processing/index.md#id-type-feature)_
 
 
 ### Add Non-ID Type Feature
 
-We can add multiple NonIDTypeFeature into `PersiaBatch` with various datatype. Concat multiple `non_id_type_features` with same datatype into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example you want to add height, income or even image data.
+You can add multiple `NonIDTypeFeature` into `PersiaBatch` with various datatype. Concatting multiple `non_id_type_features` with same datatype into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example you are able to add `height`, `income` or even `image` data.
 
 ```python
 import numpy as np
@@ -119,15 +119,15 @@ non_id_type_features.append(NonIDTypeFeature(income_batch_data, name="income"))
 
 # add income_with_height
 income_with_height = np.hstack([height_batch_data, income_batch_data])
-non_id_type_features.append(NonIDTypeFeature(income_batch_data, name="income_with_height"))
+non_id_type_features.append(NonIDTypeFeature(income_with_height, name="income_with_height"))
 
 # add image data
 image_data = np.ones((5, 224, 224, 3), dtype=np.uint8)
-non_id_type_features.append(NonIDTypeFeature(income_batch_data, name="LSVR_image"))
+non_id_type_features.append(NonIDTypeFeature(image_data, name="LSVR_image"))
 ```
 
 ### Add Label
-Adding label is as same as the NonIDTypeFeature, you can add different datatype label data such as `click_or_not`, `income`, etc.
+Adding label is as same as the `NonIDTypeFeature`, you can add different datatype label data such as `click_or_not`, `income`, etc.
 
 ```python
 import numpy as np
@@ -156,7 +156,7 @@ income_batch_data = np.array([
 ], dtype=np.float32)
 labels.append(Label(income_batch_data, "income))
 
-# add ctr with income, but will cost extra bytes to cast ctr_batch_data to float32 
+# add ctr with income, but will cost extra bytes to cast ctr_batch_data from bool to float32 
 ctr_with_income = np.hstack([ctr_batch_data, income_batch_data])
 labels.append(Label(ctr_with_name, "ctr_with_income))
 ```
@@ -182,7 +182,8 @@ with DataCtx() as ctx:
 ## Model Definition
 
 ### Define DNN model
-For DNN model definition, you can design any model structure as you wanted. The only restriction is to set the DNN model forward function signature as below form.
+
+You can define any DNN model structure as you want, note that the forward function signature of the model should be as below.
 
 ```python
 from typing import List
@@ -199,7 +200,8 @@ class DNN(nn.Module):
 ```
 
 ### Modify Embedding Optimizer
-PERSIA provide the common embedding optimizer for Deep Learning scene.Review our [api doc](https://persiaml.pages.dev/main/autoapi/persia/embedding/optim/) to choose the suitable embedding optimizer for you training.
+
+There is several kinds of embedding optimizers in PERSIA, for more details, see  [api doc](https://persiaml.pages.dev/main/autoapi/persia/embedding/optim/).
 
 ```python
 from persia.embedding.optim import SGD, Adagrad, Adam
@@ -212,7 +214,8 @@ adam_embedding_optimizer = Adam(lr)
 ```
 
 ### Customize PERSIA Training Context 
-Final step is create the training context to acquire dataloder and sparse embedding process
+
+After above, a PERSIA training context should be created to acquire dataloder and manage sparse embedding .
 
 ```python
 # train.py
@@ -281,13 +284,18 @@ _more advanced features: See [Configuration](../configuration/index.md#global-co
 
 
 ## Launcher configuration
-For different user, we provide the different launcher to satisfy your requirements.The below launcher can run the PERSIA task in different handy level.
 
-- k8s launcher: Kubernetes launcher is easy to deploy large scale training. 
+There are launchers to help you launch a PERSIA training task.
+<!-- 
+We provide the different launcher to satisfy your requirements. The below launchers can run the PERSIA task in different handy level. -->
+
+- K8S launcher: Kubernetes launcher is easy to deploy large scale training. 
 - docker-compose launcher: Docker compose is the other way like `k8s` but is more lightweight.
-- honcho launcher: A Profile manager that need to build PERSIA in manually(Currently persia can build in linux, macOS, windows10.). It is hard for inexperienced person to install the requirement. But is friendly to developer to develop and debug.
+- honcho launcher: A Procfile manager that need to build PERSIA in manually(Currently persia can build in linux, macOS, windows10.). It is hard for inexperienced person to install the requirement. But is friendly to developer to develop and debug.
 
-### K8s Launcher
+All of these launchers use environment variables(`PERSIA_GLOBAL_CONFIG`, `PERSIA_EMBEDDING_CONFIG`, `PERSIA_NN_WORKER_ENTRY`, `PERSIA_DATALOADER_ENTRY`) to assign the path of the PERSIA configuration files.
+
+### K8S Launcher
 
 The PERSIA Operator is a Kubernetes [custom resource definitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/). You can define your distributed persia task by an operator file.
 
@@ -302,14 +310,15 @@ metadata:
   name: adult-income  # persia job name, need to be globally unique
   namespace: default  # k8s namespace to deploy to this job
 spec:
-  # the following path are the path inside the container
-  globalConfigPath: /home/PersiaML/examples/src/adult-income/config/global_config.yml
-  embeddingConfigPath: /home/PersiaML/examples/src/adult-income/config/embedding_config.yml
-  nnWorkerPyEntryPath: /home/PersiaML/examples/src/adult-income/train.py
-  dataLoaderPyEntryPath: /home/PersiaML/examples/src/adult-income/data_loader.py
+  # path of PERSIA configuration files.
+  persiaEnv:
+    PERSIA_GLOBAL_CONFIG: /home/PERSIA/examples/src/adult-income/config/global_config.yml
+    PERSIA_EMBEDDING_CONFIG: /home/PERSIA/examples/src/adult-income/config/embedding_config.yml
+    PERSIA_NN_WORKER_ENTRY: /home/PERSIA/examples/src/adult-income/train.py
+    PERSIA_DATALOADER_ENTRY: /home/PERSIA/examples/src/adult-income/data_loader.py
   env:
     - name: PERSIA_NATS_IP
-      value: nats://persia-nats-service:4222
+      value: nats://persia-nats-service:4222  # hostname need to be same with nats operator's name
 
   embeddingParameterServer:
     replicas: 1
@@ -336,6 +345,8 @@ spec:
     env:
       - name: CUBLAS_WORKSPACE_CONFIG
         value: :4096:8
+      - name: ENABLE_CUDA
+        value: "1"
 
   dataloader:
     replicas: 1
@@ -362,6 +373,9 @@ spec:
 _more advanced features: See [kubernetes-integration](../kubernetes-integration/index.md)_
 
 ### Docker Compose Launcher
+
+TODO(wangyulong): add description
+
 Docker compose can use docker-image directly
 
 **Configuring ENV**
@@ -483,6 +497,7 @@ services:
 ```
 
 ### Honcho Launcher
+
 Honcho launcher is suitable to test or debug PERSIA tasks in locally. You can simulate distributed environment for `data_loader` `embedding-worker` and `embedding-server` by editing the `Procfile` and `.honcho.env` file.But for `nn_worker` only support multiple-gpu training.
 
 **Configuring Env**
