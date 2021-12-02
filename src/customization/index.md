@@ -45,12 +45,12 @@ A `PersiaBatch` is consists of three parts: contiguous data, categorical data an
 ### Add ID Type Feature
 `IDTypeFeature` contains variable length of categorical data. `IDTypeFeature` store the `List[np.array]` data which is a list of sparse matrix. Note that it only accepts `np.uint64` elements.
 
-For example, you can add `user_id` and `photo_id` data into a `IDTypeFeatureSparse`.
+For example, you can add `user_id` and `photo_id` data into a `IDTypeFeature`.
 
 ```python
 import numpy as np
 
-from persia.embedding.data import IDTypeFeatureSparse
+from persia.embedding.data import IDTypeFeature
 
 id_type_features = []
 
@@ -63,7 +63,7 @@ user_id_batch_data = [
   np.array([1000,] * 200, dtype=np.uint64),
 ]
 
-id_type_features.append(IDTypeFeatureSparse(user_id_batch_data, "user_id"))
+id_type_features.append(IDTypeFeature(user_id_batch_data, "user_id"))
 
 # add photo_id data
 photo_id_batch_data = [
@@ -74,7 +74,7 @@ photo_id_batch_data = [
   np.array([4096,] * 200, dtype=np.uint64),
 ]
 
-id_type_features.append(IDTypeFeatureSparse(photo_id_batch_data, "photo_id"))
+id_type_features.append(IDTypeFeature(photo_id_batch_data, "photo_id"))
 ```
 
 After adding `IDTypeFeature`, you have to add corresponding `id_type_feature` config in `embedding_config.yml`. See [configuration](../configuration/index.md) for more details about how to config the `id_type_feature`, such as `dim`, `sqrt_scaling`, etc.
@@ -168,10 +168,10 @@ Use `persia.ctx.DataCtx` to send the data to `nn_worker` and `embedding_worker` 
 import numpy as np
 
 from persia.ctx import DataCtx
-from persia.embedding.data import PersiaBatch, IDTypeFeatureSparse
+from persia.embedding.data import PersiaBatch, IDTypeFeature
 
 id_type_features = [
-  IDTypeFeatureSparse("empty_sample", np.array([[]] * 5, dtype=np.uint64))
+  IDTypeFeature("empty_sample", np.array([[]] * 5, dtype=np.uint64))
 ]
 
 persia_batch = PersiaBatch(
@@ -381,32 +381,26 @@ _more advanced features: See [kubernetes-integration](../kubernetes-integration/
 
 We have prepared the `.docker.env` and `docker-compose.yml` files for you to launch PERSIA training task with docker compose. Following are steps to update the PERSIA task.
 
-**Configuring ENV**
+**Configuring Environment**
 
-Required fields in `.docker.env`
+We can set [environment varialbes](https://docs.docker.com/compose/environment-variables/) 
 
-* `DOCKER_COMPOSE`: Should be set to `1`.
-* `REPLICA_SIZE`: `Replica_size`  for `persia.env`
 
-Optional fields in `.docker.env`
-* `NPROC_PER_NODE`: number of processes per node to specify.
-* `ENABLE_CUDA`: Use cuda or not
+* `PERSIA_EMBEDDING_CONFIG`: persia embedding config path.
+* `PERSIA_GLOBAL_CONFIG`: persia global config path.
+* `LOG_LEVEL`: set log_level for `embedding-worker` and `embedding-parameter-server`.
 
 ```env
 # .docker.env file
-ENABLE_CUDA=1
-NPROC_PER_NODE=1
+PERSIA_EMBEDDING_CONFIG=/workspace/config/embedding_config.yml 
+PERSIA_GLOBAL_CONFIG=/workspace/config/global_config.yml.yml
+
+LOG_LEVEL=info
 ```
 
 **Configuring docker-compose File**
 
 Required fields in `docker-compose.yml`
-
-* `TASK_SLOT_ID`: This fields is required for all service in `docker-compose.yml`. The docker engine will use regex to extract docker `slot_id` into `TASK_SLOT_ID`. PERSIA will read it as `REPLICA_INDEX`.
-* `REPLICAS`: This fields is required for all service in `docker-compose.yml`. PERSIA will read it as `REPLICA_SIZE`.
-
-Optional fields in `docker-compose.yml`
-* `ENABLE_CUDA`: use cuda or not
 
 ```yaml
 # docker-compose.yml
@@ -426,10 +420,10 @@ services:
       - embedding_worker
       - persia_nats_service
     image: persiaml/persia-cuda-runtime:latest
-    command: persia-launcher data-loader /workspace/data_loader.py
+    command: persia-launcher data-loader /workspace/data_loader.py --replica-index 0 --replica-size 1
     volumes:
       - type: bind
-        source: .
+        source: . # mount current directory into container
         target: /workspace
     deploy:
       replicas: 1
@@ -442,8 +436,9 @@ services:
     environment:
       NCCL_SOCKET_IFNAME: eth0
       CUBLAS_WORKSPACE_CONFIG: :4096:8
+      ENABLE_CUDA: 1
     image: persiaml/persia-cuda-runtime:latest
-    command: persia-launcher nn-worker /workspace/train.py
+    command: persia-launcher nn-worker /workspace/train.py --nproc-per-node 1 --nnodes 1 --node-rank 0
     volumes:
       - type: bind
         source: .
@@ -459,7 +454,10 @@ services:
     depends_on:
       - server
     image: persiaml/persia-cuda-runtime:latest
-    command: persia-launcher embedding-worker --embedding-config $$PERSIA_EMBEDDING_CONFIG --global-config $$PERSIA_GLOBAL_CONFIG
+    command: >
+      bash -c "persia-launcher embedding-worker --embedding-config \$\$PERSIA_EMBEDDING_CONFIG 
+        --global-config \$\$PERSIA_GLOBAL_CONFIG 
+        --replica-index 0 --replica-size 1"
     deploy:
       replicas: 1
       restart_policy:
@@ -473,7 +471,10 @@ services:
     env_file:
       - .docker.env
     image: persiaml/persia-cuda-runtime:latest
-    command: persia-launcher embedding-server --embedding-config $$PERSIA_EMBEDDING_CONFIG --global-config $$PERSIA_GLOBAL_CONFIG
+    command: >
+      bash -c "persia-launcher embedding_parameter_server --embedding-config \$\$PERSIA_EMBEDDING_CONFIG 
+        --global-config \$\$PERSIA_GLOBAL_CONFIG 
+        --replica-index 0 --replica-size 1"
     deploy:
       replicas: 1
       restart_policy:
@@ -490,30 +491,18 @@ Honcho launcher is convenient for debug. You can simulate distributed environmen
 
 **Configuring Env**
 
-There are fields when launch the PERSIA task:
-
-Required fields in `.honcho.env`
+Fields in `.honcho.env`:
 
 * `PERSIA_NATS_IP`: set for nats-server ip address.
+* `LOG_LEVEL`: set log_level for `embedding-worker` and `embedding-parameter-server`.
 
-Optional fields in `.honcho.env`
-
-* `ENABLE_CUDA`: use cuda or not.
 
 ```env
 # .honcho.env
-
-HONCHO=1 # required by PERSIA to determine the rank
-
-REPLICA_INDEX=0 # required by PERSIA to determine the replica_index for data_loader
-REPLICA_SIZE=1 # required by PERSIA to determine the replica_size for data_loader
-
-ENABLE_CUDA=0 # enable cuda or not
-NPROC_PER_NODE=1 # number of processes per node to specify.
-ENABLE_CUDA=0 # enable cuda or not
-
 # default nats_server ip address
 PERSIA_NATS_IP=nats://0.0.0.0:4222 
+
+LOG_LEVEL=info
 ```
 **Configuring Procfile**
 
@@ -523,9 +512,9 @@ We can add multiple replica service as we want in `Procfile`. In below file by a
 # Procfile
 
 # data_loader
-data_loader: REPLICA_SIZE=1 REPLICA_INDEX=0 python3 data_loader.py && cat 
+data_loader: persia-launcher data-loader data_loader.py --replica-index 0 --replica-size 1 && cat 
 # nn_worker
-nn_worker: persia-launcher nn-worker train.py --nproc-per-node=NPROC_PER_NODE --node-rank=0 --nnodes=1
+nn_worker: persia-launcher nn-worker train.py --nproc-per-node=1 --node-rank=0 --nnodes=1
 # launch three subprocesses of embedding parameter server
 embedding_server0: persia-launcher embedding-parameter-server --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 0 --replica-size 3 --port 10000
 embedding_server1: persia-launcher embedding-parameter-server --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 1 --replica-size 3 --port 10001

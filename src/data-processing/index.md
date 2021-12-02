@@ -7,8 +7,8 @@ You can use `PersiaBatch` to state a batch of data in various types, shapes and 
 <img src="./img/persia_batch_description.svg" width="100%">
 
 - [Processing ID Type Features](#id-type-feature)
-    - [Variable Length ID Type Feature](#variable-length-id-type-feature)
-    - [One Element Length ID Type Feature](#processing-the-one-element-length-id-type-feature)
+    - [ID Type Feature with Variable Length](#id-type-feature-with-variable-length)
+    - [ID Type Feature with One Elmenet Sample](#id-type-feature-with-one-element-sample)
 - [Processing Non-ID Type Feature and Label](#non-id-type-feature-and-label)
 - [Processing Meta Data](#processing-meta-data)
 - [PersiaBatch Processing Integration Example](#persia-batch-processing-integration-example)
@@ -17,7 +17,7 @@ You can use `PersiaBatch` to state a batch of data in various types, shapes and 
 
 ID Type Features is a sparse matrix that contains variable length of discrete value. PERSIA will convert the discrete `id` to embedding after look up the `embedding-worker`. For each id_type_feature the conversion rule is different, you should review [embedding_config](#../configuration/index.md#embedding-config) chapter for more details.
 
-`PersiaBatch` only accept  `IDTypeFeatureSparse` or `IDTypeFeature` with the `np.uint64` datatype.
+`PersiaBatch` only accept  `IDTypeFeatureWithSingleID` or `IDTypeFeature` with the `np.uint64` datatype.
 
 ### ID Type Feature with Variable Length
 
@@ -28,7 +28,7 @@ It is hard to increase the id_type_feature length to inifinitly but always keep 
 ```python
 import numpy as np
 
-from persia.embedding.data import PersiaBatch, IDTypeFeatureSparse
+from persia.embedding.data import PersiaBatch, IDTypeFeature
 
 
 id_type_feature_names = [
@@ -76,7 +76,7 @@ for id_type_feature_idx, id_type_feature_name in enumerate(id_type_feature_names
             ).reshape(-1)
         )
     id_type_features.append(
-        IDTypeFeatureSparse(id_type_feature_name, id_type_feature)
+        IDTypeFeature(id_type_feature_name, id_type_feature)
     )
 ```
 
@@ -87,7 +87,7 @@ Almost all public recommendation dataset concat multiple id_type_features in one
 ```python
 import numpy as np
 
-from persia.embedding.data import PersiaBatch, IDTypeFeature
+from persia.embedding.data import PersiaBatch, IDTypeFeatureWithSingleID
 
 
 id_type_feature_names = [
@@ -111,7 +111,7 @@ for id_type_feature_idx, id_type_feature_name in enumerate(id_type_feature_names
         id_type_feature.append(
             id_type_feature_data[batch_idx: batch_idx + 1, id_type_feature_idx].reshape(-1)
         )
-    id_type_features.append(IDTypeFeature(id_type_feature_name, id_type_feature))
+    id_type_features.append(IDTypeFeatureWithSingleID(id_type_feature_name, id_type_feature))
 ```
 
 
@@ -170,10 +170,10 @@ import json
 import pickle
 
 import time 
-
+from persia.embedding.data import PesiaBatch, IDTypeFeature
 batch_size = 5
 id_type_features = [
-    IDTypeFeatureSparse(
+    IDTypeFeature(
         "empty_id_type_feature_with_batch_size", 
         [np.array([], dtype=np.uint64)] * batch_size)
 ]
@@ -184,7 +184,13 @@ meta_info = {
 }
 
 meta_json_bytes = json.dumps(meta_info)
-meta_pickle_bytes = pickle.dumps(meta_info)
+# Or use pickle serialize the meta_info
+# meta_pickle_bytes = pickle.dumps(meta_info)
+
+PersiaBatch(
+    id_type_features,
+    meta=meta_json_bytes
+)
 ```
 
 
@@ -198,7 +204,7 @@ import time
 
 import numpy as np
 
-from persia.embedding.data import PersiaBatch, IDTypeFeatureSparse, NonIDTypeFeature, Label
+from persia.embedding.data import PersiaBatch, IDTypeFeature, NonIDTypeFeature, Label
 
 batch_size = 5
 
@@ -245,7 +251,7 @@ for id_type_feature_idx, id_type_feature_name in enumerate(id_type_feature_names
                 dtype=np.uint64
             ).reshape(-1)
         )
-    id_type_features.append(IDTypeFeatureSparse(id_type_feature_name, id_type_feature))
+    id_type_features.append(IDTypeFeature(id_type_feature_name, id_type_feature))
 
 
 non_id_type_features = []
