@@ -385,12 +385,12 @@ We have prepared the `.docker.env` and `docker-compose.yml` files for you to lau
 
 Required fields in `.docker.env`
 
-* `DOCKER_COMPOSE`: Should be set to `1`.
-* `REPLICA_SIZE`: `Replica_size`  for `persia.env`
+* `DOCKER_COMPOSE`: should be set to `1`.
+* `REPLICA_SIZE`: `replica_size` for PERSIA modules.
 
 Optional fields in `.docker.env`
 * `NPROC_PER_NODE`: number of processes per node to specify.
-* `ENABLE_CUDA`: Use cuda or not
+* `ENABLE_CUDA`: use cuda or not.
 
 ```env
 # .docker.env file
@@ -490,7 +490,7 @@ Honcho launcher is convenient for debug. You can simulate distributed environmen
 
 **Configuring Env**
 
-There are fields when launch the PERSIA task:
+There are fields when launching the PERSIA task with Honcho:
 
 Required fields in `.honcho.env`
 
@@ -502,7 +502,7 @@ Optional fields in `.honcho.env`
 
 * `NPROC_PER_NODE`: number of processes per node to specify.
 * `ENABLE_CUDA`: use cuda or not.
-* `PERSIA_NATS_IP`: set this environment to 
+* `PERSIA_NATS_IP`: nats service name.
 
 ```env
 # .honcho.env
@@ -521,7 +521,8 @@ PERSIA_NATS_IP=nats://0.0.0.0:4222
 ```
 **Configuring Procfile**
 
-We can add multiple replica service as we want in `Procfile`. In below file by adding `embedding_server{replica_num}` and `embedding_worker{replica_num}` there launch three `embedding-parameter-server` and two `embedding-worker` subprocesses. TODO(wnagyulong): fix
+You can add multiple replica of PERSIA modules as you want in `Procfile`.
+For example, by adding `embedding_server{replica_num}` and `embedding_worker{replica_num}`, you can launch three `embedding-parameter-server` and two `embedding-worker` subprocesses.
 
 ```bash
 # Procfile
@@ -543,9 +544,9 @@ nats_server: nats-server
 ```
 ## Build PERSIA Runtime Image Locally
 
-Persia runtime image can biuld from locally to replace the dockerhub official version when you need to modify the source code.Both kubernetes and docker-compose can replace the original persia-runtime-image.
+Persia runtime image can be biult from local. Both kubernetes and docker-compose can use your customized docker image.
 
-Use below code to build persia-runtime-image by Makefile command.
+Use following instructions to build persia-runtime-image.
 
 ```bash
 git clone https://github.com/PersiaML/PERSIA.git
