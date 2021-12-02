@@ -77,7 +77,7 @@ TODO: fix content consistency @wangyulong
 **Run**
 
 <!-- We already provide the `docker-compose.yml` and `.docker.env` for adult income example.  -->
-Try below command to start your `PERSIA` task after install the requirements.
+Use following instructions to start your `PERSIA` training task after install the requirements.
 
 ```bash
 cd examples/src/adult-income && make run
@@ -108,9 +108,9 @@ Wheels (precompiled binary packages) are available for Linux (x86_64). Package n
 
 **From Source**
 
-We provide the following instructions to build PERSIA Python packages from source (Ubuntu 20.04 & Windows 10. It should be similar on other OSes).
+Use following instructions to build PERSIA Python packages from source (Ubuntu 20.04 & Windows 10. It should be similar on other OSes).
 
-> **Note**: You need to provide environment variable `USE_CUDA=1` to add CUDA support (for GPU training). In this case, the CUDA runtime path should be already present in `LD_LIBRARY_PATH`.
+> **Note**: You need to set environment variable `USE_CUDA=1` to add CUDA support (for GPU training). In this case, the CUDA runtime path should be already present in `LD_LIBRARY_PATH`.
 
 **Ubuntu 20.04:**
 
