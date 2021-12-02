@@ -510,27 +510,14 @@ There are some required fields that must exist when launch the PERSIA task.
 
 Required fields in `.honcho.env`
 
-* `HONCHO` must set to any value to ensure the PERSIA can know the task is launch by `honcho`
-* `REPLICA_INDEX`: replica_index for `persia.env`
-* `REPLICA_SIZE`: replica_size  for `persia.env`
-
-Optional fields in `.honcho.env`
-* `NPROC_PER_NODE`: how many gpu or cpu to use.Requires by `persia.launcher` and can manually set this value in bash command.
-* `ENABLE_CUDA`: use cuda or not
+* `PERSIA_NATS_IP`: set this environment to 
 
 ```env
 # .honcho.env
 
-HONCHO=1 # required by persia.env to determine the rank
-
-REPLICA_INDEX=0 # required by persia.env to determine the replica_index for data_loader
-REPLICA_SIZE=1 # required by persia.env to determine the replica_size for data_loader
-
 ENABLE_CUDA=0 # enable cuda or not
-NPROC_PER_NODE=1 # how many gpu or cpu core use in training
 
 # default nats_server ip address
-# set it 
 PERSIA_NATS_IP=nats://0.0.0.0:4222 
 ```
 **Configuring Procfile**
@@ -541,7 +528,7 @@ We can add multiple replica service as we want in `Procfile`. In below file by a
 # Procfile
 
 # data_loader
-data_loader: python3 data_loader.py && cat 
+data_loader: REPLICA_SIZE=1 REPLICA_INDEX=0 python3 data_loader.py && cat 
 # nn_worker
 nn_worker: persia-launcher nn-worker train.py --nproc-per-node=NPROC_PER_NODE --node-rank=0 --nnodes=1
 # launch three subprocesses of embedding parameter server
