@@ -22,9 +22,10 @@ TODO: keep order consistent with the following sections
     3. If you are using honcho, `Procfile` and `.honcho.env`
 
 * [Training Data](#training-data)
-  * [Add ID Type Features](#id-type-feature)
-  * [Add Non-ID Type Features](#non-id-type-feature)
-  * [Add Labels](#label)
+  * [Add ID Type Features](#add-id-type-feature)
+  * [Add Non-ID Type Features](#add-non-id-type-feature)
+  * [Add Labels](#add-label)
+  * [Send PersiaBatch](#send-persia-batch)
 * [Model Definition](#model-definition)
   * [Define DNN model](#define-dnn-model)
   * [Define Embedding Optimizer](#modify-embedding-optimizer)
@@ -43,7 +44,7 @@ TODO: keep order consistent with the following sections
 PersiaBatch consists of three parts, contiguous data, categorical data and label data.
 
 
-### ID Type Feature
+### Add ID Type Feature
 IDTypeFeature contains variable length of categorical data. In PERSIA, IDTypeFeature store the `List[np.array]` data that is a list of list form of sparse matrix. And it only accept the `np.uint64` element. 
 
 For example, we adding user_id and photo_id data into IDTypeFeatureSparse.
@@ -83,7 +84,7 @@ After finish adding IDTypeFeature, you should add corresponding `id_type_feature
 _more advanced [id_type_feature processing](../data-processing/index.md#id-type-feature)_
 
 
-### Non-ID Type Feature
+### Add Non-ID Type Feature
 
 We can add multiple NonIDTypeFeature into `PersiaBatch` with various datatype. Concat multiple `non_id_type_features` with same datatype into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example you want to add height, income or even image data.
 
@@ -125,7 +126,7 @@ image_data = np.ones((5, 224, 224, 3), dtype=np.uint8)
 non_id_type_features.append(NonIDTypeFeature(income_batch_data, name="LSVR_image"))
 ```
 
-### Label
+### Add Label
 Adding label is as same as the NonIDTypeFeature, you can add different datatype label data such as `click_or_not`, `income`, etc.
 
 ```python
@@ -159,7 +160,25 @@ labels.append(Label(income_batch_data, "income))
 ctr_with_income = np.hstack([ctr_batch_data, income_batch_data])
 labels.append(Label(ctr_with_name, "ctr_with_income))
 ```
+### Send PersiaBatch
+Use `persia.ctx.DataCtx` to send the data to `nn_worker` and `embedding_worker` after created the `PersiaBatch`.
 
+```python
+import numpy as np
+
+from persia.ctx import DataCtx
+from persia.embedding.data import PersiaBatch, IDTypeFeatureSparse
+
+id_type_features = [
+  IDTypeFeatureSparse("empty_sample", np.array([[]] * 5, dtype=np.uint64))
+]
+
+persia_batch = PersiaBatch(
+  id_type_features=id_type_features
+)
+with DataCtx() as ctx:
+  ctx.send_data(persia_batch)
+```
 ## Model Definition
 
 ### Define DNN model
