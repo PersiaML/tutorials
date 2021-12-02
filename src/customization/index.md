@@ -486,19 +486,34 @@ services:
 
 ### Honcho Launcher
 
-Honcho launcher is suitable to test or debug PERSIA tasks in locally. You can simulate distributed environment for `data_loader` `embedding-worker` and `embedding-server` by editing the `Procfile` and `.honcho.env` file. For `nn_worker`, it only support multiple-gpu training for single gpu machine.
+Honcho launcher is convenient for debug. You can simulate distributed environment by editing the `Procfile` and `.honcho.env` file.
 
 **Configuring Env**
 
-There are some required fields that must exist when launch the PERSIA task.
+There are fields when launch the PERSIA task:
 
 Required fields in `.honcho.env`
 
+* `HONCHO` must set to `1`.
+* `REPLICA_INDEX`: `replica_index` for PERSIA modules.
+* `REPLICA_SIZE`: `replica_size`  for PERSIA modules.
+
+Optional fields in `.honcho.env`
+
+* `NPROC_PER_NODE`: number of processes per node to specify.
+* `ENABLE_CUDA`: use cuda or not.
 * `PERSIA_NATS_IP`: set this environment to 
 
 ```env
 # .honcho.env
 
+HONCHO=1 # required by PERSIA to determine the rank
+
+REPLICA_INDEX=0 # required by PERSIA to determine the replica_index for data_loader
+REPLICA_SIZE=1 # required by PERSIA to determine the replica_size for data_loader
+
+ENABLE_CUDA=0 # enable cuda or not
+NPROC_PER_NODE=1 # number of processes per node to specify.
 ENABLE_CUDA=0 # enable cuda or not
 
 # default nats_server ip address
@@ -506,7 +521,7 @@ PERSIA_NATS_IP=nats://0.0.0.0:4222
 ```
 **Configuring Procfile**
 
-We can add multiple replica service as we want in `Procfile`. In below file by adding `embedding_server{replica_num}` and `embedding_worker{replica_num}` there launch three `embedding-parameter-server` and two `embedding-worker` subprocesses.
+We can add multiple replica service as we want in `Procfile`. In below file by adding `embedding_server{replica_num}` and `embedding_worker{replica_num}` there launch three `embedding-parameter-server` and two `embedding-worker` subprocesses. TODO(wnagyulong): fix
 
 ```bash
 # Procfile
