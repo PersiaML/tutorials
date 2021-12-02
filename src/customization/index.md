@@ -174,8 +174,11 @@ id_type_features = [
 ]
 
 persia_batch = PersiaBatch(
-  id_type_features=id_type_features
+  id_type_features=id_type_features,
+  requires_grad=False
+
 )
+
 with DataCtx() as ctx:
   ctx.send_data(persia_batch)
 ```
