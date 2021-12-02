@@ -1,6 +1,8 @@
 # Data Processing
 
-To adapt most recommendation scene, the scene that data come from different way, different datatype and shape, PERSIA provides the `PersiaBatch` to resolve this problem.
+<!-- To adapt most recommendation scene, the scene that data come from different way, different datatype and shape, PERSIA provides the `PersiaBatch` to resolve this problem. -->
+
+You can use `PersiaBatch` to state a batch of data in various types, shapes and implications.
 
 <img src="./img/persia_batch_description.svg" width="100%">
 

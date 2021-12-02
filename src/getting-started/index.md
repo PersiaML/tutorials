@@ -42,7 +42,7 @@ To run a customized training task on your own dataset and models, you can custom
 - **Data preprocessing configuration file:** A file that defines the data preprocessing. This file is named as `data_loader.py` by default. For more details see [training data](../customization/index.md#training-data).
 
 
-To assign the file path for these configuration files, we can set the environment variables
+To assign the file path for these configuration files, you can set the environment variables
 `PERSIA_EMBEDDING_CONFIG`, `PERSIA_GLOBAL_CONFIG`, `PERSIA_NN_WORKER_ENTRY`,
 `PERSIA_DATALOADER_ENTRY` by PERSIA launchers. For more
 details on how to set these environment variables, see
@@ -50,7 +50,7 @@ details on how to set these environment variables, see
 
 ## Run Manually
 
-The data of adult income should be downloaded and preprocessed before we getting started to run the example PERSIA training task:
+The data of adult income should be downloaded and preprocessed before you getting started to run the example PERSIA training task:
 
 <!-- To launch the PERSIA adult income prediction task  manually, the first step is to download the corresponding dataset and preprocess the train data and test data. We already prepare the script to help you finish this step. -->
 
@@ -65,7 +65,7 @@ Now you can start your first PERSIA training task with one of the following meth
 
 ### Using Docker-Compose
 
-[Docker-compose](https://docs.docker.com/compose/) is a tool for defining and running multi-container Docker applications. By editing the `docker-compose.yml` file, you can customize the PERSIA training task (such as `image`, `replicas`). See PERSIA docker-compose [configuration](../customization/index.md#docker-compose-launcher) for more details.
+[Docker-compose](https://docs.docker.com/compose/) is a tool for defining and running multi-container Docker applications. By modifying the `docker-compose.yml` file, you can customize the PERSIA training task (such as `image`, `replicas`). See PERSIA docker-compose [configuration](../customization/index.md#docker-compose-launcher) for more details.
 
 TODO: fix content consistency @wangyulong
 
@@ -77,7 +77,7 @@ TODO: fix content consistency @wangyulong
 **Run**
 
 <!-- We already provide the `docker-compose.yml` and `.docker.env` for adult income example.  -->
-Try below command to start your `PERSIA` task after install the requirements.
+Use following instructions to start your `PERSIA` training task after installing the requirements.
 
 ```bash
 cd examples/src/adult-income && make run
@@ -85,7 +85,10 @@ cd examples/src/adult-income && make run
 
 ### Using Python Package
 
-Alternatively, you can use PERSIA's Python packages directly to run a PERSIA task. In this way, you have the maximum flexibility (and you are free to modify source code to build and use your customized PERSIA Python packages).
+You are free to modify source code to build and use your customized PERSIA Python packages when using Python package.
+
+<!-- Alternatively, you can use PERSIA's Python packages directly to run a PERSIA task.  -->
+<!-- In this way, you have the maximum flexibility (and you are free to modify source code to build and use your customized PERSIA Python packages). -->
 
 **Requirements**
 
@@ -108,9 +111,9 @@ Wheels (precompiled binary packages) are available for Linux (x86_64). Package n
 
 **From Source**
 
-We provide the following instructions to build PERSIA Python packages from source (Ubuntu 20.04 & Windows 10. It should be similar on other OSes).
+Use following instructions to build PERSIA Python packages from source (Ubuntu 20.04 & Windows 10. It should be similar on other OSes).
 
-> **Note**: You need to provide environment variable `USE_CUDA=1` to add CUDA support (for GPU training). In this case, the CUDA runtime path should be already present in `LD_LIBRARY_PATH`.
+> **Note**: You need to set environment variable `USE_CUDA=1` to add CUDA support (for GPU training). In this case, the CUDA runtime path should be already present in `LD_LIBRARY_PATH`.
 
 **Ubuntu 20.04:**
 
@@ -147,7 +150,7 @@ NATIVE=1 pip3 install .
 
 **Run**
 
-After installing PERSIA Python package locally, you can launch the example adult income prediction training task with:
+After installing PERSIA Python package locally, you are able to launch the example adult income prediction training task with:
 
 ```bash
 cd examples/src/adult-income
