@@ -40,11 +40,10 @@ There are a few files you can customize in PERSIA:
 
 ## Training Data
 
-PersiaBatch consists of three parts: contiguous data, categorical data and label data.
-
+A `PersiaBatch` is consists of three parts: contiguous data, categorical data and label data.
 
 ### Add ID Type Feature
-IDTypeFeature contains variable length of categorical data. In PERSIA, `IDTypeFeature` store the `List[np.array]` data that is a list of list form of sparse matrix. And it only accepts the `np.uint64` element. 
+`IDTypeFeature` contains variable length of categorical data. In PERSIA, `IDTypeFeature` store the `List[np.array]` data which is a list of sparse matrix. And it only accepts `np.uint64` elements.
 
 For example, you can add `user_id` and `photo_id` data into a `IDTypeFeatureSparse`.
 
@@ -126,7 +125,8 @@ non_id_type_features.append(NonIDTypeFeature(image_data, name="LSVR_image"))
 ```
 
 ### Add Label
-Adding label is as same as the `NonIDTypeFeature`, you can add different datatype label data such as `click_or_not`, `income`, etc.
+
+Adding a label is as same as the `NonIDTypeFeature`, you can add different datatype label data such as `bool`, `float32`, etc.
 
 ```python
 import numpy as np
@@ -160,7 +160,7 @@ ctr_with_income = np.hstack([ctr_batch_data, income_batch_data])
 labels.append(Label(ctr_with_name, "ctr_with_income))
 ```
 ### Send PersiaBatch
-Use `persia.ctx.DataCtx` to send the data to `nn_worker` and `embedding_worker` after created the `PersiaBatch`.
+Use `persia.ctx.DataCtx` to send the data to `nn_worker` and `embedding_worker` after the `PersiaBatch` created.
 
 ```python
 import numpy as np
@@ -185,7 +185,7 @@ with DataCtx() as ctx:
 
 ### Define DNN model
 
-You can define any DNN model structure as you want, note that the forward function signature of the model should be as below.
+You can define any DNN model structure as you want, note that the forward function signature of the model should be same with follow.
 
 ```python
 from typing import List
@@ -215,9 +215,9 @@ adagrad_embedding_optimizer = Adagrad(lr)
 adam_embedding_optimizer = Adam(lr)
 ```
 
-### Customize PERSIA Training Context 
+### Customize PERSIA Training Context
 
-After above, a PERSIA training context should be created to acquire dataloder and manage sparse embedding .
+After above, a PERSIA training context should be created to acquire dataloder and manage sparse embedding.
 
 ```python
 # train.py
@@ -291,15 +291,15 @@ There are launchers to help you launch a PERSIA training task.
 <!-- 
 We provide the different launcher to satisfy your requirements. The below launchers can run the PERSIA task in different handy level. -->
 
-- K8S launcher: Kubernetes launcher is easy to deploy large scale training. 
+- K8S launcher: Kubernetes launcher is easy to deploy large scale training.
 - docker-compose launcher: Docker compose is the other way like `k8s` but is more lightweight.
-- honcho launcher: A Procfile manager that need to build PERSIA in manually(Currently persia can build in linux, macOS, windows10.). It is hard for inexperienced person to install the requirement. But is friendly to developer to develop and debug.
+- honcho launcher: A Procfile manager that need to build PERSIA in manually(Currently persia can build in linux, macOS, windows10.). It is hard for inexperienced ones to install the requirement. But is friendly for developers to develop and debug.
 
 All of these launchers use environment variables(`PERSIA_GLOBAL_CONFIG`, `PERSIA_EMBEDDING_CONFIG`, `PERSIA_NN_WORKER_ENTRY`, `PERSIA_DATALOADER_ENTRY`) to assign the path of the PERSIA configuration files.
 
 ### K8S Launcher
 
-The PERSIA Operator is a Kubernetes [custom resource definitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/). You can define your distributed persia task by an operator file.
+The PERSIA Operator is a Kubernetes [custom resource definitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/). You can define your distributed PERSIA training task by an operator file.
 
 Here is an example for an operator file
 
