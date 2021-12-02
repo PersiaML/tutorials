@@ -384,10 +384,11 @@ TODO(wangyulong): add description
 Docker compose can use docker-image directly
 
 **Configuring ENV**
+
 Required fields in `.docker.env`
 
-* `DOCKER_COMPOSE`: Must set to any value to ensure the PERSIA can know the task is launch by `docker-compose`
-* `REPLICA_SIZE`: Replica_size  for `persia.env`
+* `DOCKER_COMPOSE`: Should be set to `1`.
+* `REPLICA_SIZE`: `Replica_size`  for `persia.env`
 
 Optional fields in `.docker.env`
 * `NPROC_PER_NODE`: How many gpu or cpu to use.Requires by `persia.launcher` and can manually set this value in bash command.
