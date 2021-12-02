@@ -11,7 +11,6 @@ The training process can be summarized by the following figure:
 
 There are a few files you can customize in PERSIA:
 
-TODO: keep order consistent with the following sections
 1. Data preprocessing configuration file: `data_loader.py`
 2. Model definition configuration file: `train.py`
 3. Embedding configuration file: `embedding_config.yaml`
