@@ -1,4 +1,5 @@
 # Training Context
+
 PERSIA training context is a configurable context that help you to set the corresponding embedding training configuration. PERSIA support both gpu nn_worker and cpu nn_worker.Different type of nn_worker may not support the same feature.Usually the gpu nn_worker will do will perform than the cpu nn_worker.
 
 We will introduce several configurations that may help you to configure your task while using PERSIA in training job.

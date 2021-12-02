@@ -43,7 +43,7 @@ There are a few files you can customize in PERSIA:
 A `PersiaBatch` is consists of three parts: contiguous data, categorical data and label data.
 
 ### Add ID Type Feature
-`IDTypeFeature` contains variable length of categorical data. In PERSIA, `IDTypeFeature` store the `List[np.array]` data which is a list of sparse matrix. And it only accepts `np.uint64` elements.
+`IDTypeFeature` contains variable length of categorical data. `IDTypeFeature` store the `List[np.array]` data which is a list of sparse matrix. Note that it only accepts `np.uint64` elements.
 
 For example, you can add `user_id` and `photo_id` data into a `IDTypeFeatureSparse`.
 
@@ -153,11 +153,11 @@ income_batch_data = np.array([
   [6660],
   [3000],
 ], dtype=np.float32)
-labels.append(Label(income_batch_data, "income))
+labels.append(Label(income_batch_data, "income"))
 
-# add ctr with income, but will cost extra bytes to cast ctr_batch_data from bool to float32 
+# add ctr with income, but will cost extra bytes to cast ctr_batch_data from bool to float32
 ctr_with_income = np.hstack([ctr_batch_data, income_batch_data])
-labels.append(Label(ctr_with_name, "ctr_with_income))
+labels.append(Label(ctr_with_name, "ctr_with_income"))
 ```
 
 ### Send PersiaBatch
