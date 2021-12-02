@@ -283,14 +283,15 @@ metadata:
   name: adult-income  # persia job name, need to be globally unique
   namespace: default  # k8s namespace to deploy to this job
 spec:
-  # the following path are the path inside the container
-  globalConfigPath: /home/PersiaML/examples/src/adult-income/config/global_config.yml
-  embeddingConfigPath: /home/PersiaML/examples/src/adult-income/config/embedding_config.yml
-  nnWorkerPyEntryPath: /home/PersiaML/examples/src/adult-income/train.py
-  dataLoaderPyEntryPath: /home/PersiaML/examples/src/adult-income/data_loader.py
+  persiaEnv:
+    # the following path are the path inside the container
+    PERSIA_GLOBAL_CONFIG: /home/PERSIA/examples/src/adult-income/config/global_config.yml
+    PERSIA_EMBEDDING_CONFIG: /home/PERSIA/examples/src/adult-income/config/embedding_config.yml
+    PERSIA_NN_WORKER_ENTRY: /home/PERSIA/examples/src/adult-income/train.py
+    PERSIA_DATALOADER_ENTRY: /home/PERSIA/examples/src/adult-income/data_loader.py
   env:
     - name: PERSIA_NATS_IP
-      value: nats://persia-nats-service:4222
+      value: nats://persia-nats-service:4222  # nats server ip address, need to be same with nats operator's name
 
   embeddingParameterServer:
     replicas: 1
@@ -317,6 +318,8 @@ spec:
     env:
       - name: CUBLAS_WORKSPACE_CONFIG
         value: :4096:8
+      - name: ENABLE_CUDA
+        value: "1"
 
   dataloader:
     replicas: 1

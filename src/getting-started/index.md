@@ -36,16 +36,17 @@ This runs the adult income prediction training task defined by `adult-income-pre
 
 To run a customized training task on your own dataset and models, we can customize the following configuration files:
 
-- **Embedding configuration file:** A file defining the embedding configurations (e.g. embedding dimension, and sum pooling). This file is named as `embedding_config.yaml` by default. For more details see [embedding config](../configuration/index.md#embedding-config). TODO: @zhuxuefeng introduce each config file env variables
+- **Embedding configuration file:** A file defining the embedding configurations (e.g. embedding dimension, and sum pooling). This file is named as `embedding_config.yaml` by default. For more details see [embedding config](../configuration/index.md#embedding-config).
 - **Embedding PS configuration file:** Configuration of embedding parameter servers, e.g. max capacity of embedding parameter servers. This file is named as `global_config.yaml` by default. For more details see [global config](../configuration/index.md#global-configuration).
 - **Model definition configuration file:** A file that defines the neural network (NN) using PyTorch. This file is named as `train.py` by default. For more details see [model definition](../customization/index.md#model-definition).
 - **Data preprocessing configuration file:** A file that defines the data preprocessing. This file is named as `data_loader.py` by default. For more details see [training data](../customization/index.md#training-data).
 
-To change the file name for these configuration files, we can remap the
-`embeddingConfigPath`, `globalConfigPath`, `nnWorkerPyEntryPath`,
-`dataLoaderPyEntryPath` in the Kubernetes PERSIA task definition file. For more
-details on how to customize Kubernetes PERSIA task definitions, see
-[K8S launcher customization](../customization/index.md#k8s-launcher).
+
+To assign the file path for these configuration files, we can set the environment variables
+`PERSIA_EMBEDDING_CONFIG`, `PERSIA_GLOBAL_CONFIG`, `PERSIA_NN_WORKER_ENTRY`,
+`PERSIA_DATALOADER_ENTRY` by PERSIA launchers. For more
+details on how to set these environment variables, see
+[launcher configuration](../customization/index.md#launcher-configuration).
 
 ## Run Manually
 
