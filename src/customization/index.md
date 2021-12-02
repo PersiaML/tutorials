@@ -204,7 +204,7 @@ class DNN(nn.Module):
 
 ### Modify Embedding Optimizer
 
-There are several kinds of embedding optimizers in PERSIA, for more details, see  [api doc](https://persiaml.pages.dev/main/autoapi/persia/embedding/optim/).
+There are several kinds of embedding optimizers in PERSIA, for more details, see [api doc](https://persiaml.pages.dev/main/autoapi/persia/embedding/optim/).
 
 ```python
 from persia.embedding.optim import SGD, Adagrad, Adam
