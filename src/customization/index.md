@@ -494,15 +494,11 @@ There are fields when launching the PERSIA task with Honcho:
 
 Required fields in `.honcho.env`
 
-* `HONCHO` must set to `1`.
-* `REPLICA_INDEX`: `replica_index` for PERSIA modules.
-* `REPLICA_SIZE`: `replica_size`  for PERSIA modules.
+* `PERSIA_NATS_IP`: set for nats-server ip address.
 
 Optional fields in `.honcho.env`
 
-* `NPROC_PER_NODE`: number of processes per node to specify.
 * `ENABLE_CUDA`: use cuda or not.
-* `PERSIA_NATS_IP`: nats service name.
 
 ```env
 # .honcho.env
