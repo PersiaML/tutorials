@@ -77,14 +77,14 @@ photo_id_batch_data = [
 id_type_features.append(IDTypeFeatureSparse(photo_id_batch_data, "photo_id"))
 ```
 
-After adding `IDTypeFeature`, you should add corresponding `id_type_feature` config in `embedding_config.yml`. Review [configuration](../configuration/index.md) chapter for more details about how to config the `id_type_feature`, such as `dim`, `sqrt_scaling`, etc.
+After adding `IDTypeFeature`, you have to add corresponding `id_type_feature` config in `embedding_config.yml`. See [configuration](../configuration/index.md) for more details about how to config the `id_type_feature`, such as `dim`, `sqrt_scaling`, etc.
 
 _more advanced [id_type_feature processing](../data-processing/index.md#id-type-feature)_
 
 
 ### Add Non-ID Type Feature
 
-You can add multiple `NonIDTypeFeature` into `PersiaBatch` with various datatype. Concatting multiple `non_id_type_features` with same datatype into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example, you are able to add `height`, `income` or even `image` data.
+You are also able to add multiple `NonIDTypeFeature` into `PersiaBatch` with various datatype. Concatting multiple `non_id_type_features` with same datatype into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example, you are able to add `height`, `income` or even `image` data.
 
 ```python
 import numpy as np
@@ -159,8 +159,10 @@ labels.append(Label(income_batch_data, "income))
 ctr_with_income = np.hstack([ctr_batch_data, income_batch_data])
 labels.append(Label(ctr_with_name, "ctr_with_income))
 ```
+
 ### Send PersiaBatch
-Use `persia.ctx.DataCtx` to send the data to `nn_worker` and `embedding_worker` after the `PersiaBatch` created.
+
+Use `persia.ctx.DataCtx` to send the data to `nn_worker` and `embedding_worker` after the `PersiaBatch` created:
 
 ```python
 import numpy as np
@@ -181,11 +183,12 @@ persia_batch = PersiaBatch(
 with DataCtx() as ctx:
   ctx.send_data(persia_batch)
 ```
+
 ## Model Definition
 
 ### Define DNN model
 
-You can define any DNN model structure as you want, note that the forward function signature of the model should be same with follow.
+You can define any DNN model structure as you want, only note that the forward function signature of the model should be same with follow.
 
 ```python
 from typing import List
@@ -203,7 +206,7 @@ class DNN(nn.Module):
 
 ### Modify Embedding Optimizer
 
-There are several kinds of embedding optimizers in PERSIA, for more details, see [api doc](https://persiaml.pages.dev/main/autoapi/persia/embedding/optim/).
+There are several kinds of embedding optimizers in PERSIA. For more details, see [api doc](https://persiaml.pages.dev/main/autoapi/persia/embedding/optim/).
 
 ```python
 from persia.embedding.optim import SGD, Adagrad, Adam
