@@ -50,14 +50,18 @@ details on how to set these environment variables, see
 
 ## Run Manually
 
-To launch the PERSIA adult income task manually, the first step is to download the corresponding dataset and preprocess the train data and test data. We already prepare the script to help you finish this step.
+The data of adult income should be downloaded and preprocessed before we getting started to run the example PERSIA training task:
+
+<!-- To launch the PERSIA adult income prediction task  manually, the first step is to download the corresponding dataset and preprocess the train data and test data. We already prepare the script to help you finish this step. -->
 
 ```bash
 git clone https://github.com/PersiaML/PERSIA.git
 cd PERSIA/examples/src/adult-income/data && ./prepare_data.sh
 ```
 
-After downloading the adult income dataset. You can choose from the following two methods to start your first PERSIA task.
+<!-- After downloading the adult income dataset. You can choose from the following two methods to start your first PERSIA task. -->
+
+Now you can start your first PERSIA training task with one of the following methods.
 
 ### Using Docker-Compose
 
@@ -72,7 +76,8 @@ TODO: fix content consistency @wangyulong
 
 **Run**
 
-We already provide the `docker-compose.yml` and `.docker.env` for adult income example. Try below command to start your `PERSIA` task after install the requirements.
+<!-- We already provide the `docker-compose.yml` and `.docker.env` for adult income example.  -->
+Try below command to start your `PERSIA` task after install the requirements.
 
 ```bash
 cd examples/src/adult-income && make run
@@ -80,7 +85,7 @@ cd examples/src/adult-income && make run
 
 ### Using Python Package
 
-Alternatively, you can use PERSIA's Python packages directly to run a PERSIA task. In this way, users have the maximum flexibility (and you are free to modify source code to build and use your customized PERSIA Python packages).
+Alternatively, you can use PERSIA's Python packages directly to run a PERSIA task. In this way, you have the maximum flexibility (and you are free to modify source code to build and use your customized PERSIA Python packages).
 
 **Requirements**
 
@@ -90,7 +95,9 @@ Alternatively, you can use PERSIA's Python packages directly to run a PERSIA tas
 
 **Using Pre-compiled Wheels**
  
-We provide pre-compiled wheels for linux platform. If your Python version is greater than 3.6. You can install pre-compiled PERSIA packages with:
+<!-- We provide pre-compiled wheels for linux platform. If your Python version is greater than 3.6. You can install pre-compiled PERSIA packages with: -->
+
+Wheels (precompiled binary packages) are available for Linux (x86_64). Package names are different depending on your CUDA Toolkit version (CUDA Toolkit version is shown in` nvcc --version`). All of these precompiled binary packages needs Python greater than 3.6.
 
 |CUDA Toolkit version|Installation command|
 |-|-|
