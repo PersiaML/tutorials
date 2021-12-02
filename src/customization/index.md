@@ -100,7 +100,7 @@ height_batch_data = np.array([
   [177],
 ], dtype=np.float32)
 
-non_id_type_features.append(NonIDTypeFeature(height_batch_data, "height"))
+non_id_type_features.append(NonIDTypeFeature(height_batch_data, name="height"))
 
 # income data
 income_batch_data = np.array([
@@ -117,14 +117,14 @@ non_id_type_features.append(NonIDTypeFeature(income_batch_data, name="income"))
 income_with_height = np.hstack([height_batch_data, income_batch_data])
 non_id_type_features.append(NonIDTypeFeature(income_with_height, name="income_with_height"))
 
-# add image data
+# add five image data with RGB channel
 image_data = np.ones((5, 224, 224, 3), dtype=np.uint8)
 non_id_type_features.append(NonIDTypeFeature(image_data, name="LSVR_image"))
 ```
 
 ### Add Label
 
-Adding a label is as same as the `NonIDTypeFeature`, you can add different datatype label data such as `bool`, `float32`, etc.
+Adding a label is as same as the `NonIDTypeFeature`. You can add different datatype label data such as `bool`, `float32`, etc.
 
 ```python
 import numpy as np
@@ -141,7 +141,7 @@ ctr_batch_data = np.array([
   1
 ], dtype=np.bool)
 
-labels.append(Label(ctr_batch_data, "ctr"))
+labels.append(Label(ctr_batch_data, name="ctr"))
 
 # add income label data
 income_batch_data = np.array([
@@ -151,7 +151,7 @@ income_batch_data = np.array([
   [6660],
   [3000],
 ], dtype=np.float32)
-labels.append(Label(income_batch_data, "income"))
+labels.append(Label(income_batch_data, name="income"))
 
 # add ctr with income, but will cost extra bytes to cast ctr_batch_data from bool to float32
 ctr_with_income = np.hstack([ctr_batch_data, income_batch_data])
@@ -173,7 +173,7 @@ id_type_features = [
 ]
 
 persia_batch = PersiaBatch(
-  id_type_features=id_type_features,
+  id_type_features,
   requires_grad=False
 )
 
@@ -183,9 +183,11 @@ with DataCtx() as ctx:
 
 ## Model Definition
 
+Model definition includes three parts.Customize the `forward` function in `torch.nn.Module`, select the embedding optimizer and customize the `persia.ctx.TrainCtx`. 
+
 ### Define DNN model
 
-You can define any DNN model structure as you want, only note that the forward function signature of the model should be same with follow.
+You can define any DNN model structure as you want. Only note that the forward function signature of the model should be the same as follow.
 
 ```python
 from typing import List
@@ -209,15 +211,14 @@ There are several kinds of embedding optimizers in PERSIA. For more details, see
 from persia.embedding.optim import SGD, Adagrad, Adam
 from persia.ctx import TrainCtx
 
-lr = 1e-3
-sgd_embedding_optimizer = SGD(lr)
-adagrad_embedding_optimizer = Adagrad(lr)
-adam_embedding_optimizer = Adam(lr)
+sgd_embedding_optimizer = SGD(1e-3)
+adagrad_embedding_optimizer = Adagrad(1e-3)
+adam_embedding_optimizer = Adam(1e-3)
 ```
 
 ### Customize PERSIA Training Context
 
-After above, a PERSIA training context should be created to acquire dataloder and manage sparse embedding.
+After the above, a PERSIA training context should be created to acquire the `Dataloder` and manage the embedding.
 
 ```python
 # train.py
@@ -244,8 +245,6 @@ dense_optimizer = SGD(model.parameters(), lr=0.1)
 # Embedding parameters optimizer
 embedding_optimizer = Adagrad(lr=1e-3)
 
-loss_fn = nn.BCELoss()
-
 with TrainCtx(
     model=model,
     embedding_optimizer=embedding_optimizer,
@@ -255,12 +254,7 @@ with TrainCtx(
 
     train_data_loader = Dataloader(dataset)
     for (batch_idx, data) in enumerate(loader):
-        output, labels = ctx.forward(data)
-        label = labels[0]
-        loss= loss_fn(output, target)
-        scaled_loss = ctx.backward(loss)
-        logger.info(f"current idx: {batch_idx} loss: {loss}")
-
+      ...
 ```
 
 _more advanced features: [TrainCtx](../training-context/index.md)_
