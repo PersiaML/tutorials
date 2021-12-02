@@ -78,7 +78,7 @@ photo_id_batch_data = [
 id_type_features.append(IDTypeFeatureSparse(photo_id_batch_data, "photo_id"))
 ```
 
-After adding `IDTypeFeature`, you should add corresponding `id_type_feature` config in `embedding_config.yml`. Review [configuration](../configuration/index.md) chapter for more detail about how to config the `id_type_feature`, such as `dim`, `sqrt_scaling`, etc.
+After adding `IDTypeFeature`, you should add corresponding `id_type_feature` config in `embedding_config.yml`. Review [configuration](../configuration/index.md) chapter for more details about how to config the `id_type_feature`, such as `dim`, `sqrt_scaling`, etc.
 
 _more advanced [id_type_feature processing](../data-processing/index.md#id-type-feature)_
 
@@ -163,7 +163,10 @@ labels.append(Label(ctr_with_name, "ctr_with_income))
 ## Model Definition
 
 ### Define DNN model
-For DNN model definition, you can design any model structure as you wanted. The only restriction is to set the DNN model forward function signature as below form.
+
+<!-- For DNN model definition, you can define any DNN model structure as you wanted. The only restriction is to set the DNN model forward function signature as below form. -->
+
+You can define any DNN model structure as you want, note that the forward function signature of the model should be as below.
 
 ```python
 from typing import List
@@ -180,7 +183,10 @@ class DNN(nn.Module):
 ```
 
 ### Modify Embedding Optimizer
-PERSIA provide the common embedding optimizer for Deep Learning scene.Review our [api doc](https://persiaml.pages.dev/main/autoapi/persia/embedding/optim/) to choose the suitable embedding optimizer for you training.
+
+<!-- PERSIA provide several kinds of embedding optimizers. Review our [api doc](https://persiaml.pages.dev/main/autoapi/persia/embedding/optim/) to choose the suitable embedding optimizer for you training. -->
+
+There is several kinds of embedding optimizers in PERSIA, for more details, see  [api doc](https://persiaml.pages.dev/main/autoapi/persia/embedding/optim/).
 
 ```python
 from persia.embedding.optim import SGD, Adagrad, Adam
@@ -193,7 +199,10 @@ adam_embedding_optimizer = Adam(lr)
 ```
 
 ### Customize PERSIA Training Context 
-Final step is create the training context to acquire dataloder and sparse embedding process
+
+<!-- Final step is create the training context to acquire dataloder and sparse embedding process -->
+
+After above, a PERSIA training context should be created to acquire dataloder and manage sparse embedding .
 
 ```python
 # train.py
