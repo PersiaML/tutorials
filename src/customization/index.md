@@ -84,7 +84,7 @@ _more advanced [id_type_feature processing](../data-processing/index.md#id-type-
 
 ### Add Non-ID Type Feature
 
-You are also able to add multiple `NonIDTypeFeature` into `PersiaBatch` with various datatype. Concatting multiple `non_id_type_features` with same datatype into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example, you are able to add `height`, `income` or even `image` data.
+You are also able to add multiple `NonIDTypeFeature` into `PersiaBatch` with various datatype. Concatting multiple `non_id_type_features` with same datatype into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example, you are able to add `float32` or `uint8` data.
 
 ```python
 import numpy as np
