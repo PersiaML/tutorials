@@ -291,7 +291,7 @@ spec:
     PERSIA_DATALOADER_ENTRY: /home/PERSIA/examples/src/adult-income/data_loader.py
   env:
     - name: PERSIA_NATS_IP
-      value: nats://persia-nats-service:4222  # nats server ip address, need to be same with nats operator's name
+      value: nats://persia-nats-service:4222  # hostname need to be same with nats operator's name
 
   embeddingParameterServer:
     replicas: 1
