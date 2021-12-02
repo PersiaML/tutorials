@@ -45,7 +45,7 @@ PersiaBatch consists of three parts: contiguous data, categorical data and label
 
 
 ### Add ID Type Feature
-IDTypeFeature contains variable length of categorical data. In PERSIA, `IDTypeFeature` store the `List[np.array]` data that is a list of list form of sparse matrix. And it only accept the `np.uint64` element. 
+IDTypeFeature contains variable length of categorical data. In PERSIA, `IDTypeFeature` store the `List[np.array]` data that is a list of list form of sparse matrix. And it only accepts the `np.uint64` element. 
 
 For example, you can add `user_id` and `photo_id` data into a `IDTypeFeatureSparse`.
 
@@ -86,7 +86,7 @@ _more advanced [id_type_feature processing](../data-processing/index.md#id-type-
 
 ### Add Non-ID Type Feature
 
-You can add multiple `NonIDTypeFeature` into `PersiaBatch` with various datatype. Concatting multiple `non_id_type_features` with same datatype into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example you are able to add `height`, `income` or even `image` data.
+You can add multiple `NonIDTypeFeature` into `PersiaBatch` with various datatype. Concatting multiple `non_id_type_features` with same datatype into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example, you are able to add `height`, `income` or even `image` data.
 
 ```python
 import numpy as np
@@ -543,7 +543,7 @@ We can add multiple replica service as we want in `Procfile`. In below file by a
 data_loader: python3 data_loader.py && cat 
 # nn_worker
 nn_worker: persia-launcher nn-worker train.py --nproc-per-node=NPROC_PER_NODE --node-rank=0 --nnodes=1
-# launch three subprocess of embedding parameter server
+# launch three subprocesses of embedding parameter server
 embedding_server0: persia-launcher embedding-parameter-server --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 0 --replica-size 3 --port 10000
 embedding_server1: persia-launcher embedding-parameter-server --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 1 --replica-size 3 --port 10001
 embedding_server2: persia-launcher embedding-parameter-server --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 2 --replica-size 3 --port 10002

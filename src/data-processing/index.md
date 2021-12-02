@@ -1,6 +1,6 @@
 # Data Processing
 
-To adapt most recommendation scene, the scene that data come from different way, different datatype and shape, PERSIA provide the `PersiaBatch` to resolve this problem.
+To adapt most recommendation scene, the scene that data come from different way, different datatype and shape, PERSIA provides the `PersiaBatch` to resolve this problem.
 
 <img src="./img/persia_batch_description.svg" width="100%">
 
@@ -13,7 +13,7 @@ To adapt most recommendation scene, the scene that data come from different way,
 
 ## Processing ID Type Feature
 
-ID Type Features is a sparse tensor that contains variable length of discrete value. Such user_id, photo_id, client_id. There should at least exists categorical name and dimension to describe a categorical data. PERSIA parameter server will lookup the discrete `id`  to a vector and the dimension of vector is equal to the value you describe before. It is simple to add one categorical data in PERSIA, modify the embedding config file and add the categorical name and its dimension.Both `embedding-worker` and `embedding-parameter-server` will load the embedding config file to apply the categorical data configuration.
+ID Type Features is a sparse tensor that contains variable length of discrete value. Such user_id, photo_id, client_id. There should at least exists categorical name and dimension to describe a categorical data. PERSIA parameter server will look up the discrete `id`  to a vector and the dimension of vector is equal to the value you describe before. It is simple to add one categorical data in PERSIA, modify the embedding config file and add the categorical name and its dimension.Both `embedding-worker` and `embedding-parameter-server` will load the embedding config file to apply the categorical data configuration.
 
 ID type feature is the sparse 2d vector that define as the list of list with a feature_name in PERSIA(`Tuple[str, List[List]]`) .Each sample in the id_type_feature can be variable length.
 
@@ -140,8 +140,8 @@ non_id_type_features.append(NonIDTypeFeature(np.eye((batch_size, 3) dtype=np.flo
 non_id_type_features.append(NonIDTypeFeature(np.ones((batch_size, 3, 224, 224), dtype=np.int8)))
 
 labels = []
-# add label 
-# multiple label classification label
+# add label
+# multiple labels classification
 labels.append(Label(np.ones((batch_size, 4), dtype=np.bool)))
 # regression label
 labels.append(Label(np.ones((batch_size), dtype=np.float32)))

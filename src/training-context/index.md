@@ -1,5 +1,5 @@
 # Training Context
-PERSIA training context is a configurable context that help you to set the corresponding embedding training configuration.PERSIA support both gpu nn_worker and cpu nn_worker.Different type of nn_worker may not support the same feature.Usually the gpu nn_worker will do will perform than the cpu nn_worker.
+PERSIA training context is a configurable context that help you to set the corresponding embedding training configuration. PERSIA support both gpu nn_worker and cpu nn_worker.Different type of nn_worker may not support the same feature.Usually the gpu nn_worker will do will perform than the cpu nn_worker.
 
 We will introduce several configurations that may help you to configure your task while using PERSIA in training job.
 
@@ -19,9 +19,6 @@ embedding_config = EmbeddingConfig(
     weight_bound=1
 )
 
-TrainCtx(
-    embedding_config=embedding_config
-)
 ```
 ## Mixed Precision Training
 
@@ -47,7 +44,6 @@ master_addr = "localhost"
 master_port = 2307
 
 DDPOption(backend="nccl", init_method=init_method, master_addr=master_addr, master_port=master_port)
-o
 ```
 
 **Configure BaguaDistributedOption**
