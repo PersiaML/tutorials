@@ -84,7 +84,7 @@ _more advanced [id_type_feature processing](../data-processing/index.md#id-type-
 
 ### Add Non-ID Type Feature
 
-You are also able to add multiple `NonIDTypeFeature` into `PersiaBatch` with various datatype. Concatting multiple `non_id_type_features` with same datatype into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example, you are able to add `height`, `income` or even `image` data.
+You are also able to add multiple `NonIDTypeFeature` into `PersiaBatch` with various datatype. Concatting multiple `non_id_type_features` with same datatype into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example, you are able to add `float32` or `uint8` data.
 
 ```python
 import numpy as np
@@ -491,7 +491,9 @@ Honcho launcher is convenient for debug. You can simulate distributed environmen
 
 **Configuring Env**
 
-Fields in `.honcho.env`:
+There are fields when launching the PERSIA task with Honcho:
+
+Required fields in `.honcho.env`
 
 * `PERSIA_NATS_IP`: set for nats-server ip address.
 * `LOG_LEVEL`: set log_level for `embedding-worker` and `embedding-parameter-server`.
@@ -506,7 +508,8 @@ LOG_LEVEL=info
 ```
 **Configuring Procfile**
 
-We can add multiple replica service as we want in `Procfile`. In below file by adding `embedding_server{replica_num}` and `embedding_worker{replica_num}` there launch three `embedding-parameter-server` and two `embedding-worker` subprocesses. TODO(wnagyulong): fix
+You can add multiple replica of PERSIA modules as you want in `Procfile`.
+For example, by adding `embedding_server{replica_num}` and `embedding_worker{replica_num}`, you can launch three `embedding-parameter-server` and two `embedding-worker` subprocesses.
 
 ```bash
 # Procfile
@@ -528,9 +531,9 @@ nats_server: nats-server
 ```
 ## Build PERSIA Runtime Image Locally
 
-Persia runtime image can biuld from locally to replace the dockerhub official version when you need to modify the source code.Both kubernetes and docker-compose can replace the original persia-runtime-image.
+PERSIA runtime image can be built from local. You can use your customized docker image to launch a PERSIA training task by both kubernetes and docker-compose.
 
-Use below code to build persia-runtime-image by Makefile command.
+Use following instructions to build persia-runtime-image:
 
 ```bash
 git clone https://github.com/PersiaML/PERSIA.git
