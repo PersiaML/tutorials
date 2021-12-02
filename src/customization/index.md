@@ -540,7 +540,7 @@ nats_server: nats-server
 ```
 ## Build PERSIA Runtime Image Locally
 
-Persia runtime image can be built from local. You can use your customized docker image to launch a PERSIA training task by both kubernetes and docker-compose.
+PERSIA runtime image can be built from local. You can use your customized docker image to launch a PERSIA training task by both kubernetes and docker-compose.
 
 Use following instructions to build persia-runtime-image:
 
