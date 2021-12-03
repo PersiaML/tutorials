@@ -80,7 +80,7 @@ A `PersiaBatch` is consists of three parts: ID Type Feature, Non-ID Type Feature
 ### Add ID Type Feature
 `IDTypeFeature` declares categorical data with variable length. It is a sparse matrix(`List[np.array]`) in [LIL](https://scipy-lectures.org/advanced/scipy_sparse/lil_matrix.html) format. Note that it only accepts `np.uint64` elements.
 
-For example, you can append `user_id` and `photo_id` data into an `IDTypeFeature`.
+For example, For example, you can put `user_id` and `photo_id` data into the `IDTypeFeature` separately.
 
 <!-- `IDTypeFeature` contains the variable length of categorical data. `IDTypeFeature` store the `List[np.array]` data which is a [lil](https://scipy-lectures.org/advanced/scipy_sparse/lil_matrix.html) format sparse matrix. Note that it only accepts `np.uint64` elements.
 
@@ -114,14 +114,14 @@ photo_id_batch_data = [
 id_type_features.append(IDTypeFeature(photo_id_batch_data, "photo_id"))
 ```
 
-After appending `IDTypeFeature`, you have to config this `id_type_feature` in `embedding_config.yml`. See [configuration](../configuration/index.md#embedding-config) for more details about how to config the `id_type_feature`, such as `dim`, `sqrt_scaling`, etc.
+After generating `IDTypeFeature`, you have to config this `id_type_feature` in `embedding_config.yml`. See [configuration](../configuration/index.md#embedding-config) for more details about how to config the `id_type_feature`, such as `dim`, `sqrt_scaling`, etc.
 
-_more advanced [id_type_feature processing](../data-processing/index.md#processing-id-type-feature)_
+_more advanced features: [id_type_feature processing](../data-processing/index.md#processing-id-type-feature)_
 
 
 ### Add Non-ID Type Feature
 
-You are also able to add multiple `NonIDTypeFeature` into a `PersiaBatch` with various datatype. Stacking multiple `non_id_type_features` with same datatype horizontally into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example, you are able to add `float32`, `uint8`, etc.
+You are also able to add multiple `NonIDTypeFeature` into a `PersiaBatch` with various datatype. Stacking multiple `non_id_type_features` with same datatype horizontally into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example, you are able to add the `NonIDTypeFeature` with datatype in `float32`, `uint8` or else.
 
 <!-- You are also able to add multiple `NonIDTypeFeature` into `PersiaBatch` with the various datatype. Stacking multiple `non_id_type_features` with the same datatype horizontally into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example, you can add `float32` or `uint8` data. -->
 
@@ -167,7 +167,7 @@ image_data = np.ones((5, 224, 224, 3), dtype=np.uint8)
 non_id_type_features.append(NonIDTypeFeature(image_data, name="LSVR_image"))
 ```
 
-_more advanced [non_id_type_feature processing](../data-processing/index.md##nonid-type-feature-and-label)_
+_more advanced features: [non_id_type_feature processing](../data-processing/index.md##nonid-type-feature-and-label)_
 ### Add Label
 
 Adding a label is as same as the `NonIDTypeFeature`. You can add different datatype label data such as `bool`, `float32`, etc.
@@ -178,7 +178,7 @@ import numpy as np
 from persia.embedding.data import Label
 
 labels = []
-# add ctr label data
+# Add ctr label data
 ctr_batch_data = np.array([
   0,
   1,
@@ -189,7 +189,7 @@ ctr_batch_data = np.array([
 
 labels.append(Label(ctr_batch_data, name="ctr"))
 
-# add income label data
+# Add income label data
 income_batch_data = np.array([
   [37000],
   [7000],
@@ -199,12 +199,13 @@ income_batch_data = np.array([
 ], dtype=np.float32)
 labels.append(Label(income_batch_data, name="income"))
 
-# add ctr with income, but will cost extra bytes to cast ctr_batch_data from bool to float32
+# Add ctr with income, but will cost 
+# extra bytes to cast ctr_batch_data from bool to float32
 ctr_with_income = np.hstack([ctr_batch_data, income_batch_data])
 labels.append(Label(ctr_with_name, "ctr_with_income"))
 ```
 
-_more advanced [processing label](../data-processing/index.md##nonid-type-feature-and-label)_
+_more advanced features: [label processing](../data-processing/index.md##nonid-type-feature-and-label)_
 
 ### Send PersiaBatch
 
@@ -243,7 +244,7 @@ from typing import List
 
 import torch
 
-class DNN(nn.Module):
+class DNN(torch.nn.Module):
     def forward(
       self, 
       non_id_type_feature_tensors: List[torch.Tensor],
