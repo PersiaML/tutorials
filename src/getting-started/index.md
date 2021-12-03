@@ -80,7 +80,7 @@ cd examples/src/adult-income && make run
 
 ### Using Python Package
 
-You are free to modify source code to build and use your customized PERSIA Python packages when using the Python package.
+You are free to modify PERSIA source code and build your customized PERSIA Python package.
 
 **Requirements**
 
