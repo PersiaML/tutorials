@@ -45,7 +45,7 @@ A `PersiaBatch` is consists of three parts: ID Type Feature, Non-ID Type Feature
 ### Add ID Type Feature
 `IDTypeFeature` declares categorical data with variable length. It is a list of sparse matrix(`List[np.array]`) in [lil](https://scipy-lectures.org/advanced/scipy_sparse/lil_matrix.html) format. Note that it only accepts `np.uint64` elements.
 
-For example, you can append `user_id` and `photo_id` data into a `IDTypeFeatureSparse`.
+For example, you can append `user_id` and `photo_id` data into an `IDTypeFeatureSparse`.
 
 <!-- `IDTypeFeature` contains the variable length of categorical data. `IDTypeFeature` store the `List[np.array]` data which is a [lil](https://scipy-lectures.org/advanced/scipy_sparse/lil_matrix.html) format sparse matrix. Note that it only accepts `np.uint64` elements.
 
@@ -79,7 +79,7 @@ photo_id_batch_data = [
 id_type_features.append(IDTypeFeature(photo_id_batch_data, "photo_id"))
 ```
 
-After appending `IDTypeFeature`, you have to set corresponding `id_type_feature` config in `embedding_config.yml`. See [configuration](../configuration/index.md) for more details about how to config the `id_type_feature`, such as `dim`, `sqrt_scaling`, etc.
+After appending `IDTypeFeature`, you have to config this `id_type_feature` in `embedding_config.yml`. See [configuration](../configuration/index.md) for more details about how to config the `id_type_feature`, such as `dim`, `sqrt_scaling`, etc.
 
 _more advanced [id_type_feature processing](../data-processing/index.md#id-type-feature)_
 
@@ -189,7 +189,8 @@ with DataCtx() as ctx:
 
 ## Model Definition
 
-Model definition includes three parts.Customize the `forward` function in `torch.nn.Module`, select the embedding optimizer and customize the `persia.ctx.TrainCtx`. 
+Model definition includes following three parts.
+<!-- Customize the `forward` function in `torch.nn.Module`, select the embedding optimizer and customize the `persia.ctx.TrainCtx`. -->
 
 ### Define DNN model
 
@@ -375,22 +376,24 @@ _more advanced features: See [kubernetes-integration](../kubernetes-integration/
 
 ### Docker Compose Launcher
 
-We have prepared the `.docker.env` and `docker-compose.yml` files for you to launch the PERSIA training task with docker-compose. Following are steps to update the PERSIA task.
+`.docker.env` and `docker-compose.yml` are the files you can customize when launching PERSIA training task with docker-compose. Following are steps to customize a PERSIA training task.
+
+<!-- We have prepared the `.docker.env` and `docker-compose.yml` files for you to launch the PERSIA training task with docker-compose. Following are steps to update the PERSIA task. -->
 
 **Configuring Environment**
 
-We can set PERSIA task environment variables following the Docker official [docs](https://docs.docker.com/compose/environment-variables/).
+You are able to set PERSIA task environment variables following the Docker official [docs](https://docs.docker.com/compose/environment-variables/).
 
 The Environment definition:
 
-* `PERSIA_EMBEDDING_CONFIG`: PERSIA embedding config path.
-* `PERSIA_GLOBAL_CONFIG`: PERSIA global config path.
-* `LOG_LEVEL`: set log level for `embedding-worker` and `embedding-parameter-server`.
+* `PERSIA_EMBEDDING_CONFIG`: PERSIA embedding configuration file.
+* `PERSIA_GLOBAL_CONFIG`: PERSIA embedding PS configuration file.
+* `LOG_LEVEL`: log level for `embedding-worker` and `embedding-parameter-server`.
 
 ```env
 # .docker.env
 
-PERSIA_EMBEDDING_CONFIG=/workspace/config/embedding_config.yml 
+PERSIA_EMBEDDING_CONFIG=/workspace/config/embedding_config.yml
 PERSIA_GLOBAL_CONFIG=/workspace/config/global_config.yml.yml
 
 LOG_LEVEL=info
@@ -398,7 +401,7 @@ LOG_LEVEL=info
 
 **Configuring docker-compose File**
 
-You can adding multiple `data_loader`, `embedding_worker` and `embedding_parameter_server` services following the below configuration.
+You can add multiple `data_loader`, `embedding_worker` and `embedding_parameter_server` services by following configuration.
 
 ```yaml
 version: "3.2"
@@ -443,11 +446,11 @@ services:
 
 <!-- Honcho launcher is convenient for debug. You can simulate distributed environment by editing the `Procfile` and `.honcho.env` file. -->
 
-You are able to simulate distributed environment when using Honcho launcher. You may need to modify these files: `Procfile`, `.honcho.env`.
+You are able to simulate distributed environment when using Honcho launcher. You may need to customize these files: `Procfile`, `.honcho.env`.
 
 **Configuring Env**
 
-There are fields when launching the PERSIA task with Honcho:
+There are fields when launching a PERSIA task with Honcho:
 
 Required fields in `.honcho.env`
 
@@ -464,7 +467,7 @@ LOG_LEVEL=info
 **Configuring Procfile**
 
 You can add multiple replicas of PERSIA modules as you want in `Procfile`.
-For example, by adding `embedding_parameter_server0`, `embedding_parameter_server1` and `embedding_parameter_server2`, you can launch three subprocess of `embedding_parameter_server` in different web server port.And it is the same for `data_laoder` and `embedding_worker`.
+For example, by adding `embedding_parameter_server0`, `embedding_parameter_server1` and `embedding_parameter_server2`, you can launch three subprocess of `embedding_parameter_server` in different web server port.
 
 ```bash
 # Procfile
@@ -476,7 +479,8 @@ embedding_parameter_server2: persia-launcher embedding-parameter-server --embedd
 ```
 ## Build PERSIA Runtime Image Locally
 
-PERSIA runtime image can be built from source. You can use your customized docker image to launch a PERSIA training task by both Kubernetes and docker-compose.
+You are also able to build PERSIA runtime image from source code, then you can use your customized docker image to launch a PERSIA training task by both Kubernetes and docker-compose.
+<!-- PERSIA runtime image is able to be built from source. You can use your customized docker image to launch a PERSIA training task by both Kubernetes and docker-compose. -->
 
 Use the following instructions to build persia-runtime-image:
 
