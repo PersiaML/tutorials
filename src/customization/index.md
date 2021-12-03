@@ -24,7 +24,7 @@ There are a few files you can customize in PERSIA:
   * [Add ID Type Features](#add-id-type-feature)
   * [Add Non-ID Type Features](#add-non-id-type-feature)
   * [Add Labels](#add-label)
-  * [Send PersiaBatch](#send-persia-batch)
+  * [Send PersiaBatch](#send-persiabatch)
 * [Model Definition](#model-definition)
   * [Define DNN model](#define-dnn-model)
   * [Define Embedding Optimizer](#modify-embedding-optimizer)
@@ -33,24 +33,28 @@ There are a few files you can customize in PERSIA:
 * [Configuring Embedding Parameter Server](#configuring-embedding-parameter-server)
 * [Launcher configuration](#launcher-configuration)
   * [K8s launcher](#k8s-launcher)
-  * [Honcho Launcher](#honcho-launcher)
   * [Docker Compose Launcher](#docker-compose-launcher)
+  * [Honcho Launcher](#honcho-launcher)
 * [Build PERSIA Runtime Image Locally](#biuld-persia-runtime-image-locally)
 * [Deploy Trained Model for inference](#deploy-trained-model-for-inference)
 
 ## Training Data
 
-A `PersiaBatch` is consists of three parts: contiguous data, categorical data and label data.
+A `PersiaBatch` is consists of three parts: ID Type Feature, Non-ID Type Feature and Label.
 
 ### Add ID Type Feature
-`IDTypeFeature` declares categorical data with variable length. It is a list of sparse matrix(`List[np.array]`). Note that it only accepts `np.uint64` elements.
+`IDTypeFeature` declares categorical data with variable length. It is a list of sparse matrix(`List[np.array]`) in [lil](https://scipy-lectures.org/advanced/scipy_sparse/lil_matrix.html) format. Note that it only accepts `np.uint64` elements.
 
 For example, you can append `user_id` and `photo_id` data into a `IDTypeFeatureSparse`.
+
+<!-- `IDTypeFeature` contains the variable length of categorical data. `IDTypeFeature` store the `List[np.array]` data which is a [lil](https://scipy-lectures.org/advanced/scipy_sparse/lil_matrix.html) format sparse matrix. Note that it only accepts `np.uint64` elements.
+
+For example, you can add `user_id` or `photo_id` data into `IDTypeFeature`. -->
 
 ```python
 import numpy as np
 
-from persia.embedding.data import IDTypeFeatureSparse
+from persia.embedding.data import IDTypeFeature
 
 id_type_features = []
 
@@ -62,8 +66,7 @@ user_id_batch_data = [
   np.array([1000, 1001, 1024], dtype=np.uint64),
   np.array([1000,] * 200, dtype=np.uint64),
 ]
-
-id_type_features.append(IDTypeFeatureSparse(user_id_batch_data, "user_id"))
+id_type_features.append(IDTypeFeature(user_id_batch_data, "user_id"))
 
 # add photo_id data
 photo_id_batch_data = [
@@ -73,8 +76,7 @@ photo_id_batch_data = [
   np.array([4000, 1001, 1024], dtype=np.uint64),
   np.array([4096,] * 200, dtype=np.uint64),
 ]
-
-id_type_features.append(IDTypeFeatureSparse(photo_id_batch_data, "photo_id"))
+id_type_features.append(IDTypeFeature(photo_id_batch_data, "photo_id"))
 ```
 
 After appending `IDTypeFeature`, you have to set corresponding `id_type_feature` config in `embedding_config.yml`. See [configuration](../configuration/index.md) for more details about how to config the `id_type_feature`, such as `dim`, `sqrt_scaling`, etc.
@@ -84,7 +86,9 @@ _more advanced [id_type_feature processing](../data-processing/index.md#id-type-
 
 ### Add Non-ID Type Feature
 
-You are also able to add multiple `NonIDTypeFeature` into a `PersiaBatch` with various datatype. Concatting multiple `non_id_type_features` with same datatype into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example, you are able to add `float32`, `uint8`, etc.
+You are also able to add multiple `NonIDTypeFeature` into a `PersiaBatch` with various datatype. Stacking multiple `non_id_type_features` with same datatype horizontally into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example, you are able to add `float32`, `uint8`, etc.
+
+<!-- You are also able to add multiple `NonIDTypeFeature` into `PersiaBatch` with the various datatype. Stacking multiple `non_id_type_features` with the same datatype horizontally into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example, you can add `float32` or `uint8` data. -->
 
 ```python
 import numpy as np
@@ -102,7 +106,7 @@ height_batch_data = np.array([
   [177],
 ], dtype=np.float32)
 
-non_id_type_features.append(NonIDTypeFeature(height_batch_data, "height"))
+non_id_type_features.append(NonIDTypeFeature(height_batch_data, name="height"))
 
 # income data
 income_batch_data = np.array([
@@ -119,14 +123,14 @@ non_id_type_features.append(NonIDTypeFeature(income_batch_data, name="income"))
 income_with_height = np.hstack([height_batch_data, income_batch_data])
 non_id_type_features.append(NonIDTypeFeature(income_with_height, name="income_with_height"))
 
-# add image data
+# add five image data with RGB channel
 image_data = np.ones((5, 224, 224, 3), dtype=np.uint8)
 non_id_type_features.append(NonIDTypeFeature(image_data, name="LSVR_image"))
 ```
 
 ### Add Label
 
-Adding a label is as same as the `NonIDTypeFeature`, you can add different datatype label data such as `bool`, `float32`, etc.
+Adding a label is as same as the `NonIDTypeFeature`. You can add different datatype label data such as `bool`, `float32`, etc.
 
 ```python
 import numpy as np
@@ -143,7 +147,7 @@ ctr_batch_data = np.array([
   1
 ], dtype=np.bool)
 
-labels.append(Label(ctr_batch_data, "ctr"))
+labels.append(Label(ctr_batch_data, name="ctr"))
 
 # add income label data
 income_batch_data = np.array([
@@ -153,7 +157,7 @@ income_batch_data = np.array([
   [6660],
   [3000],
 ], dtype=np.float32)
-labels.append(Label(income_batch_data, "income"))
+labels.append(Label(income_batch_data, name="income"))
 
 # add ctr with income, but will cost extra bytes to cast ctr_batch_data from bool to float32
 ctr_with_income = np.hstack([ctr_batch_data, income_batch_data])
@@ -168,14 +172,14 @@ Use `persia.ctx.DataCtx` to send `PersiaBatch` to `nn_worker` and `embedding_wor
 import numpy as np
 
 from persia.ctx import DataCtx
-from persia.embedding.data import PersiaBatch, IDTypeFeatureSparse
+from persia.embedding.data import PersiaBatch, IDTypeFeature
 
 id_type_features = [
-  IDTypeFeatureSparse("empty_sample", np.array([[]] * 5, dtype=np.uint64))
+  IDTypeFeature("empty_sample", np.array([[]] * 5, dtype=np.uint64))
 ]
 
 persia_batch = PersiaBatch(
-  id_type_features=id_type_features,
+  id_type_features,
   requires_grad=False
 )
 
@@ -185,9 +189,11 @@ with DataCtx() as ctx:
 
 ## Model Definition
 
+Model definition includes three parts.Customize the `forward` function in `torch.nn.Module`, select the embedding optimizer and customize the `persia.ctx.TrainCtx`. 
+
 ### Define DNN model
 
-You can define any DNN model structure as you want, only note that the forward function signature of models should be same with follow.
+You can define any DNN model structure as you want. Only note that the forward function signature of the model should be the same as follow.
 
 ```python
 from typing import List
@@ -211,15 +217,14 @@ There are several kinds of embedding optimizers in PERSIA. For more details, see
 from persia.embedding.optim import SGD, Adagrad, Adam
 from persia.ctx import TrainCtx
 
-lr = 1e-3
-sgd_embedding_optimizer = SGD(lr)
-adagrad_embedding_optimizer = Adagrad(lr)
-adam_embedding_optimizer = Adam(lr)
+sgd_embedding_optimizer = SGD(1e-3)
+adagrad_embedding_optimizer = Adagrad(1e-3)
+adam_embedding_optimizer = Adam(1e-3)
 ```
 
 ### Customize PERSIA Training Context
 
-After above, a PERSIA training context should be created to manage training environments.
+After the above, a PERSIA training context should be created to acquire the `Dataloder` and manage the embedding.
 
 ```python
 # train.py
@@ -246,8 +251,6 @@ dense_optimizer = SGD(model.parameters(), lr=0.1)
 # Embedding parameters optimizer
 embedding_optimizer = Adagrad(lr=1e-3)
 
-loss_fn = nn.BCELoss()
-
 with TrainCtx(
     model=model,
     embedding_optimizer=embedding_optimizer,
@@ -257,23 +260,18 @@ with TrainCtx(
 
     train_data_loader = Dataloader(dataset)
     for (batch_idx, data) in enumerate(loader):
-        output, labels = ctx.forward(data)
-        label = labels[0]
-        loss= loss_fn(output, target)
-        scaled_loss = ctx.backward(loss)
-        logger.info(f"current idx: {batch_idx} loss: {loss}")
-
+      ...
 ```
 
 _more advanced features: [TrainCtx](../training-context/index.md)_
 
 ## Configuring Embedding Worker
 
-An embedding worker runs asynchronous updating algorithm for getting the embedding parameters from the embedding parameter server; aggregating embedding vectors (potentially) and putting embedding gradients back to embedding parameter server. You can learn more details of the system design through 4.2 section in our [paper](https://arxiv.org/abs/2111.05897). Generally, you only need to adjust the number of instances and resources according to your workload. See [K8S launcher](#k8s-launcher).
+An embedding worker runs an asynchronous updating algorithm for getting the embedding parameters from the embedding parameter server; aggregating embedding vectors (potentially) and putting embedding gradients back to the embedding parameter server. You can learn the details of the system design through 4.2 section in our [paper](https://arxiv.org/abs/2111.05897). Generally, you only need to adjust the number of instances and resources according to your workload. See [K8S launcher](#k8s-launcher).
 
 ## Configuring Embedding Parameter Server
 
-An embedding parameter server manages the storage and update of the embedding parameters according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies. So you need to configure capacity of the LRU cache in the embedding PS configuration file according to your workload and available memory size. In addition, the capacity means the max number of embedding vectors, not the number of parameters. Here is an example.
+An embedding parameter server manages the storage and update of the embedding parameters according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies. So you need to configure the capacity of the LRU cache in the configuration file according to your workload and available memory size. In addition, the capacity means the max number of embedding vectors, not the number of parameters. Here is an example.
 
 ```yaml
 # global_config.yaml
@@ -289,12 +287,10 @@ _more advanced features: See [Configuration](../configuration/index.md#global-co
 
 ## Launcher configuration
 
-There are launchers to help you launch a PERSIA training task.
-<!-- 
-We provide the different launcher to satisfy your requirements. The below launchers can run the PERSIA task in different handy level. -->
+There are several launchers to help you launch a PERSIA training task.
 
-- K8S launcher: Kubernetes launcher is easy to deploy large scale training.
-- docker-compose launcher: Docker compose is the other way like `K8S` but is more lightweight.
+- K8S launcher: Kubernetes launcher is easy to deploy large-scale training.
+- docker-compose launcher: Docker compose is an other way like `K8S` but is more lightweight.
 - honcho launcher: You can build PERSIA (Currently persia can build in linux, macOS, windows10) manually when using a Procfile manager, which is friendly for developers.
 
 All of these launchers use environment variables(`PERSIA_GLOBAL_CONFIG`, `PERSIA_EMBEDDING_CONFIG`, `PERSIA_NN_WORKER_ENTRY`, `PERSIA_DATALOADER_ENTRY`) to assign the path of the PERSIA configuration files.
@@ -379,46 +375,35 @@ _more advanced features: See [kubernetes-integration](../kubernetes-integration/
 
 ### Docker Compose Launcher
 
-We have prepared the `.docker.env` and `docker-compose.yml` files for you to launch PERSIA training task with docker compose. Following are steps to update the PERSIA task.
+We have prepared the `.docker.env` and `docker-compose.yml` files for you to launch the PERSIA training task with docker-compose. Following are steps to update the PERSIA task.
 
-**Configuring ENV**
+**Configuring Environment**
 
-Required fields in `.docker.env`
+We can set PERSIA task environment variables following the Docker official [docs](https://docs.docker.com/compose/environment-variables/).
 
-* `DOCKER_COMPOSE`: should be set to `1`.
-* `REPLICA_SIZE`: `replica_size` for PERSIA modules.
+The Environment definition:
 
-Optional fields in `.docker.env`
-* `NPROC_PER_NODE`: number of processes per node to specify.
-* `ENABLE_CUDA`: use cuda or not.
+* `PERSIA_EMBEDDING_CONFIG`: PERSIA embedding config path.
+* `PERSIA_GLOBAL_CONFIG`: PERSIA global config path.
+* `LOG_LEVEL`: set log level for `embedding-worker` and `embedding-parameter-server`.
 
 ```env
-# .docker.env file
-ENABLE_CUDA=1
-NPROC_PER_NODE=1
+# .docker.env
+
+PERSIA_EMBEDDING_CONFIG=/workspace/config/embedding_config.yml 
+PERSIA_GLOBAL_CONFIG=/workspace/config/global_config.yml.yml
+
+LOG_LEVEL=info
 ```
 
 **Configuring docker-compose File**
 
-Required fields in `docker-compose.yml`
-
-* `TASK_SLOT_ID`: This fields is required for all service in `docker-compose.yml`. The docker engine will use regex to extract docker `slot_id` into `TASK_SLOT_ID`. PERSIA will read it as `REPLICA_INDEX`.
-* `REPLICAS`: This fields is required for all service in `docker-compose.yml`. PERSIA will read it as `REPLICA_SIZE`.
-
-Optional fields in `docker-compose.yml`
-* `ENABLE_CUDA`: use cuda or not
+You can adding multiple `data_loader`, `embedding_worker` and `embedding_parameter_server` services following the below configuration.
 
 ```yaml
-# docker-compose.yml
-
 version: "3.2"
 services:
-  persia_nats_service:
-    image: nats:latest
-    deploy:
-      replicas: 1
-          
-  data_loader:
+  data_loader1:
     env_file:
       - .docker.env
     depends_on:
@@ -426,63 +411,33 @@ services:
       - embedding_worker
       - persia_nats_service
     image: persiaml/persia-cuda-runtime:latest
-    command: persia-launcher data-loader /workspace/data_loader.py
+    command: persia-launcher data-loader /workspace/data_loader.py --replica-index 0 --replica-size 2
     volumes:
       - type: bind
-        source: .
+        source: . # mount current directory into container
         target: /workspace
     deploy:
-      replicas: 1
       restart_policy:
         condition: on-failure
 
-  nn_worker:
-    env_file:
-      - .docker.env
-    environment:
-      NCCL_SOCKET_IFNAME: eth0
-      CUBLAS_WORKSPACE_CONFIG: :4096:8
-    image: persiaml/persia-cuda-runtime:latest
-    command: persia-launcher nn-worker /workspace/train.py
-    volumes:
-      - type: bind
-        source: .
-        target: /workspace
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-
-  embedding_worker:
+  data_loader2:
     env_file:
       - .docker.env
     depends_on:
-      - server
+      - nn_worker
+      - embedding_worker
+      - persia_nats_service
     image: persiaml/persia-cuda-runtime:latest
-    command: persia-launcher embedding-worker --embedding-config $$PERSIA_EMBEDDING_CONFIG --global-config $$PERSIA_GLOBAL_CONFIG
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
+    command: persia-launcher data-loader /workspace/data_loader.py --replica-index 1 --replica-size 2
     volumes:
       - type: bind
-        source: .
+        source: . # mount current directory into container
         target: /workspace
-
-  server:
-    env_file:
-      - .docker.env
-    image: persiaml/persia-cuda-runtime:latest
-    command: persia-launcher embedding-server --embedding-config $$PERSIA_EMBEDDING_CONFIG --global-config $$PERSIA_GLOBAL_CONFIG
     deploy:
-      replicas: 1
       restart_policy:
         condition: on-failure
-    volumes:
-      - type: bind
-        source: .
-        target: /workspace
 ```
+> **NOTE:** You can also use the `replcias` keyword in docker-compose swarm mode to launch multiple services once. But there need to parse the [.TASK.SLOT](https://docs.docker.com/engine/reference/commandline/service_create/#create-services-using-templates) into `replcia_index` and feed it to `data-loader`.
 
 ### Honcho Launcher
 
@@ -497,53 +452,33 @@ There are fields when launching the PERSIA task with Honcho:
 Required fields in `.honcho.env`
 
 * `PERSIA_NATS_IP`: set for nats-server ip address.
-
-Optional fields in `.honcho.env`
-
-* `ENABLE_CUDA`: use cuda or not.
+* `LOG_LEVEL`: set log_level for `embedding-worker` and `embedding-parameter-server`.
 
 ```env
 # .honcho.env
-
-HONCHO=1 # required by PERSIA to determine the rank
-
-REPLICA_INDEX=0 # required by PERSIA to determine the replica_index for data_loader
-REPLICA_SIZE=1 # required by PERSIA to determine the replica_size for data_loader
-
-NPROC_PER_NODE=1 # number of processes per node to specify.
-ENABLE_CUDA=0 # enable cuda or not
-
 # default nats_server ip address
 PERSIA_NATS_IP=nats://0.0.0.0:4222 
+
+LOG_LEVEL=info
 ```
 **Configuring Procfile**
 
 You can add multiple replicas of PERSIA modules as you want in `Procfile`.
-For example, by adding `embedding_server{replica_num}` and `embedding_worker{replica_num}`, you can launch three `embedding-parameter-server` and two `embedding-worker` subprocesses.
+For example, by adding `embedding_parameter_server0`, `embedding_parameter_server1` and `embedding_parameter_server2`, you can launch three subprocess of `embedding_parameter_server` in different web server port.And it is the same for `data_laoder` and `embedding_worker`.
 
 ```bash
 # Procfile
 
-# data_loader
-data_loader: REPLICA_SIZE=1 REPLICA_INDEX=0 python3 data_loader.py && cat 
-# nn_worker
-nn_worker: persia-launcher nn-worker train.py --nproc-per-node=NPROC_PER_NODE --node-rank=0 --nnodes=1
 # launch three subprocesses of embedding parameter server
-embedding_server0: persia-launcher embedding-parameter-server --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 0 --replica-size 3 --port 10000
-embedding_server1: persia-launcher embedding-parameter-server --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 1 --replica-size 3 --port 10001
-embedding_server2: persia-launcher embedding-parameter-server --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 2 --replica-size 3 --port 10002
-# launch two subprocess of embedding worker server
-embedding_worker1: persia-launcher embedding-worker --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 0 --replica-size 2 --port 9000
-embedding_worker2: persia-launcher embedding-worker --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 1 --replica-size 2 --port 9001
-# nats_server
-nats_server: nats-server 
-
+embedding_parameter_server0: persia-launcher embedding-parameter-server --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 0 --replica-size 3 --port 10000
+embedding_parameter_server1: persia-launcher embedding-parameter-server --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 1 --replica-size 3 --port 10001
+embedding_parameter_server2: persia-launcher embedding-parameter-server --embedding-config config/embedding_config.yml --global-config config/global_config.yml --replica-index 2 --replica-size 3 --port 10002
 ```
 ## Build PERSIA Runtime Image Locally
 
-PERSIA runtime image can be built from source. You can use your customized docker image to launch a PERSIA training task by both kubernetes and docker-compose.
+PERSIA runtime image can be built from source. You can use your customized docker image to launch a PERSIA training task by both Kubernetes and docker-compose.
 
-Use following instructions to build persia-runtime-image:
+Use the following instructions to build persia-runtime-image:
 
 ```bash
 git clone https://github.com/PersiaML/PERSIA.git

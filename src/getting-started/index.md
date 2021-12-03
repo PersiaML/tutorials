@@ -83,10 +83,7 @@ cd examples/src/adult-income && make run
 
 ### Using Python Package
 
-You are free to modify source code to build and use your customized PERSIA Python packages when using Python package.
-
-<!-- Alternatively, you can use PERSIA's Python packages directly to run a PERSIA task.  -->
-<!-- In this way, you have the maximum flexibility (and you are free to modify source code to build and use your customized PERSIA Python packages). -->
+You are free to modify source code to build and use your customized PERSIA Python packages when using the Python package.
 
 **Requirements**
 
@@ -96,9 +93,7 @@ You are free to modify source code to build and use your customized PERSIA Pytho
 
 **Using Pre-compiled Wheels**
  
-<!-- We provide pre-compiled wheels for linux platform. If your Python version is greater than 3.6. You can install pre-compiled PERSIA packages with: -->
-
-Wheels (precompiled binary packages) are available for Linux (x86_64). Package names are different depending on your CUDA Toolkit version (CUDA Toolkit version is shown in` nvcc --version`). All of these precompiled binary packages needs Python greater than 3.6.
+Wheels (precompiled binary packages) are available for Linux (x86_64). Package names are different depending on your CUDA Toolkit version (CUDA Toolkit version is shown in` nvcc --version`). All of these precompiled binary packages need Python greater than 3.6.
 
 |CUDA Toolkit version|Installation command|
 |-|-|
@@ -148,7 +143,7 @@ NATIVE=1 pip3 install .
 
 **Run**
 
-After installing PERSIA Python package locally, you are able to launch the example adult income prediction training task with:
+After installing the PERSIA Python package locally, you are able to launch the example adult income prediction training task with:
 
 ```bash
 cd examples/src/adult-income
