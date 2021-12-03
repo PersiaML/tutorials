@@ -51,9 +51,9 @@ There are a few files you can customize in PERSIA:
 3. Embedding configuration file: `embedding_config.yaml`, the file location can be specified using the environment variable `PERSIA_EMBEDDING_CONFIG`. See [Embedding Configuration](../configuration/index.md#embedding-config) for details.
 4. Embedding PS configuration file: `global_config.yaml`, the file location can be specified using the environment variable `PERSIA_GLOBAL_CONFIG`. See [Configuring Embedding Parameter Server](#configuring-embedding-parameter-server) for details.
 5. Launcher configuration:
-    1. If you are using K8S, `k8s.train.yaml`
-    2. If you are using docker compose, `docker-compose.yml` and `.docker.env`
-    3. If you are using honcho, `Procfile` and `.honcho.env`
+    1. If you are using K8S, `k8s.train.yaml`. See [K8s launcher](#k8s-launcher) for details.
+    2. If you are using docker compose, `docker-compose.yml` and `.docker.env`. See [Docker Compose Launcher](#docker-compose-launcher) for details.
+    3. If you are using honcho, `Procfile` and `.honcho.env`. See [Honcho Launcher](#honcho-launcher) for details.
 
 <!-- * [Training Data](#training-data)
   * [Add ID Type Features](#add-id-type-feature)
