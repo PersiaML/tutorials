@@ -9,6 +9,41 @@ The training process can be summarized by the following figure:
 <img src="img/persia_workflow.png" width="1000">
 </center>
 
+1. The data loader will dispatch the [ID type feature](#add-id-type-feature) x<sup>ID</sup><sub>(.)</sub> to
+an [embedding worker](#configuring-embedding-worker), the embedding worker will generate a unique sample ID $\xi$ for
+this sample, buffer this sample ID with the ID type feature x<sup>ID</sup><sub>$\xi$</sub>
+locally, and return this unique sample ID $\xi$ back the data loader; the data loader
+will associate this sample’s [Non-ID type features](#add-non-id-type-feature) and [labels](#add-label) with this unique ID.
+
+2. Next, the data loader will [dispatch](#send-persiabatch) the Non-ID type feature and
+label(s)(x<sup>NID</sup><sub>$\xi$</sub>, y<sub>$\xi$</sub>) to a NN worker.
+
+3. Once a NN worker receives this incomplete training sample, it will issue a request 
+to pull the ID type features’(x<sup>ID</sup><sub>$\xi$</sub>) embedding w<sup>emb</sup><sub>$\xi$</sub>
+from some embedding worker according to the sample ID $\xi$, this would trigger the
+forward propagation accroding to asynchronous updating algorithm for embeddings, where the
+embedding worker will use the buffered ID type feature x<sup>ID</sup><sub>$\xi$</sub>
+to get the corresponding w<sup>emb</sup><sub>$\xi$</sub> from the [embedding PS](#configuring-embedding-parameter-server).
+
+4. Then the embedding worker performs some potential aggregation of original embedding
+vectors. When this computation finishes, the aggregated embedding vector w<sup>emb</sup><sub>$\xi$</sub>
+will be transmitted to the NN worker that issues the pull request.
+
+5. Once the NN worker gets a group of complete inputs for the dense module, it will create
+a mini-batch and conduct the [training computation](#model-definition) of the NN according to synchronous updating
+algorithm for NN parameters. Note that the parameter of the NN always locates in the device
+RAM of the NN worker, where the NN workers synchronize the gradients by the AllReduce Paradigm.
+
+6. When the iteration of synchronous updating is finished, the NN worker will send the
+gradients of the embedding(F<sup>emb'</sup><sub>$\xi$</sub>)  back to the embedding worker
+(also along with the sample ID $\xi$).
+
+7. The embedding worker will query the buffered ID type feature x<sup>ID</sup><sub>$\xi$</sub>
+according to the sample ID $\xi$; compute gradients F<sup>emb'</sup><sub>$\xi$</sub> of the 
+embedding parameters and send the gradients to the embedding PS, so that the embedding PS 
+can finally compute the updates according the embedding parameter’s gradients by
+its SGD optimizer and update the embedding parameters.
+
 There are a few files you can customize in PERSIA:
 
 1. Data preprocessing configuration file: `data_loader.py`, the file location can be specified using the environment variable `PERSIA_DATALOADER_ENTRY`.
@@ -20,7 +55,7 @@ There are a few files you can customize in PERSIA:
     2. If you are using docker compose, `docker-compose.yml` and `.docker.env`
     3. If you are using honcho, `Procfile` and `.honcho.env`
 
-* [Training Data](#training-data)
+<!-- * [Training Data](#training-data)
   * [Add ID Type Features](#add-id-type-feature)
   * [Add Non-ID Type Features](#add-non-id-type-feature)
   * [Add Labels](#add-label)
@@ -36,7 +71,7 @@ There are a few files you can customize in PERSIA:
   * [Docker Compose Launcher](#docker-compose-launcher)
   * [Honcho Launcher](#honcho-launcher)
 * [Build PERSIA Runtime Image Locally](#build-persia-runtime-image-locally)
-* [Deploy Trained Model for inference](#deploy-trained-model-for-inference)
+* [Deploy Trained Model for inference](#deploy-trained-model-for-inference) -->
 
 ## Training Data
 
