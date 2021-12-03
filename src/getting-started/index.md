@@ -105,7 +105,9 @@ Use following instructions to build PERSIA Python packages from source (Ubuntu 2
 
 > **Note**: You need to set environment variable `USE_CUDA=1` to add CUDA support (for GPU training). In this case, the CUDA runtime path should be already present in `LD_LIBRARY_PATH`.
 
-**Ubuntu 20.04:**
+<center>
+**Ubuntu 20.04**
+</center>
 
 ```bash
 apt update && apt-get install -y curl build-essential git python3 python3-dev python3-pip 
@@ -124,8 +126,9 @@ USE_CUDA=1 NATIVE=1 pip3 install .
 NATIVE=1 pip3 install .
 ```
 
-**Windows 10:**
-
+<center>
+**Windows 10**
+</center>
 Python3, [Perl](https://strawberryperl.com/) and [Rust](https://www.rust-lang.org/tools/install) are required.
 
 ```bash
