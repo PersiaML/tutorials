@@ -23,7 +23,7 @@ In addition, `PersiaBatch` only accepts  `IDTypeFeature` or `IDTypeFeatureWithSi
 ### ID Type Feature with Variable Length
 
 <!-- It is hard to keep the training speed stable with the id_typ_feature sample length increasing, especially using the fixed sample size.  -->
-The following code shows how to conver a `id_type_feature` with variable length `LIL` sparse matrix with fixed sample size.
+The following code shows how to conver a `id_type_feature` with variable length to `LIL` sparse matrix with fixed sample size.
 
 ```python
 import numpy as np
