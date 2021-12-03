@@ -43,9 +43,9 @@ There are a few files you can customize in PERSIA:
 A `PersiaBatch` is consists of three parts: ID Type Feature, Non-ID Type Feature and Label.
 
 ### Add ID Type Feature
-`IDTypeFeature` declares categorical data with variable length. It is a list of sparse matrix(`List[np.array]`) in [LIL](https://scipy-lectures.org/advanced/scipy_sparse/lil_matrix.html) format. Note that it only accepts `np.uint64` elements.
+`IDTypeFeature` declares categorical data with variable length. It is a sparse matrix(`List[np.array]`) in [LIL](https://scipy-lectures.org/advanced/scipy_sparse/lil_matrix.html) format. Note that it only accepts `np.uint64` elements.
 
-For example, you can append `user_id` and `photo_id` data into an `IDTypeFeatureSparse`.
+For example, you can append `user_id` and `photo_id` data into an `IDTypeFeature`.
 
 <!-- `IDTypeFeature` contains the variable length of categorical data. `IDTypeFeature` store the `List[np.array]` data which is a [lil](https://scipy-lectures.org/advanced/scipy_sparse/lil_matrix.html) format sparse matrix. Note that it only accepts `np.uint64` elements.
 
