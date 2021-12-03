@@ -47,7 +47,7 @@ details on how to customize these environment variables, see
 
 ## Run Manually
 
-The data of adult income should be downloaded and preprocessed before you get started to run the example PERSIA training task:
+The data of adult income should be downloaded and preprocessed before getting started to run the example PERSIA training task:
 
 <!-- To launch the PERSIA adult income prediction task  manually, the first step is to download the corresponding dataset and preprocess the train data and test data. We already prepare the script to help you finish this step. -->
 
