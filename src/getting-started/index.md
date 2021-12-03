@@ -41,8 +41,8 @@ To run a customized training task on your own dataset and models, you can custom
 - **Model definition configuration file:** A file that defines the neural network (NN) using PyTorch. This file is named as `train.py` by default. For more details see [model definition](../customization/index.md#model-definition).
 - **Data preprocessing configuration file:** A file that defines the data preprocessing. This file is named as `data_loader.py` by default. For more details see [training data](../customization/index.md#training-data).
 
-The location of these files can be specified using the environment variables `PERSIA_EMBEDDING_CONFIG`, `PERSIA_GLOBAL_CONFIG`, `PERSIA_NN_WORKER_ENTRY`, `PERSIA_DATALOADER_ENTRY` by PERSIA launchers. For more
-details on how to set these environment variables, see
+The location of these files can be specified using the environment variables `PERSIA_EMBEDDING_CONFIG`, `PERSIA_GLOBAL_CONFIG`, `PERSIA_NN_WORKER_ENTRY`, `PERSIA_DATALOADER_ENTRY` respectively. For more
+details on how to customize these environment variables, see
 [launcher configuration](../customization/index.md#launcher-configuration).
 
 ## Run Manually
