@@ -22,7 +22,7 @@ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/reso
 kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/resources/operator.persia.com.yaml
 ```
 
-> **NOTE** It can take a few minutes to start the `operator` due to container image pulling.
+> **NOTE:** It can take a few minutes to start the `operator` due to container image pulling.
 
 **Run**
 
@@ -41,11 +41,8 @@ To run a customized training task on your own dataset and models, you can custom
 - **Model definition configuration file:** A file that defines the neural network (NN) using PyTorch. This file is named as `train.py` by default. For more details see [model definition](../customization/index.md#model-definition).
 - **Data preprocessing configuration file:** A file that defines the data preprocessing. This file is named as `data_loader.py` by default. For more details see [training data](../customization/index.md#training-data).
 
-
-To assign the file path for these configuration files, you can set the environment variables
-`PERSIA_EMBEDDING_CONFIG`, `PERSIA_GLOBAL_CONFIG`, `PERSIA_NN_WORKER_ENTRY`,
-`PERSIA_DATALOADER_ENTRY` by PERSIA launchers. For more
-details on how to set these environment variables, see
+The location of these files can be specified using the environment variables `PERSIA_EMBEDDING_CONFIG`, `PERSIA_GLOBAL_CONFIG`, `PERSIA_NN_WORKER_ENTRY`, `PERSIA_DATALOADER_ENTRY` respectively. For more
+details on how to customize these environment variables, see
 [launcher configuration](../customization/index.md#launcher-configuration).
 
 ## Run Manually
@@ -97,10 +94,10 @@ Wheels (precompiled binary packages) are available for Linux (x86_64). Package n
 
 |CUDA Toolkit version|Installation command|
 |-|-|
-|None|`pip3 install persia`|
-|>=10.2|`pip3 install persia-cuda102`|
-|>=11.1|`pip3 install persia-cuda111`|
-|>=11.3|`pip3 install persia-cuda113`|
+|None (CPU version) |`pip3 install persia`|
+|>= v10.2|`pip3 install persia-cuda102`|
+|>= v11.1|`pip3 install persia-cuda111`|
+|>= v11.3|`pip3 install persia-cuda113`|
 
 **From Source**
 
@@ -108,7 +105,9 @@ Use following instructions to build PERSIA Python packages from source (Ubuntu 2
 
 > **Note**: You need to set environment variable `USE_CUDA=1` to add CUDA support (for GPU training). In this case, the CUDA runtime path should be already present in `LD_LIBRARY_PATH`.
 
-**Ubuntu 20.04:**
+<center>
+**Ubuntu 20.04**
+</center>
 
 ```bash
 apt update && apt-get install -y curl build-essential git python3 python3-dev python3-pip 
@@ -127,8 +126,9 @@ USE_CUDA=1 NATIVE=1 pip3 install .
 NATIVE=1 pip3 install .
 ```
 
-**Windows 10:**
-
+<center>
+**Windows 10**
+</center>
 Python3, [Perl](https://strawberryperl.com/) and [Rust](https://www.rust-lang.org/tools/install) are required.
 
 ```bash
