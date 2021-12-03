@@ -29,8 +29,8 @@ to get the corresponding w<sup>emb</sup><sub>$\xi$</sub> from the [embedding PS]
 vectors. When this computation finishes, the aggregated embedding vector w<sup>emb</sup><sub>$\xi$</sub>
 will be transmitted to the NN worker that issues the pull request.
 
-5. Once the NN worker gets a group of complete inputs for the dense module, it will create
-a mini-batch and conduct the [training computation](#model-definition) of the NN according to synchronous updating
+5. Once the NN worker gets a group of complete inputs for the [dense module](#model-definition), it will create
+a mini-batch and conduct the training computation of the NN according to synchronous updating
 algorithm for NN parameters. Note that the parameter of the NN always locates in the device
 RAM of the NN worker, where the NN workers synchronize the gradients by the AllReduce Paradigm.
 
