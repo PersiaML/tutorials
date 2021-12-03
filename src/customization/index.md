@@ -447,7 +447,7 @@ services:
       restart_policy:
         condition: on-failure
 ```
-> **NOTE:** You can also use the `replcias` keyword in docker-compose swarm mode to launch multiple services once. But there need to parse the [.TASK.SLOT](https://docs.docker.com/engine/reference/commandline/service_create/#create-services-using-templates) into `replica_index` and feed it to `data-loader`.
+> **NOTE:** You can also use the `replicas` keyword in docker-compose swarm mode to launch multiple services once. But there need to parse the [.TASK.SLOT](https://docs.docker.com/engine/reference/commandline/service_create/#create-services-using-templates) into `replica_index` and feed it to `data-loader`.
 
 ### Honcho Launcher
 
