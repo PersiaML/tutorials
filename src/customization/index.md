@@ -11,10 +11,10 @@ The training process can be summarized by the following figure:
 
 There are a few files you can customize in PERSIA:
 
-1. Data preprocessing configuration file: `data_loader.py`
-2. Model definition configuration file: `train.py`
-3. Embedding configuration file: `embedding_config.yaml`
-4. Embedding PS configuration file: `global_config.yaml`
+1. Data preprocessing configuration file: `data_loader.py`, the file location can be specified using the environment variable `PERSIA_DATALOADER_ENTRY`.
+2. Model definition configuration file: `train.py`, the file location can be specified using the environment variable `PERSIA_NN_WORKER_ENTRY`.
+3. Embedding configuration file: `embedding_config.yaml`, the file location can be specified using the environment variable `PERSIA_EMBEDDING_CONFIG`.
+4. Embedding PS configuration file: `global_config.yaml`, the file location can be specified using the environment variable `PERSIA_GLOBAL_CONFIG`.
 5. Launcher configuration:
     1. If you are using K8S, `k8s.train.yaml`
     2. If you are using docker compose, `docker-compose.yml` and `.docker.env`
