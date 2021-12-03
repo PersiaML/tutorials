@@ -311,11 +311,11 @@ _more advanced features: [TrainCtx](../training-context/index.md)_
 
 ## Configuring Embedding Worker
 
-An embedding worker runs an asynchronous updating algorithm for getting the embedding parameters from the embedding parameter server; aggregating embedding vectors (potentially) and putting embedding gradients back to the embedding parameter server. You can learn the details of the system design through 4.2 section in our [paper](https://arxiv.org/abs/2111.05897). Generally, you only need to adjust the number of instances and resources according to your workload. See [K8S launcher](#k8s-launcher).
+An embedding worker runs an asynchronous updating algorithm for getting the embedding parameters from the embedding parameter server; aggregating embedding vectors (potentially) and putting embedding gradients back to the embedding parameter server. You can comprehend the details of the system design through 4.2 section in our [paper](https://arxiv.org/abs/2111.05897). Generally, you only need to adjust the number of instances and resources according to your workload. See [K8S launcher](#k8s-launcher).
 
 ## Configuring Embedding Parameter Server
 
-An embedding parameter server manages the storage and update of the embedding parameters according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies. So you need to configure the capacity of the LRU cache in the configuration file according to your workload and available memory size. In addition, the capacity means the max number of embedding vectors, not the number of parameters. Here is an example.
+An embedding parameter server manages the storage and update of the embedding parameters according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies. So you need to configure the capacity of the LRU cache in the configuration file according to your workload and available memory capacity. In addition, the `capacity` of `embedding-parameter-server` means the max number of embedding vectors, not the number of parameters. Here is an example
 
 ```yaml
 # global_config.yaml
