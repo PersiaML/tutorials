@@ -98,7 +98,7 @@ Wheels (precompiled binary packages) are available for Linux (x86_64). Package n
 |CUDA Toolkit version|Installation command|
 |-|-|
 |None|`pip3 install persia`|
-|>=v10.2|`pip3 install persia-cuda102`|
+|>=10.2|`pip3 install persia-cuda102`|
 |>=11.1|`pip3 install persia-cuda111`|
 |>=11.3|`pip3 install persia-cuda113`|
 
