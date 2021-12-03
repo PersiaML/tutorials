@@ -72,7 +72,7 @@ Now you can start your first PERSIA training task with one of the following meth
 **Run**
 
 <!-- We already provide the `docker-compose.yml` and `.docker.env` for adult income example.  -->
-Use following instructions to start your `PERSIA` training task after installing the requirements.
+Use the following instructions to start your `PERSIA` training task after installing the requirements.
 
 ```bash
 cd examples/src/adult-income && make run
