@@ -34,7 +34,7 @@ The `mixed_precision` feature in PERSIA training is only support on gpu NN worke
 
 ## Distributed Option
 
-[Distributed Option](https://persiaml.pages.dev/main/autoapi/persia/distributed/#module-persia.distributed) define the implementation of data parallelism among PERSIA NN workers.
+[Distributed Option](https://persiaml.pages.dev/main/autoapi/persia/distributed/#module-persia.distributed) defines the implementation of data parallelism among PERSIA NN workers.
 <!-- Distributed training in PERSIA is easy to configuration. We already integrated two distributed option for you to use. -->
 
 - [DDP](https://pytorch.org/docs/stable/distributed.html) (by default): Native pytorch distributed training data parallelism implementation.
@@ -42,7 +42,7 @@ The `mixed_precision` feature in PERSIA training is only support on gpu NN worke
 
 **Configuring DDPOption**
 
-Here is an example:
+In `DDPOption`, you can configure the `backend` and `init_method`. The default `init_method` is TCP that needs to set the master_address and master_port.
 
 ```python
 from persia.distributed import DDPOption
