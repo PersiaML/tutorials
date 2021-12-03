@@ -35,7 +35,7 @@ There are a few files you can customize in PERSIA:
   * [K8s launcher](#k8s-launcher)
   * [Docker Compose Launcher](#docker-compose-launcher)
   * [Honcho Launcher](#honcho-launcher)
-* [Build PERSIA Runtime Image Locally](#biuld-persia-runtime-image-locally)
+* [Build PERSIA Runtime Image Locally](#build-persia-runtime-image-locally)
 * [Deploy Trained Model for inference](#deploy-trained-model-for-inference)
 
 ## Training Data
@@ -81,7 +81,7 @@ id_type_features.append(IDTypeFeature(photo_id_batch_data, "photo_id"))
 
 After appending `IDTypeFeature`, you have to config this `id_type_feature` in `embedding_config.yml`. See [configuration](../configuration/index.md) for more details about how to config the `id_type_feature`, such as `dim`, `sqrt_scaling`, etc.
 
-_more advanced [id_type_feature processing](../data-processing/index.md#id-type-feature)_
+_more advanced [id_type_feature processing](../data-processing/index.md#processing-id-type-feature)_
 
 
 ### Add Non-ID Type Feature
@@ -117,17 +117,22 @@ income_batch_data = np.array([
   [3000],
 ], dtype=np.float32)
 
-non_id_type_features.append(NonIDTypeFeature(income_batch_data, name="income"))
+non_id_type_features.append(
+  NonIDTypeFeature(income_batch_data, name="income")
+)
 
 # add income_with_height
 income_with_height = np.hstack([height_batch_data, income_batch_data])
-non_id_type_features.append(NonIDTypeFeature(income_with_height, name="income_with_height"))
+non_id_type_features.append(
+  NonIDTypeFeature(income_with_height, name="income_with_height")
+)
 
 # add five image data with RGB channel
 image_data = np.ones((5, 224, 224, 3), dtype=np.uint8)
 non_id_type_features.append(NonIDTypeFeature(image_data, name="LSVR_image"))
 ```
 
+_more advanced [non_id_type_feature processing](../data-processing/index.md##non-id-type-feature-and-label)_
 ### Add Label
 
 Adding a label is as same as the `NonIDTypeFeature`. You can add different datatype label data such as `bool`, `float32`, etc.
@@ -163,6 +168,8 @@ labels.append(Label(income_batch_data, name="income"))
 ctr_with_income = np.hstack([ctr_batch_data, income_batch_data])
 labels.append(Label(ctr_with_name, "ctr_with_income"))
 ```
+
+_more advanced [processing label](../data-processing/index.md##non-id-type-feature-and-label)_
 
 ### Send PersiaBatch
 

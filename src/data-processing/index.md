@@ -8,10 +8,10 @@ You can use `PersiaBatch` to declare a batch of data in various types, shapes an
 
 - [Processing ID Type Features](#processing-id-type-feature)
     - [ID Type Feature with Variable Length](#id-type-feature-with-variable-length)
-    - [ID Type Feature with Single ID](#id-type-feature-with-one-element-sample)
+    - [ID Type Feature with Single ID](#id-type-feature-with-single-id)
 - [Processing Non-ID Type Feature and Label](#non-id-type-feature-and-label)
 - [Processing Meta Data](#processing-meta-data)
-- [PersiaBatch Processing Integration Example](#persia-batch-processing-integration-example)
+- [PersiaBatch Processing Integration Example](#persiabatch-processing-integration-example)
 
 ## Processing ID Type Feature
 
@@ -273,17 +273,20 @@ non_id_type_features = []
 # add non_id_type_feature
 # int8 image_embedding from DNN Extractor
 non_id_type_features.append(NonIDTypeFeature(np.ones((batch_size, 256), dtype=np.int8)))
+
 # general statistics such as average income, height, weight
 # you can merge the non_id_type_feature together with same datatype
 non_id_type_features.append(NonIDTypeFeature(np.eye((batch_size, 3) dtype=np.float32)))
+
 # image_pixel_data or RS data with multiple dimension
 non_id_type_features.append(NonIDTypeFeature(np.ones((batch_size, 3, 224, 224), dtype=np.int8)))
 
 labels = []
 # add label 
-# multiple label classification label
+# multiple label classification task label
 labels.append(Label(np.ones((batch_size, 4), dtype=np.bool), name="ctr_label"))
-# regression label
+
+# regression task label
 labels.append(Label(np.ones((batch_size), dtype=np.float32), name="income_label"))
 
 meta_info = {
