@@ -43,9 +43,9 @@ There are a few files you can customize in PERSIA:
 A `PersiaBatch` is consists of three parts: contiguous data, categorical data and label data.
 
 ### Add ID Type Feature
-`IDTypeFeature` contains variable length of categorical data. `IDTypeFeature` store the `List[np.array]` data which is a list of sparse matrix. Note that it only accepts `np.uint64` elements.
+`IDTypeFeature` declares categorical data with variable length. It is a list of sparse matrix(`List[np.array]`). Note that it only accepts `np.uint64` elements.
 
-For example, you can add `user_id` and `photo_id` data into a `IDTypeFeatureSparse`.
+For example, you can append `user_id` and `photo_id` data into a `IDTypeFeatureSparse`.
 
 ```python
 import numpy as np
@@ -77,14 +77,14 @@ photo_id_batch_data = [
 id_type_features.append(IDTypeFeatureSparse(photo_id_batch_data, "photo_id"))
 ```
 
-After adding `IDTypeFeature`, you have to add corresponding `id_type_feature` config in `embedding_config.yml`. See [configuration](../configuration/index.md) for more details about how to config the `id_type_feature`, such as `dim`, `sqrt_scaling`, etc.
+After appending `IDTypeFeature`, you have to set corresponding `id_type_feature` config in `embedding_config.yml`. See [configuration](../configuration/index.md) for more details about how to config the `id_type_feature`, such as `dim`, `sqrt_scaling`, etc.
 
 _more advanced [id_type_feature processing](../data-processing/index.md#id-type-feature)_
 
 
 ### Add Non-ID Type Feature
 
-You are also able to add multiple `NonIDTypeFeature` into `PersiaBatch` with various datatype. Concatting multiple `non_id_type_features` with same datatype into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example, you are able to add `float32` or `uint8` data.
+You are also able to add multiple `NonIDTypeFeature` into a `PersiaBatch` with various datatype. Concatting multiple `non_id_type_features` with same datatype into one `np.array` can avoid memory fragmentation and reduce the time of type check. For example, you are able to add `float32`, `uint8`, etc.
 
 ```python
 import numpy as np
@@ -162,7 +162,7 @@ labels.append(Label(ctr_with_name, "ctr_with_income"))
 
 ### Send PersiaBatch
 
-Use `persia.ctx.DataCtx` to send the data to `nn_worker` and `embedding_worker` after the `PersiaBatch` created:
+Use `persia.ctx.DataCtx` to send `PersiaBatch` to `nn_worker` and `embedding_worker`:
 
 ```python
 import numpy as np
@@ -187,7 +187,7 @@ with DataCtx() as ctx:
 
 ### Define DNN model
 
-You can define any DNN model structure as you want, only note that the forward function signature of the model should be same with follow.
+You can define any DNN model structure as you want, only note that the forward function signature of models should be same with follow.
 
 ```python
 from typing import List
@@ -219,7 +219,7 @@ adam_embedding_optimizer = Adam(lr)
 
 ### Customize PERSIA Training Context
 
-After above, a PERSIA training context should be created to acquire dataloder and manage sparse embedding.
+After above, a PERSIA training context should be created to manage training environments.
 
 ```python
 # train.py
@@ -269,11 +269,11 @@ _more advanced features: [TrainCtx](../training-context/index.md)_
 
 ## Configuring Embedding Worker
 
-An embedding worker runs asynchronous updating algorithm for getting the embedding parameters from the embedding parameter server; aggregating embedding vectors (potentially) and putting embedding gradients back to embedding parameter server. You can learn the details of the system design through 4.2 section in our [paper](https://arxiv.org/abs/2111.05897). Generally, you only need to adjust the number of instances and resources according to your workload. See [K8S launcher](#k8s-launcher).
+An embedding worker runs asynchronous updating algorithm for getting the embedding parameters from the embedding parameter server; aggregating embedding vectors (potentially) and putting embedding gradients back to embedding parameter server. You can learn more details of the system design through 4.2 section in our [paper](https://arxiv.org/abs/2111.05897). Generally, you only need to adjust the number of instances and resources according to your workload. See [K8S launcher](#k8s-launcher).
 
 ## Configuring Embedding Parameter Server
 
-An embedding parameter server manages the storage and update of the embedding parameters according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies. So you need to configure capacity of the LRU cache in the configuration file according to your workload and available memory size. In addition, the capacity means the max number of embedding vectors, not the number of parameters. Here is an example.
+An embedding parameter server manages the storage and update of the embedding parameters according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies. So you need to configure capacity of the LRU cache in the embedding PS configuration file according to your workload and available memory size. In addition, the capacity means the max number of embedding vectors, not the number of parameters. Here is an example.
 
 ```yaml
 # global_config.yaml
@@ -295,7 +295,7 @@ We provide the different launcher to satisfy your requirements. The below launch
 
 - K8S launcher: Kubernetes launcher is easy to deploy large scale training.
 - docker-compose launcher: Docker compose is the other way like `K8S` but is more lightweight.
-- honcho launcher: A Procfile manager that need to build PERSIA in manually(Currently persia can build in linux, macOS, windows10.). It is hard for inexperienced ones to install the requirement. But is friendly for developers to develop and debug.
+- honcho launcher: You can build PERSIA (Currently persia can build in linux, macOS, windows10) manually when using a Procfile manager, which is friendly for developers.
 
 All of these launchers use environment variables(`PERSIA_GLOBAL_CONFIG`, `PERSIA_EMBEDDING_CONFIG`, `PERSIA_NN_WORKER_ENTRY`, `PERSIA_DATALOADER_ENTRY`) to assign the path of the PERSIA configuration files.
 
@@ -486,7 +486,9 @@ services:
 
 ### Honcho Launcher
 
-Honcho launcher is convenient for debug. You can simulate distributed environment by editing the `Procfile` and `.honcho.env` file.
+<!-- Honcho launcher is convenient for debug. You can simulate distributed environment by editing the `Procfile` and `.honcho.env` file. -->
+
+You are able to simulate distributed environment when using Honcho launcher. You may need to modify these files: `Procfile`, `.honcho.env`.
 
 **Configuring Env**
 
@@ -508,7 +510,6 @@ HONCHO=1 # required by PERSIA to determine the rank
 REPLICA_INDEX=0 # required by PERSIA to determine the replica_index for data_loader
 REPLICA_SIZE=1 # required by PERSIA to determine the replica_size for data_loader
 
-ENABLE_CUDA=0 # enable cuda or not
 NPROC_PER_NODE=1 # number of processes per node to specify.
 ENABLE_CUDA=0 # enable cuda or not
 
@@ -517,7 +518,7 @@ PERSIA_NATS_IP=nats://0.0.0.0:4222
 ```
 **Configuring Procfile**
 
-You can add multiple replica of PERSIA modules as you want in `Procfile`.
+You can add multiple replicas of PERSIA modules as you want in `Procfile`.
 For example, by adding `embedding_server{replica_num}` and `embedding_worker{replica_num}`, you can launch three `embedding-parameter-server` and two `embedding-worker` subprocesses.
 
 ```bash
@@ -540,7 +541,7 @@ nats_server: nats-server
 ```
 ## Build PERSIA Runtime Image Locally
 
-PERSIA runtime image can be built from local. You can use your customized docker image to launch a PERSIA training task by both kubernetes and docker-compose.
+PERSIA runtime image can be built from source. You can use your customized docker image to launch a PERSIA training task by both kubernetes and docker-compose.
 
 Use following instructions to build persia-runtime-image:
 
