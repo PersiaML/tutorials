@@ -132,7 +132,7 @@ image_data = np.ones((5, 224, 224, 3), dtype=np.uint8)
 non_id_type_features.append(NonIDTypeFeature(image_data, name="LSVR_image"))
 ```
 
-_more advanced [non_id_type_feature processing](../data-processing/index.md##non-id-type-feature-and-label)_
+_more advanced [non_id_type_feature processing](../data-processing/index.md##nonid-type-feature-and-label)_
 ### Add Label
 
 Adding a label is as same as the `NonIDTypeFeature`. You can add different datatype label data such as `bool`, `float32`, etc.
@@ -169,7 +169,7 @@ ctr_with_income = np.hstack([ctr_batch_data, income_batch_data])
 labels.append(Label(ctr_with_name, "ctr_with_income"))
 ```
 
-_more advanced [processing label](../data-processing/index.md##non-id-type-feature-and-label)_
+_more advanced [processing label](../data-processing/index.md##nonid-type-feature-and-label)_
 
 ### Send PersiaBatch
 
@@ -447,7 +447,7 @@ services:
       restart_policy:
         condition: on-failure
 ```
-> **NOTE:** You can also use the `replcias` keyword in docker-compose swarm mode to launch multiple services once. But there need to parse the [.TASK.SLOT](https://docs.docker.com/engine/reference/commandline/service_create/#create-services-using-templates) into `replcia_index` and feed it to `data-loader`.
+> **NOTE:** You can also use the `replcias` keyword in docker-compose swarm mode to launch multiple services once. But there need to parse the [.TASK.SLOT](https://docs.docker.com/engine/reference/commandline/service_create/#create-services-using-templates) into `replica_index` and feed it to `data-loader`.
 
 ### Honcho Launcher
 
@@ -457,9 +457,8 @@ You are able to simulate distributed environment when using Honcho launcher. You
 
 **Configuring Env**
 
-There are fields when launching a PERSIA task with Honcho:
+There are environments when launching a PERSIA task with Honcho:
 
-Required fields in `.honcho.env`
 
 * `PERSIA_NATS_IP`: set for nats-server ip address.
 * `LOG_LEVEL`: set log_level for `embedding-worker` and `embedding-parameter-server`.
