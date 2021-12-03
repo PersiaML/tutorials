@@ -79,7 +79,7 @@ photo_id_batch_data = [
 id_type_features.append(IDTypeFeature(photo_id_batch_data, "photo_id"))
 ```
 
-After appending `IDTypeFeature`, you have to config this `id_type_feature` in `embedding_config.yml`. See [configuration](../configuration/index.md) for more details about how to config the `id_type_feature`, such as `dim`, `sqrt_scaling`, etc.
+After appending `IDTypeFeature`, you have to config this `id_type_feature` in `embedding_config.yml`. See [configuration](../configuration/index.md#embedding-config) for more details about how to config the `id_type_feature`, such as `dim`, `sqrt_scaling`, etc.
 
 _more advanced [id_type_feature processing](../data-processing/index.md#processing-id-type-feature)_
 
