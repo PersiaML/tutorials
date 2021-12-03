@@ -67,8 +67,6 @@ Now you can start your first PERSIA training task with one of the following meth
 
 [Docker-compose](https://docs.docker.com/compose/) is a tool for defining and running multi-container docker applications. By modifying the `docker-compose.yml` file, you can customize the PERSIA training task (such as `image`, `replicas`). See PERSIA docker-compose [configuration](../customization/index.md#docker-compose-launcher) for more details.
 
-TODO: fix content consistency @wangyulong
-
 **Requirements**
 
 * [docker](https://docs.docker.com/engine/install/ubuntu/)
