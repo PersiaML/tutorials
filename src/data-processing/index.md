@@ -15,14 +15,15 @@ You can use `PersiaBatch` to declare a batch of data in various types, shapes an
 
 ## Processing ID Type Feature
 
-An ID type feature is a sparse matrix that contains variable length of discrete values. PERSIA converts these discrete `id`s to embeddings by looking up from `embedding-worker`. The conversion rules are different for different `id_type_feature`, see [embedding_config](#../configuration/index.md#embedding-config) for more details.
+An ID type feature is a sparse matrix that contains variable length of discrete values. PERSIA converts these discrete valuess to embeddings by looking up from `embedding-worker`. The conversion rules are different for different `id_type_feature`, see [embedding config](#../configuration/index.md#embedding-config) for more details.
 
 
-In addition, `PersiaBatch` only accepts  `IDTypeFeature` or `IDTypeFeatureWithSingleID` with the `np.uint64` datatype.
+In addition, `PersiaBatch` only accepts  `IDTypeFeature` or `IDTypeFeatureWithSingleID` with `np.uint64` datatype.
 
 ### ID Type Feature with Variable Length
 
-It is hard to keep the training speed stable with the id_typ_feature sample length increasing, especially using the fixed sample size. The following code helps you understand how to process the id_type_feature to `LIL` sparse matrix that is variable length.
+<!-- It is hard to keep the training speed stable with the id_typ_feature sample length increasing, especially using the fixed sample size.  -->
+The following code shows how to conver a `id_type_feature` with variable length `LIL` sparse matrix with fixed sample size.
 
 ```python
 import numpy as np
@@ -81,7 +82,9 @@ for id_type_feature_idx, id_type_feature_name in enumerate(id_type_feature_names
 
 ### ID Type Feature with Single ID
 
-Almost all public recommendation datasets concat multiple id_type_features in one `numpy.array`. This kind of id_type_feature has only one ID for each sample. The below code helps you understand how to process such a kind of dataset and add the id_type_feature into `PersiaBatch`.
+<!-- Almost all public recommendation datasets concat multiple id_type_features in one `numpy.array`. This kind of id_type_feature has only one ID for each sample. The below code helps you understand how to process such a kind of dataset and add the id_type_feature into `PersiaBatch`. -->
+
+The below code shows how to process data who has only one ID for each sample.
 
 ```python
 import numpy as np
@@ -119,7 +122,7 @@ for id_type_feature_idx, id_type_feature_name in enumerate(id_type_feature_names
 
 ## Non-ID Type Feature and Label
 
-Non-ID type features and Labels are tensors with various data type and shape that has the same batch size with `id_type_feature` in a `PersiaBatch`.
+Non-ID type features and Labels are tensors with various data type and shape who has a same batch size with `id_type_feature` in a `PersiaBatch`.
 
 <!-- Non-ID type features and Labels can be variable datatype and shape. The restrictions to them is to check the datatype support or not and the batch_size is same as id_type_feature or not.Below code help you understand adding these two type of data. -->
 
@@ -127,7 +130,7 @@ Non-ID type features and Labels are tensors with various data type and shape tha
 
 <!-- `non_id_type_features` support the datatype that [pytorch](https://pytorch.org/docs/stable/tensors.html) support.  -->
 
-The best practice is to concat data with the same type and then append it to `non_id_type_features`, instead of append one by one.
+The best practice is to stack data with the same type and then append it to `non_id_type_features`, instead of append one by one.
 <!-- You can add multiple `non_id_type_feature` with different datatype and different shape. For every Non-ID type_feature, you can concat multiple tensors as one tensor that have same datatype or for more readable reason to add the Non-ID type feature one by one. -->
 
 Datatype supported in `NonIDTypeFeature` and `Label`:
@@ -172,7 +175,8 @@ labels.append(Label(np.ones((batch_size), dtype=np.float32)))
 
 ## Processing Meta Data
 
-`PersiaBatch` provides the meta field to store unstructured data. You can serialize the object into bytes and add it into `PersiaBatch`.
+There is meta field in `PersiaBatch` to store unstructured data. You are able to serialize the object into bytes and add it into `PersiaBatch`.
+<!-- `PersiaBatch` provides the meta field to store unstructured data. You can serialize the object into bytes and add it into `PersiaBatch`. -->
 
 ```python
 import json
@@ -207,7 +211,7 @@ PersiaBatch(
 
 <!-- We provide an integration example for you to understand how to generate a `PersiaBatch` from origin data. -->
 
-Here is an example of how to generate a `PersiaBatch` from raw data:
+Here is an integration example of how to generate a `PersiaBatch` from raw data:
 
 ```python 
 import json
