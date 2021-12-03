@@ -441,7 +441,7 @@ services:
     command: persia-launcher data-loader /workspace/data_loader.py --replica-index 1 --replica-size 2
     volumes:
       - type: bind
-        source: . # mount current directory into container
+        source: .
         target: /workspace
     deploy:
       restart_policy:
