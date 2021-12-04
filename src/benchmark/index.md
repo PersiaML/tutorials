@@ -3,9 +3,9 @@ Benchmark
 
 We perform a series of large-scale training experiments to demonstrate the
 scalability and speed of PERSIA on open-source benchmarks as well as production
-recommendation workflows. Comparing to SOTA recommender systems, Persia
+recommendation workflows. Comparing to SOTA recommender systems, PERSIA
 provides significant boost to end-to-end training time, provide high training
-throughput and scale out well up to trillion-parameter scale models. 
+throughput and scale out well up to trillion-parameter scale models.
 
 ## Setup
 
@@ -22,7 +22,7 @@ production microvideo recommendation workflow at Kwai:
 * [Criteo-Ad](https://www.kaggle.com/c/criteo-display-ad-challenge): predict
   the advertisement CTR of Criteo’s traffic for 24 days with 44 million
   records.
-* Kwai-Video(confidential production dataset): predict the explicit behavior of
+* Kwai-Video (confidential production dataset): predict the explicit behavior of
   Kwai’s active users about the microvideo recommendation in 7 days with 3
   billion records.
 
@@ -50,11 +50,11 @@ The figure above illustrates the convergence behaviors of different systems. We 
 <img src="img/scalability.png" width="1200">
 </center>
 
-Above figure illustrates significant performance improvements from Persia: e.g., for the Taobao-Ad benchmark, PERSIA is 7.12× and 8.4× faster than that of the synchronous and asynchronous modes of XDL, and 1.71× faster than PaddlePaddle–same level of speedup also appears in the Avazu-Ad and Criteo-Ad benchmark.
+Above figure illustrates significant performance improvements from PERSIA: e.g., for the Taobao-Ad benchmark, PERSIA is 7.12× and 8.4× faster than that of the synchronous and asynchronous modes of XDL, and 1.71× faster than PaddlePaddle–same level of speedup also appears in the Avazu-Ad and Criteo-Ad benchmark.
 
 ## Scalability: Number of Parameters
 
-The intensive test of Persia’ capacity is conducted over Google cloud platform with a heterogeneous cluster including:
+The intensive test of PERSIA's capacity is conducted over Google cloud platform with a heterogeneous cluster including:
 * 8 a2-highgpu-8g instances (each with 8 Nvidia A100 GPUs) as NN workers;
 * 100 c2-standard-30 instances (each with 30 vCPUs, 120 GB RAM) as embedding workers;
 * 30 m2-ultramem-416 instances (each with 416 vCPUs, 12 TB RAM) as embedding PS.
@@ -63,7 +63,7 @@ The intensive test of Persia’ capacity is conducted over Google cloud platform
 <img src="img/model_scalability.png" width="600">
 </center>
 
-We see that PERSIA shows stable training throughput when increasing the model size even up to 100 trillion parameters. For the 100 trillion-parameter model, PERSIA also achieves 2.6× higher throughput than the fully synchronous mode.
+We see that PERSIA shows stable training throughput when increasing the model size even up to 100 trillion parameters. Even for the 100 trillion-parameter model, PERSIA still achieves 2.6× higher throughput than the fully synchronous mode.
 
 
 [^1]: According to private communications we had with members of the PaddlePaddle development community.

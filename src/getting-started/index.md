@@ -1,7 +1,7 @@
 # Getting Started
 
 
-- [Run on Kubernetes with PERSIA Operator(Recommended)](#run-on-kubernetes-with-persia-operator)
+- [Run on Kubernetes with PERSIA Operator (Recommended)](#run-on-kubernetes-with-persia-operator)
 - [Run Manually](#run-manually)
     - [Docker Compose](#using-docker-compose)
     - [Python Package](#using-python-package)
@@ -11,7 +11,7 @@
 **Requirements**
 
 * `kubectl` command-line tool
-* valid `kubeconfig` file (default located at `~/.kube/config`)
+* valid `kubeconfig` file (by efault located at `~/.kube/config`)
 
 **Installation**
 
@@ -32,9 +32,9 @@ To run a simple example training task ([adult income prediction](https://archive
 kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/example/adult-income-prediction.train.yml
 ```
 
-This runs the adult income prediction training task defined by `adult-income-prediction.train.yml`. This file defines the system configuration (e.g. resources limit, volume mounts, and environment variables) of a PERSIA training task.
+This runs the adult income prediction training task defined by `adult-income-prediction.train.yml`. This file defines system configuration (e.g. resources limit, volume mounts) and environment variables (with paths to embedding, model and data configuration files) of a PERSIA training task.
 
-To run a customized training task on your own dataset and models, you can customize the following configuration files:
+To run a customized training task on your own dataset and models, you can edit the following configuration files:
 
 - **Embedding configuration file:** A file defining the embedding configurations (e.g. embedding dimension, and sum pooling). This file is named as `embedding_config.yaml` by default. For more details see [embedding config](../configuration/index.md#embedding-config).
 - **Embedding PS configuration file:** Configuration of embedding parameter servers, e.g. max capacity of embedding parameter servers. This file is named as `global_config.yaml` by default. For more details see [global config](../configuration/index.md#global-configuration).
@@ -72,7 +72,7 @@ Now you can start your first PERSIA training task with one of the following meth
 **Run**
 
 <!-- We already provide the `docker-compose.yml` and `.docker.env` for adult income example.  -->
-Use the following instructions to start your `PERSIA` training task after installing the requirements.
+Use the following instructions to start your PERSIA training task after installing the requirements.
 
 ```bash
 cd examples/src/adult-income && make run
@@ -84,12 +84,12 @@ You are free to modify PERSIA source code and build your customized PERSIA Pytho
 
 **Requirements**
 
-* [PERSIA python package](https://pypi.org/project/persia/) 
-* [honcho](https://github.com/nickstenning/honcho) 
+* [PERSIA python package](https://pypi.org/project/persia/)
+* [honcho](https://github.com/nickstenning/honcho)
 * [nats-server](https://docs.nats.io/running-a-nats-service/introduction/installation)
 
 **Using Pre-compiled Wheels**
- 
+
 Wheels (precompiled binary packages) are available for Linux (x86_64). Package names are different depending on your CUDA Toolkit version (CUDA Toolkit version is shown in` nvcc --version`). All of these precompiled binary packages need Python greater than 3.6.
 
 |CUDA Toolkit version|Installation command|
@@ -105,19 +105,17 @@ Use following instructions to build PERSIA Python packages from source (Ubuntu 2
 
 > **Note**: You need to set environment variable `USE_CUDA=1` to add CUDA support (for GPU training). In this case, the CUDA runtime path should be already present in `LD_LIBRARY_PATH`.
 
-<center>
-**Ubuntu 20.04**
-</center>
+**<center>Ubuntu 20.04</center>**
 
 ```bash
-apt update && apt-get install -y curl build-essential git python3 python3-dev python3-pip 
+apt update && apt-get install -y curl build-essential git python3 python3-dev python3-pip
 
 export RUSTUP_HOME=/rust
 export CARGO_HOME=/cargo
 export PATH=/cargo/bin:/rust/bin:$PATH
 curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly -y --profile default --no-modify-path
 
-git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA 
+git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA
 
 # To install CUDA version
 USE_CUDA=1 NATIVE=1 pip3 install .
@@ -126,13 +124,14 @@ USE_CUDA=1 NATIVE=1 pip3 install .
 NATIVE=1 pip3 install .
 ```
 
-<center>
-**Windows 10**
-</center>
+
+**<center>Windows 10</center>**
+
+
 Python3, [Perl](https://strawberryperl.com/) and [Rust](https://www.rust-lang.org/tools/install) are required.
 
 ```bash
-git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA 
+git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA
 
 # To install CUDA version
 USE_CUDA=1 NATIVE=1 pip3 install .
