@@ -18,7 +18,7 @@ metadata:
 
 ## Configuring Environment Variables
 
-You can set environment variables for all pods or for a PERSIA module. As the following example, setting of `PERSIA_NATS_IP` take effect for all pods in this job, while the `CUBLAS_WORKSPACE_CONFIG` only set on NN workers.
+You can set environment variables for all pods or for a PERSIA module. As the following example, setting of `PERSIA_NATS_URL` take effect for all pods in this job, while the `CUBLAS_WORKSPACE_CONFIG` only set on NN workers.
 
 ```yaml
 ...
@@ -108,7 +108,7 @@ spec:
 
 ## Configuring Nats Operator
 
-While starting a PERSIA training task, we usually need to start a nats service, which can be achieved through its [operator](https://github.com/nats-io/nats-operator). PERSIA transmits ID type feature through nats, so you need to ensure that its `maxPayload` is large enough. Please note that global environment variable `PERSIA_NATS_IP` should be set to `nats://your-nats-operator-name:4222`, e.g. `nats://persia-nats-service:4222` for the following example.
+While starting a PERSIA training task, we usually need to start a nats service, which can be achieved through its [operator](https://github.com/nats-io/nats-operator). PERSIA transmits ID type feature through nats, so you need to ensure that its `maxPayload` is large enough. Please note that global environment variable `PERSIA_NATS_URL` should be set to `nats://your-nats-operator-name:4222`, e.g. `nats://persia-nats-service:4222` for the following example.
 
 ```yaml
 apiVersion: "nats.io/v1alpha2"
