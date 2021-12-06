@@ -497,7 +497,7 @@ It is possible to simulate distributed environment when using Honcho launcher. Y
 There are two environment variables that you can customize when launching a PERSIA task with Honcho:
 
 
-* `PERSIA_NATS_URL`: set for nats-server ip address.
+* `PERSIA_NATS_URL`: set for nats-server url.
 * `LOG_LEVEL`: set log_level for `embedding-worker` and `embedding-parameter-server`.
 
 ```env
