@@ -84,7 +84,7 @@ for id_type_feature_idx, id_type_feature_name in enumerate(id_type_feature_names
 
 <!-- Almost all public recommendation datasets concat multiple id_type_features in one `numpy.array`. This kind of id_type_feature has only one ID for each sample. The below code helps you understand how to process such a kind of dataset and add the id_type_feature into `PersiaBatch`. -->
 
-The below code shows how to process data who has only one ID for each sample.
+The below code shows how to process data who have only one ID for each sample.
 
 ```python
 import numpy as np
