@@ -42,7 +42,7 @@ The `mixed_precision` feature in PERSIA training is only supported on gpu NN wor
 
 **Configuring DDPOption**
 
-In `DDPOption`, you can configure the `backend` and `init_method`. The default `init_method` is TCP that needs to set the master_address and master_port.
+In `DDPOption`, you can configure the `backend` and `init_method`. The default `init_method` is TCP that needs to set the `master_address` and `master_port`.
 
 ```python
 from persia.distributed import DDPOption
