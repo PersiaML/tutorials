@@ -89,9 +89,11 @@ You are free to modify PERSIA source code and build your customized PERSIA Pytho
 * [PERSIA Python package](https://pypi.org/project/persia/)
 * [nats-server](https://docs.nats.io/running-a-nats-service/introduction/installation)
 
+**Acquiring PERSIA Python package**
+
 There are methods to acquire a PERSIA Python package.
 
-**Using Pre-compiled Wheels**
+**<center>Using Pre-compiled Wheels</center>**
 
 Wheels (precompiled binary packages) are available for Linux (x86_64). Package names are different depending on your CUDA Toolkit version (CUDA Toolkit version is shown in` nvcc --version`). All of these precompiled binary packages need Python greater than 3.6.
 
@@ -102,7 +104,7 @@ Wheels (precompiled binary packages) are available for Linux (x86_64). Package n
 |>= v11.1|`pip3 install persia-cuda111`|
 |>= v11.3|`pip3 install persia-cuda113`|
 
-**From Source**
+**<center>From Source</center>**
 
 Use following instructions to build PERSIA Python packages from source (Ubuntu 20.04 & Windows 10. It should be similar on other OSes).
 
