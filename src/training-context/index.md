@@ -6,7 +6,7 @@ A PERSIA training context manages training environments on NN workers.
 
 ## PERSIA Training Context Complete Example
 
-Here is an complete example for the usage of PERSIA training context.
+Here is a complete example for the usage of PERSIA training context.
 
 ```python
 import os
