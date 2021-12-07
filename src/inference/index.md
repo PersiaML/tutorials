@@ -63,13 +63,13 @@ For the dense part, it is saved directly by PyTorch with [TorchScript]:
 
 ```python
 jit_model = torch.jit.script(model)
-jit_model.save('/your/model/dir/you_model_name.pth')
+jit_model.save('/your/model/dir/your_dense_model_name.pth')
 ```
 
 Then, to serve the dense part with TorchServe, use [torch-model-archiver] to package it.
 
 ```bash
-torch-model-archiver --model-name you_model_name --version 1.0 --serialized-file /your/model/dir/you_model_name.pth --handler /your/model/dir/persia_handler.py
+torch-model-archiver --model-name your_dense_model_name --version 1.0 --serialized-file /your/model/dir/your_dense_model_name.pth --handler /your/model/dir/persia_handler.py
 ```
 
 Sparse model can be saved and loaded with PERSIA Python API, see [Model Checkpointing](../model-checkpointing/index.md) for details.
@@ -79,7 +79,7 @@ Sparse model can be saved and loaded with PERSIA Python API, see [Model Checkpoi
 TorchServe can be launched with:
 
 ```bash
-torchserve --start --ncs --model-store /workspace/serve/model/ --models you_model_name.mar
+torchserve --start --ncs --model-store /your/dense/model/dir --models your_dense_model_name.mar
 ```
 
 There are configurations in [`global_config.yaml`](https://github.com/PersiaML/tutorials/blob/docs/monitoring/src/configuring/index.md#global-config) when deploy embedding parameter servers and embedding workers for inference.
@@ -171,7 +171,9 @@ if __name__ == "__main__":
 
 ```
 
-## 5. Model incremental update
+## 5. Model update
+
+### Sparse model incremental update
 
 It is crucial to keep the model for inference up to date. For huge sparse models, PERSIA provides incremental updates, so that online prediction services only receives model differences during training to update the online model for inference. This dramatically reduces the model latency between training and inference.
 
@@ -180,7 +182,7 @@ During training, an incremental update file will be dumped periodically. During 
 Relavant configurations in [`global_config.yaml`](https://github.com/PersiaML/tutorials/blob/docs/monitoring/src/configuring/index.md#global-config) are `enable_incremental_update`, `incremental_buffer_size` and `incremental_dir`.
 
 
-## 6. Manage dense models on TorchServe
+### Manage dense models on TorchServe
 
 To update dense model with sparse model, it can be managed by torchserve through its [management api]. After generating the `.mar` file according to the above steps, its path can be sent to torchserve with [grpc client](https://github.com/pytorch/serve/blob/master/ts_scripts/torchserve_grpc_client.py).
 

@@ -24,6 +24,10 @@ embedding_config = EmbeddingConfig(
     weight_bound=1
 )
 
+TrainCtx(
+    embedding_config=embedding_config
+)
+
 ```
 
 ## Mixed Precision Training

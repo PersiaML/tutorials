@@ -8,6 +8,8 @@
 
 ## Run on Kubernetes with PERSIA Operator
 
+By taking advantage of PERSIA K8s operator's automation, you can start a PERSIA training task with a few instructions.
+
 **Requirements**
 
 * `kubectl` command-line tool
@@ -34,7 +36,7 @@ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/exam
 
 This runs the adult income prediction training task defined by `adult-income-prediction.train.yml`. This file defines system configuration (e.g. resources limit, volume mounts) and environment variables (with paths to embedding, model and data configuration files) of a PERSIA training task.
 
-To run a customized training task on your own dataset and models, you can edit the following configuration files:
+To run a customized training task on your own dataset and models, you can edit the following configuration files(see [customization](../customization/index.md) for more details):
 
 - **Embedding configuration file:** A file defining the embedding configurations (e.g. embedding dimension, and sum pooling). This file is named as `embedding_config.yaml` by default. For more details see [embedding config](../configuration/index.md#embedding-config).
 - **Embedding PS configuration file:** Configuration of embedding parameter servers, e.g. max capacity of embedding parameter servers. This file is named as `global_config.yaml` by default. For more details see [global config](../configuration/index.md#global-configuration).
@@ -47,9 +49,9 @@ details on how to customize these environment variables, see
 
 ## Run Manually
 
-The data of adult income should be downloaded and preprocessed before you get started to run the example PERSIA training task:
+<!-- The data of adult income should be downloaded and preprocessed before you get started to run the example PERSIA training task: -->
 
-<!-- To launch the PERSIA adult income prediction task  manually, the first step is to download the corresponding dataset and preprocess the train data and test data. We already prepare the script to help you finish this step. -->
+To launch the PERSIA adult income prediction training task manually, the first step is to download the corresponding dataset and preprocess the train data and test data. We have prepared the script to help you to finish this step.
 
 ```bash
 git clone https://github.com/PersiaML/PERSIA.git
@@ -84,9 +86,10 @@ You are free to modify PERSIA source code and build your customized PERSIA Pytho
 
 **Requirements**
 
-* [PERSIA python package](https://pypi.org/project/persia/)
-* [honcho](https://github.com/nickstenning/honcho)
+* [PERSIA Python package](https://pypi.org/project/persia/)
 * [nats-server](https://docs.nats.io/running-a-nats-service/introduction/installation)
+
+There are methods to acquire a PERSIA Python package.
 
 **Using Pre-compiled Wheels**
 
