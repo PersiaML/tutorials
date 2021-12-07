@@ -175,7 +175,7 @@ if __name__ == "__main__":
 
 ### Sparse model incremental update
 
-It is crucial to keep the model for inference up to date. For huge sparse models, PERSIA provides incremental updates, so that online prediction services only receives model differences during training to update the online model for inference. This dramatically reduces the model latency between training and inference.
+Generally, online prediction services need to continuously load the latest model to keep the model for inference up to date, while for huge sparse models, dumping full amount of the model in a short interval always means a huge overhead for systems. Incremental update can fill this gap by dumping a small part of the model which updated recently. so that online prediction services only receives model differences during training to update the online model for inference. This dramatically reduces the model latency between training and inference.
 
 During training, an incremental update file will be dumped periodically. During inference, PERSIA services keep scanning a directory to find if there is a new incremental update file to load.
 
