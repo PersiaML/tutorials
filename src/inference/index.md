@@ -173,7 +173,7 @@ if __name__ == "__main__":
 
 ## 5. Model update
 
-### Sparse model incremental update
+### Sparse model: PERSIA Incremental update
 
 Generally, online prediction services need to continuously load the latest model to keep the model for inference up to date, while for huge sparse models, dumping full amount of the model in a short interval always means a huge overhead for systems. Incremental update can fill this gap by dumping a small part of the model which updated recently. so that online prediction services only receives model differences during training to update the online model for inference. This dramatically reduces the model latency between training and inference.
 
@@ -182,7 +182,7 @@ During training, an incremental update file will be dumped periodically. During 
 Relavant configurations in [`global_config.yaml`](https://github.com/PersiaML/tutorials/blob/docs/monitoring/src/configuring/index.md#global-config) are `enable_incremental_update`, `incremental_buffer_size` and `incremental_dir`.
 
 
-### Manage dense models on TorchServe
+### Dense model: TorchServe Management API
 
 Update of the dense part of the model can be achieved using torchserve through its [management api]. First generate the `.mar` file for the updated model following the steps described above, then register its path to torchserve with [grpc client](https://github.com/pytorch/serve/blob/master/ts_scripts/torchserve_grpc_client.py), and finally deregister the old model.
 
