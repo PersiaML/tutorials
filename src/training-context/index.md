@@ -2,7 +2,98 @@
 <!--
 PERSIA training context is a configurable context that help you to set the corresponding embedding training configuration. PERSIA support both gpu nn_worker and cpu nn_worker.Different type of nn_worker may not support the same feature.Usually the gpu nn_worker will do will perform than the cpu nn_worker. -->
 
-A PERSIA training context manages training environments on NN workers. In the following section, we will introduce several configuration options when creating a PERSIA training context.
+A PERSIA training context manages training environments on NN workers.
+
+## PERSIA Training Context Complete Example
+
+Here is an complete example for the usage of PERSIA training context.
+
+```python
+import os
+from posixpath import abspath
+
+import torch
+import numpy as np
+
+from tqdm import tqdm
+from sklearn import metrics
+
+from persia.ctx import TrainCtx, eval_ctx
+from persia.embedding.optim import Adagrad
+from persia.embedding.data import PersiaBatch
+from persia.env import get_rank, get_local_rank, get_world_size
+from persia.logger import get_default_logger
+from persia.data import Dataloder, PersiaDataset, StreamingDataset
+from persia.prelude import PersiaBatchDataSender
+from persia.utils import setup_seed
+
+from model import DNN
+from data_generator import make_dataloader
+
+logger = get_default_logger("nn_worker")
+
+setup_seed(3)
+
+class TestDataset(PersiaDataset):
+    ...
+
+def test(model: torch.nn.Module, data_loader: Dataloder, cuda: bool):
+    ...
+
+if __name__ == "__main__":
+    model = DNN()
+    logger.info("init Simple DNN model...")
+    rank, device_id, world_size = get_rank(), get_local_rank(), get_world_size()
+
+    cuda = bool(int(os.environ.get("ENABLE_CUDA", 0)))
+    mixed_precision = True
+
+    if cuda:
+        torch.cuda.set_device(device_id)
+        model.cuda(device_id)
+    else:
+        mixed_precision = False
+        device_id = None
+
+    logger.info(f"device_id is {device_id}")
+
+    dense_optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
+    embedding_optimizer = Adagrad(lr=1e-2)
+    loss_fn = torch.nn.BCELoss(reduction="mean")
+
+    embedding_config = EmbeddingConfig(
+        emb_initialization=(-1, 1),
+        admit_probability=0.8,
+        weight_bound=1
+    )
+
+    with TrainCtx(
+        model=model,
+        embedding_config=embedding_config,
+        embedding_optimizer=embedding_optimizer,
+        dense_optimizer=dense_optimizer,
+        mixed_precision=mixed_precision,
+        device_id=device_id,
+    ) as ctx:
+        train_dataloader = Dataloder(StreamingDataset(10))
+        test_loader = Dataloder(test_dataset, is_training=False)
+
+        logger.info("start to training...")
+        for (batch_idx, data) in enumerate(train_dataloader):
+            (output, labels) = ctx.forward(data)
+            label = labels[0]
+            loss = loss_fn(output, label)
+            scaled_loss = ctx.backward(loss)
+            accuracy = (torch.round(output) == label).sum() / label.shape[0]
+
+            logger.info(
+                f"current idx: {batch_idx} loss: {float(loss)} scaled_loss: {float(scaled_loss)} accuracy: {float(accuracy)}"
+            )
+            if batch_idx % test_interval == 0 and batch_idx != 0:
+                test(model, test_loader, cuda)
+```
+
+In the following section, we will introduce several configuration options when creating a PERSIA training context.
 
 <!-- We will introduce several configurations that may help you to configure your task while using PERSIA in training job. -->
 
