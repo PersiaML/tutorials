@@ -85,7 +85,6 @@ You are free to modify PERSIA source code and build your customized PERSIA Pytho
 **Requirements**
 
 * [PERSIA python package](https://pypi.org/project/persia/)
-* [honcho](https://github.com/nickstenning/honcho)
 * [nats-server](https://docs.nats.io/running-a-nats-service/introduction/installation)
 
 **Using Pre-compiled Wheels**
