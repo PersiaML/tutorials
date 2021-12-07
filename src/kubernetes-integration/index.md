@@ -108,7 +108,7 @@ spec:
 
 ## Configuring Nats Operator
 
-While starting a PERSIA training task, we usually need to start a nats service, which can be achieved through [nats-operator](https://github.com/nats-io/nats-operator). PERSIA transmits ID type feature through nats, so you need to ensure that its `maxPayload` is large enough. Please note that global environment variable `PERSIA_NATS_IP` should be set to `nats://your-nats-operator-name:4222`, e.g. `nats://persia-nats-service:4222` for the following example.
+While starting a PERSIA training task, we usually need to start a nats service, which can be achieved through [nats-operator](https://github.com/nats-io/nats-operator). PERSIA transmits ID type feature through nats, so you need to ensure that its `maxPayload` is large enough. Please note that global environment variable `PERSIA_NATS_URL` should be set to `nats://your-nats-operator-name:4222`, e.g. `nats://persia-nats-service:4222` for the following example.
 
 ```yaml
 apiVersion: "nats.io/v1alpha2"

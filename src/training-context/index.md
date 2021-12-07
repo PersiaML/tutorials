@@ -28,7 +28,7 @@ embedding_config = EmbeddingConfig(
 
 ## Mixed Precision Training
 
-The `mixed_precision` feature in PERSIA training is only support on gpu NN workers because it depends on [pytorch amp](https://pytorch.org/docs/stable/amp.html).
+The `mixed_precision` feature in PERSIA training is only supported on gpu NN workers because it depends on [pytorch amp](https://pytorch.org/docs/stable/amp.html).
 
 <!-- And it only improves the speed of the dense model training and reduce the corresponding device memory cost. It won increase or reduce the data for the embedding. -->
 
@@ -42,7 +42,7 @@ The `mixed_precision` feature in PERSIA training is only support on gpu NN worke
 
 **Configuring DDPOption**
 
-In `DDPOption`, you can configure the `backend` and `init_method`. The default `init_method` is TCP that needs to set the master_address and master_port.
+In `DDPOption`, you can configure the `backend` and `init_method`. The default `init_method` is `"tcp"` who needs `master_address` and `master_port`.
 
 ```python
 from persia.distributed import DDPOption

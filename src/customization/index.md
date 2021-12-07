@@ -363,7 +363,7 @@ spec:
     PERSIA_NN_WORKER_ENTRY: /home/PERSIA/examples/src/adult-income/train.py
     PERSIA_DATALOADER_ENTRY: /home/PERSIA/examples/src/adult-income/data_loader.py
   env:
-    - name: PERSIA_NATS_IP
+    - name: PERSIA_NATS_URL
       value: nats://persia-nats-service:4222  # hostname need to be same with nats operator's name
 
   embeddingParameterServer:
@@ -497,13 +497,13 @@ It is possible to simulate distributed environment when using Honcho launcher. Y
 There are two environment variables that you can customize when launching a PERSIA task with Honcho:
 
 
-* `PERSIA_NATS_IP`: set for nats-server ip address.
+* `PERSIA_NATS_URL`: set for nats-server url.
 * `LOG_LEVEL`: set log_level for `embedding-worker` and `embedding-parameter-server`.
 
 ```env
 # .honcho.env
 # default nats_server ip address
-PERSIA_NATS_IP=nats://0.0.0.0:4222
+PERSIA_NATS_URL=nats://0.0.0.0:4222
 
 LOG_LEVEL=info
 ```
