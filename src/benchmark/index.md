@@ -42,7 +42,7 @@ We include up to 64 Nvidia V100 GPUs, and 100 CPU instances (each with 52 cores 
 <img src="img/convergence.png" width="1200">
 </center>
 
-The figure above illustrates the convergence behaviors of different systems. We see that the persia hybrid algorithm shows almost identical convergence when comparing with the fully synchronous mode. We see that test AUC gap between the hybrid mode and synchronous mode is always less than 0.1% in the three open-source benchmarks, and less than 0.001% in the production Kwai-video benchmark; by contrast, the gap between the asynchronous mode and the synchronous mode is much higher (from 0.5% to 1.0%); further, as we allow more aggressive asynchronicity in PaddlePaddle, the gap is more significant.
+The figure above illustrates the convergence behaviors of different systems. We see that the PERSIA hybrid algorithm shows almost identical convergence when comparing with the fully synchronous mode. We see that test AUC gap between the hybrid mode and synchronous mode is always less than 0.1% in the three open-source benchmarks, and less than 0.001% in the production Kwai-video benchmark; by contrast, the gap between the asynchronous mode and the synchronous mode is much higher (from 0.5% to 1.0%); further, as we allow more aggressive asynchronicity in PaddlePaddle, the gap is more significant.
 
 ## Scalability: Number of Workers
 
