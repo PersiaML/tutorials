@@ -11,7 +11,7 @@ You can use `PersiaBatch` to declare a batch of data in various types, shapes an
     - [ID Type Feature with Single ID](#id-type-feature-with-single-id)
 - [Processing Non-ID Type Feature and Label](#non-id-type-feature-and-label)
 - [Processing Meta Data](#processing-meta-data)
-- [PersiaBatch Processing Integration Example](#persiabatch-processing-integration-example)
+- [PersiaBatch Processing Complete Example](#persiabatch-processing-complete-example)
 
 ## Processing ID Type Feature
 
@@ -23,7 +23,7 @@ In addition, `PersiaBatch` only accepts  `IDTypeFeature` or `IDTypeFeatureWithSi
 ### ID Type Feature with Variable Length
 
 <!-- It is hard to keep the training speed stable with the id_typ_feature sample length increasing, especially using the fixed sample size.  -->
-The following code shows how to conver a `id_type_feature` with variable length to `LIL` sparse matrix with fixed sample size.
+The following code shows how to convert an `id_type_feature` with variable length to `LIL` sparse matrix with fixed sample size.
 
 ```python
 import numpy as np
@@ -112,7 +112,7 @@ for id_type_feature_idx, id_type_feature_name in enumerate(id_type_feature_names
     id_type_feature = []
     id_type_features.append(
         IDTypeFeatureWithSingleID(
-            id_type_feature_name, 
+            id_type_feature_name,
             id_type_feature_data[start: start + batch_size,id_type_feature_idx]
         )
     )
@@ -122,7 +122,7 @@ for id_type_feature_idx, id_type_feature_name in enumerate(id_type_feature_names
 
 ## Non-ID Type Feature and Label
 
-Non-ID type features and Labels are tensors with various data type and shape who has a same batch size with `id_type_feature` in a `PersiaBatch`.
+Non-ID type features and Labels are tensors with various data type and shape. They must have the same batch size with `id_type_feature` in a `PersiaBatch`.
 
 <!-- Non-ID type features and Labels can be variable datatype and shape. The restrictions to them is to check the datatype support or not and the batch_size is same as id_type_feature or not.Below code help you understand adding these two type of data. -->
 
@@ -130,7 +130,7 @@ Non-ID type features and Labels are tensors with various data type and shape who
 
 <!-- `non_id_type_features` support the datatype that [pytorch](https://pytorch.org/docs/stable/tensors.html) support.  -->
 
-The best practice is to stack data with the same type and then append it to `non_id_type_features`, instead of append one by one.
+The best practice is to stack data with the same type and then append it to `non_id_type_features`, instead of appending one by one.
 <!-- You can add multiple `non_id_type_feature` with different datatype and different shape. For every Non-ID type_feature, you can concat multiple tensors as one tensor that have same datatype or for more readable reason to add the Non-ID type feature one by one. -->
 
 Datatype supported in `NonIDTypeFeature` and `Label`:
@@ -175,19 +175,19 @@ labels.append(Label(np.ones((batch_size), dtype=np.float32)))
 
 ## Processing Meta Data
 
-There is meta field in `PersiaBatch` to store unstructured data. You are able to serialize the object into bytes and add it into `PersiaBatch`.
+There is an optional meta field in `PersiaBatch` to store unstructured data. You are able to serialize the object into bytes and add it into `PersiaBatch`.
 <!-- `PersiaBatch` provides the meta field to store unstructured data. You can serialize the object into bytes and add it into `PersiaBatch`. -->
 
 ```python
 import json
 import pickle
 
-import time 
+import time
 from persia.embedding.data import PesiaBatch, IDTypeFeature
 batch_size = 5
 id_type_features = [
     IDTypeFeature(
-        "empty_id_type_feature_with_batch_size", 
+        "empty_id_type_feature_with_batch_size",
         [np.array([], dtype=np.uint64)] * batch_size)
 ]
 
@@ -207,15 +207,15 @@ PersiaBatch(
 ```
 
 
-## PersiaBatch Processing Integration Example
+## PersiaBatch Processing Complete Example
 
 <!-- We provide an integration example for you to understand how to generate a `PersiaBatch` from origin data. -->
 
-Here is an integration example of how to generate a `PersiaBatch` from raw data:
+Here is a complete example of how to generate a `PersiaBatch` from raw data:
 
-```python 
+```python
 import json
-import time 
+import time
 
 import numpy as np
 
@@ -262,7 +262,7 @@ for id_type_feature_idx, id_type_feature_name in enumerate(id_type_feature_names
     for batch_idx in range(batch_size):
         id_type_feature.append(
             np.array(
-                id_type_feature_data[id_type_feature_idx][batch_idx: batch_idx + 1], 
+                id_type_feature_data[id_type_feature_idx][batch_idx: batch_idx + 1],
                 dtype=np.uint64
             ).reshape(-1)
         )
@@ -282,7 +282,7 @@ non_id_type_features.append(NonIDTypeFeature(np.eye((batch_size, 3) dtype=np.flo
 non_id_type_features.append(NonIDTypeFeature(np.ones((batch_size, 3, 224, 224), dtype=np.int8)))
 
 labels = []
-# add label 
+# add label
 # multiple label classification task label
 labels.append(Label(np.ones((batch_size, 4), dtype=np.bool), name="ctr_label"))
 

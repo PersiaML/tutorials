@@ -11,7 +11,7 @@ In the following sections, we first introduce how to create a custom handler for
 
 ## 1. Create PERSIA handler for TorchServe
 
-With TorchService, customized operations (like preprocess or postprocess) can be done with simple Python scripts, called [custom handler].
+With TorchServe, customized operations (like preprocess or postprocess) can be done with simple Python scripts, called [custom handler].
 
 There are ways to write custom handler, one of them is [custom-handler-with-class-level-entry-point].
 
@@ -82,7 +82,7 @@ TorchServe can be launched with:
 torchserve --start --ncs --model-store /your/dense/model/dir --models your_dense_model_name.mar
 ```
 
-There are configurations in [`global_config.yaml`](https://github.com/PersiaML/tutorials/blob/docs/monitoring/src/configuring/index.md#global-config) when deploy embedding parameter servers and embedding workers for inference.
+You can config embedding server address(es) and model checkpoint path in [`global_config.yaml`](https://github.com/PersiaML/tutorials/blob/docs/monitoring/src/configuring/index.md#global-config) when deploying embedding parameter servers and embedding workers for inference.
 
 ```yaml
 common_config:
@@ -184,7 +184,7 @@ Relavant configurations in [`global_config.yaml`](https://github.com/PersiaML/tu
 
 ### Manage dense models on TorchServe
 
-To update dense model with sparse model, it can be managed by torchserve through its [management api]. After generating the `.mar` file according to the above steps, its path can be sent to torchserve with [grpc client](https://github.com/pytorch/serve/blob/master/ts_scripts/torchserve_grpc_client.py).
+Update of the dense part of the model can be achieved using torchserve through its [management api]. First generate the `.mar` file for the updated model following the steps described above, then register its path to torchserve with [grpc client](https://github.com/pytorch/serve/blob/master/ts_scripts/torchserve_grpc_client.py), and finally deregister the old model.
 
 
 

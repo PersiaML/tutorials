@@ -1,11 +1,11 @@
 Kubernetes Integration
 ===
 
-The PERSIA Operator is a Kubernetes [custom resource definitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/). You can define your distributed persia task by an operator file. We have learned the structure of an operator definition file in the [Customize a PERSIA Job](../customization/index.md) section. In following section, we will introduce more details about running PERSIA on a k8s cluster.
+PERSIA is integrated to Kubernetes as a `PersiaJob` [custom resource](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/). You can define your distributed PERSIA task by a [CustomResourceDefinition](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/) (CRD). We have learned the basic structure of a PERSIA CRD in the [Customize a PERSIA Job](../customization/index.md#K8s-launcher) section. In this section, we will introduce more details about running PERSIA on a K8s cluster.
 
 ## PERSIA Job Name
 
-For PERSIA operator, a job name is a unique identifier, it is important to keep job name different between PERSIA jobs.
+In a PERSIA CRD, the job name is a unique identifier of the current PERSIA training task. It is important to keep job names different between different PERSIA jobs.
 
 ```yaml
 apiVersion: persia.com/v1
@@ -18,7 +18,7 @@ metadata:
 
 ## Configuring Environment Variables
 
-You can set environment variables for all pods or for a PERSIA module. As the following example, setting of `PERSIA_NATS_URL` take effect for all pods in this job, while the `CUBLAS_WORKSPACE_CONFIG` only set on NN workers.
+You can set environment variables for all pods or for a PERSIA module. In the following example, the environment variable `GLOBAL_ENV` is set for all pods in this job, while the `MODULE_RNV` is only set on NN workers.
 
 ```yaml
 ...
@@ -42,7 +42,7 @@ spec:
 
 ## Configuring Resources
 
-When you specify a PERSIA module, you can optionally specify how much of each resource a container of this module needs. The most common resources to specify are CPU, memory and GPUs. Refer to [k8s doc](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
+When you specify a PERSIA module, you can optionally specify how much of each resource a container of this module needs. The most common resources to specify are CPU, memory and GPUs. Refer to [K8s doc](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for more details.
 
 ```yaml
 ...
@@ -64,7 +64,7 @@ spec:
 
 ## Mounting Volumes
 
-Kubernetes supports many types of volumes (refer to [k8s doc](https://kubernetes.io/docs/concepts/storage/volumes/)), you can mount these volumes to your containers in a PERSIA job. Here is an example.
+Kubernetes supports many types of volumes (see [K8s doc](https://kubernetes.io/docs/concepts/storage/volumes/)). You can mount these volumes to your containers in a PERSIA job. Here is an example:
 
 ```yaml
 ...
@@ -90,7 +90,7 @@ spec:
 
 ## Configuring PERSIA Image
 
-PERSIA operator support to specify an image for modules, here is an example.
+You can also specify a docker image for a PERSIA module. Here is an example:
 
 ```yaml
 ...
@@ -108,7 +108,7 @@ spec:
 
 ## Configuring Nats Operator
 
-While starting a PERSIA training task, we usually need to start a nats service, which can be achieved through its [operator](https://github.com/nats-io/nats-operator). PERSIA transmits ID type feature through nats, so you need to ensure that its `maxPayload` is large enough. Please note that global environment variable `PERSIA_NATS_URL` should be set to `nats://your-nats-operator-name:4222`, e.g. `nats://persia-nats-service:4222` for the following example.
+While starting a PERSIA training task, we usually need to start a nats service, which can be achieved through [nats-operator](https://github.com/nats-io/nats-operator). PERSIA transmits ID type feature through nats, so you need to ensure that its `maxPayload` is large enough. Please note that global environment variable `PERSIA_NATS_URL` should be set to `nats://your-nats-operator-name:4222`, e.g. `nats://persia-nats-service:4222` for the following example.
 
 ```yaml
 apiVersion: "nats.io/v1alpha2"
@@ -122,5 +122,5 @@ spec:
   resources:
     limits:
       memory: "8Gi"
-      cpu: "2" 
+      cpu: "2"
 ```

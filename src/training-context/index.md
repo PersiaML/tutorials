@@ -1,8 +1,8 @@
 # Training Context
-<!-- 
+<!--
 PERSIA training context is a configurable context that help you to set the corresponding embedding training configuration. PERSIA support both gpu nn_worker and cpu nn_worker.Different type of nn_worker may not support the same feature.Usually the gpu nn_worker will do will perform than the cpu nn_worker. -->
 
-A PERSIA training context manages training environments on NN workers. In the following section, we will introduce several configurations about training context.
+A PERSIA training context manages training environments on NN workers. In the following section, we will introduce several configuration options when creating a PERSIA training context.
 
 <!-- We will introduce several configurations that may help you to configure your task while using PERSIA in training job. -->
 
@@ -10,9 +10,9 @@ A PERSIA training context manages training environments on NN workers. In the fo
 
 [EmbeddingConfig](https://persiaml.pages.dev/main/autoapi/persia/embedding/#persia.embedding.EmbeddingConfig) defines embedding hyperparameters.
 
-- `emb_initialization`: The default initialization of PERSIA embedding is `Uniform` distribution. Lower and upper bound of embedding uniform initialization.
+- `emb_initialization`: The default initialization of PERSIA embedding is `Uniform` distribution. Value is a tuple of the lower and upper bound of embedding uniform initialization.
 - `admit_probability`: The probability (0<=, <=1) of admitting a new embedding.
-- `weight_bound`: Restrict each element value of an embedding in [-weight_bound, weight_bound].
+- `weight_bound`: Restrict each element value of an embedding in `[-weight_bound, weight_bound]`.
 
 ```python
 from persia.embedding import EmbeddingConfig
@@ -65,7 +65,7 @@ DDPOption(backend="nccl", init_method=init_method)
 
 <!-- Bagua support multiple data parallelism implementation that may help you speedup the training speed. Review the [doc](https://tutorials.baguasys.com/algorithms/) to select the best one for you. -->
 
-There are several data parallelism implementations in Bagua, see their [doc](https://tutorials.baguasys.com/algorithms/) to learn more about Bagua.
+There are several data parallelism implementations in Bagua, see [Bagua Documentation](https://tutorials.baguasys.com/algorithms/) to learn more about Bagua.
 
 ```python
 from persia.ctx import TrainCtx
