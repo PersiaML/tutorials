@@ -42,7 +42,8 @@ The `mixed_precision` feature in PERSIA training is only supported on gpu NN wor
 
 **Configuring DDPOption**
 
-In `DDPOption`, you can configure the `backend` and `init_method`. The default `init_method` is `"tcp"` who needs `master_address` and `master_port`.
+In `DDPOption`, you can configure the `backend` and `init_method`.
+<!-- The default `init_method` is `"tcp"` who needs `master_address` and `master_port`. -->
 
 ```python
 from persia.distributed import DDPOption
@@ -53,10 +54,7 @@ backend = "nccl"
 init_method = "tcp"
 # init_method = "file"
 
-master_addr = "localhost"
-master_port = 2307
-
-DDPOption(backend="nccl", init_method=init_method, master_addr=master_addr, master_port=master_port)
+DDPOption(backend="nccl", init_method=init_method)
 ```
 
 **Configuring BaguaDistributedOption**
