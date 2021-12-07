@@ -437,6 +437,8 @@ The Environment definition:
 ```env
 # .docker.env
 
+PERSIA_NN_WORKER_ENTRY=/workspace/train.py
+PERSIA_DATALOADER_ENTRY=/workspace/data_loader.py
 PERSIA_EMBEDDING_CONFIG=/workspace/config/embedding_config.yml
 PERSIA_GLOBAL_CONFIG=/workspace/config/global_config.yml.yml
 
@@ -458,7 +460,7 @@ services:
       - embedding_worker
       - persia_nats_service
     image: persiaml/persia-cuda-runtime:latest
-    command: persia-launcher data-loader /workspace/data_loader.py --replica-index 0 --replica-size 2
+    command: persia-launcher data-loader --replica-index 0 --replica-size 2
     volumes:
       - type: bind
         source: . # mount current directory into container
@@ -475,7 +477,7 @@ services:
       - embedding_worker
       - persia_nats_service
     image: persiaml/persia-cuda-runtime:latest
-    command: persia-launcher data-loader /workspace/data_loader.py --replica-index 1 --replica-size 2
+    command: persia-launcher data-loader --replica-index 1 --replica-size 2
     volumes:
       - type: bind
         source: .
