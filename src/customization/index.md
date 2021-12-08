@@ -7,39 +7,19 @@ The training process can be summarized by the following figure:
 <img src="img/persia_workflow.png" width="1000">
 </center>
 
-1. The data loader will dispatch the [ID type feature](#add-id-type-feature) x<sup>ID</sup><sub>(.)</sub> to
-an [embedding worker](#configuring-embedding-worker), where the embedding worker will generate a unique sample ID $\xi$ for
-this sample, buffer this sample ID with the ID type feature x<sup>ID</sup><sub>$\xi$</sub>
-locally, and return this unique sample ID $\xi$ back the data loader. The data loader
-will then associate this sample’s [Non-ID type features](#add-non-id-type-feature) and [labels](#add-label) with this unique ID.
+1. The data loader will dispatch the [ID type feature](#add-id-type-feature) x<sup>ID</sup><sub>(.)</sub> to an [embedding worker](#configuring-embedding-worker), where the embedding worker will generate a unique sample ID $\xi$ for this sample, buffer this sample ID with the ID type feature x<sup>ID</sup><sub>$\xi$</sub> locally, and return this unique sample ID $\xi$ back the data loader. The data loader will then associate this sample’s [Non-ID type features](#add-non-id-type-feature) and [labels](#add-label) with this unique ID.
 
-2. Next, the data loader will [dispatch](#send-persiabatch) the Non-ID type feature and
-label(s) (x<sup>NID</sup><sub>$\xi$</sub>, y<sub>$\xi$</sub>) to an NN worker.
+2. Next, the data loader will [dispatch](#send-persiabatch) the Non-ID type feature and label(s) (x<sup>NID</sup><sub>$\xi$</sub>, y<sub>$\xi$</sub>) to an NN worker.
 
-3. Once an NN worker receives this incomplete training sample, it will issue a request
-to pull the ID type features’(x<sup>ID</sup><sub>$\xi$</sub>) embedding w<sup>emb</sup><sub>$\xi$</sub>
-from some embedding worker according to the sample ID $\xi$. This will trigger the
-forward propagation according to asynchronous updating algorithm for embeddings, where the
-embedding worker will use the buffered ID type feature x<sup>ID</sup><sub>$\xi$</sub>
-to get the corresponding w<sup>emb</sup><sub>$\xi$</sub> from the [embedding PS](#configuring-embedding-parameter-server).
+3. Once an NN worker receives this incomplete training sample, it will issue a request to pull the ID type features’(x<sup>ID</sup><sub>$\xi$</sub>) embedding w<sup>emb</sup><sub>$\xi$</sub> from some embedding worker according to the sample ID $\xi$. This will trigger the forward propagation according to asynchronous updating algorithm for embeddings, where the embedding worker will use the buffered ID type feature x<sup>ID</sup><sub>$\xi$</sub> to get the corresponding w<sup>emb</sup><sub>$\xi$</sub> from the [embedding PS](#configuring-embedding-parameter-server).
 
-4. Then the embedding worker performs some potential aggregation of original embedding
-vectors. When this computation finishes, the aggregated embedding vector w<sup>emb</sup><sub>$\xi$</sub>
-will be transmitted to the NN worker that issues the pull request.
+4. Then the embedding worker performs some potential aggregation of original embedding vectors. When this computation finishes, the aggregated embedding vector w<sup>emb</sup><sub>$\xi$</sub> will be transmitted to the NN worker that issues the pull request.
 
-5. Once the NN worker gets a group of complete inputs for the [dense module](#model-definition), it will create
-a mini-batch and conduct the training computation of the NN according to synchronous updating
-algorithm for NN parameters. Note that the parameter of the NN always locates in the device
-RAM of the NN worker, where the NN workers synchronize the gradients by the AllReduce Paradigm.
+5. Once the NN worker gets a group of complete inputs for the [dense module](#model-definition), it will create a mini-batch and conduct the training computation of the NN according to synchronous updating algorithm for NN parameters. Note that the parameter of the NN always locates in the device RAM of the NN worker, where the NN workers synchronize the gradients by the AllReduce Paradigm.
 
-6. When the iteration of synchronous updating is finished, the NN worker will send the
-gradients of the embedding (F<sup>emb'</sup><sub>$\xi$</sub>) back to the embedding worker
-(also along with the sample ID $\xi$).
+6. When the iteration of synchronous updating is finished, the NN worker will send the gradients of the embedding (F<sup>emb'</sup><sub>$\xi$</sub>) back to the embedding worker (also along with the sample ID $\xi$).
 
-7. The embedding worker will query the buffered ID type feature x<sup>ID</sup><sub>$\xi$</sub>
-according to the sample ID $\xi$, compute gradients F<sup>emb'</sup><sub>$\xi$</sub> of the
-embedding parameters and send the gradients to the embedding PS. Finally the embedding PS
-will compute the updates to the embedding parameters using the gradients and update the embedding parameters.
+7. The embedding worker will query the buffered ID type feature x<sup>ID</sup><sub>$\xi$</sub> according to the sample ID $\xi$, compute gradients F<sup>emb'</sup><sub>$\xi$</sub> of the embedding parameters and send the gradients to the embedding PS. Finally the embedding PS will compute the updates to the embedding parameters using the gradients and update the embedding parameters.
 
 There are a few files you can customize in PERSIA:
 
