@@ -135,7 +135,7 @@ NATIVE=1 pip3 install .
 **<center>Windows 10</center>**
 
 
-Python3, [Perl](https://strawberryperl.com/) and [Rust](https://www.rust-lang.org/tools/install) are required.
+[Python3](https://www.python.org/downloads/windows/), [Perl](https://strawberryperl.com/) and [Rust](https://www.rust-lang.org/tools/install) are required.
 
 ```bash
 git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA
