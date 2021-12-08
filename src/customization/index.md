@@ -278,12 +278,12 @@ from torch import nn
 from torch.optim import SGD
 
 from persia.ctx import TrainCtx
-from persia.data import StreamDataset, Dataloader
+from persia.data import StreamingDataset, Dataloader
 from persia.env import get_local_rank
 from persia.embedding.optim import Adagrad
 
 prefetch_size = 10
-dataset = StreamDataset(prefetch_size)
+dataset = StreamingDataset(prefetch_size)
 
 local_rank = get_local_rank()
 
