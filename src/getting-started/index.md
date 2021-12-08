@@ -6,6 +6,8 @@
     - [Docker Compose](#using-docker-compose)
     - [Python Package](#using-python-package)
 
+
+
 ## Run on Kubernetes with PERSIA Operator
 
 By taking advantage of PERSIA K8s operator's automation, you can start a PERSIA training task with a few instructions.
@@ -36,7 +38,7 @@ kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/exam
 
 This runs the adult income prediction training task defined by `adult-income-prediction.train.yml`. This file defines system configuration (e.g. resources limit, volume mounts) and environment variables (with paths to embedding, model and data configuration files) of a PERSIA training task.
 
-To run a customized training task on your own dataset and models, you can edit the following configuration files(see [customization](../customization/index.md) for more details):
+To run a customized training task on your own dataset and models, you can edit the following configuration files (see [customization](../customization/index.md) for more details):
 
 - **Embedding configuration file:** A file defining the embedding configurations (e.g. embedding dimension, and sum pooling). This file is named as `embedding_config.yaml` by default. For more details see [embedding config](../configuration/index.md#embedding-config).
 - **Embedding PS configuration file:** Configuration of embedding parameter servers, e.g. max capacity of embedding parameter servers. This file is named as `global_config.yaml` by default. For more details see [global config](../configuration/index.md#global-configuration).

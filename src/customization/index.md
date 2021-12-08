@@ -16,7 +16,7 @@ locally, and return this unique sample ID $\xi$ back the data loader. The data l
 will then associate this sample’s [Non-ID type features](#add-non-id-type-feature) and [labels](#add-label) with this unique ID.
 
 2. Next, the data loader will [dispatch](#send-persiabatch) the Non-ID type feature and
-label(s)(x<sup>NID</sup><sub>$\xi$</sub>, y<sub>$\xi$</sub>) to an NN worker.
+label(s) (x<sup>NID</sup><sub>$\xi$</sub>, y<sub>$\xi$</sub>) to an NN worker.
 
 3. Once an NN worker receives this incomplete training sample, it will issue a request
 to pull the ID type features’(x<sup>ID</sup><sub>$\xi$</sub>) embedding w<sup>emb</sup><sub>$\xi$</sub>
@@ -74,7 +74,7 @@ There are a few files you can customize in PERSIA:
 
 ## Training Data
 
-A `PersiaBatch` consists of three parts: ID Type Feature, Non-ID Type Feature and Label.
+In PERSIA, we use the `PersiaBatch` data structure to encode the training data. `PersiaBatch` typically consists of three parts: ID Type Feature, Non-ID Type Feature and Label.
 
 ### Add ID Type Feature
 `IDTypeFeature` declares categorical data with variable length. It is a sparse matrix (`List[np.array]`) in [LIL](https://scipy-lectures.org/advanced/scipy_sparse/lil_matrix.html) format. Note that it only accepts `np.uint64` elements.

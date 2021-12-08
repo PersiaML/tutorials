@@ -65,7 +65,7 @@ services:
 
 ```
 
-You can check what the metrics are there by running
+You can check what metrics are there by running
 
 ```bash
 curl metrics_gateway:9091/metrics
@@ -79,7 +79,7 @@ By configuring the `GF_PATHS_PROVISIONING` environment variable, you can specify
 
 To collect metrics from the gateway, you need a prometheus service to do that for you.
 
-Details of how to setup in various environments can be found in for example [docker_sd_config], [kubernetes_sd_config] or [dockerswarm_sd_config].
+Details of how to setup a prometheus service in various environments can be found in prometheus documentation, for example [docker_sd_config], [kubernetes_sd_config] or [dockerswarm_sd_config].
 
 ## Metrics in PERSIA
 
@@ -100,11 +100,11 @@ Details of how to setup in various environments can be found in for example [doc
 
 |  Key   | Description  |
 |  ----  | ----  |
-| `lookup_hashmap_time_cost_sec` | time cost of embedding lookup **on embedding server**, mainly the time consuming to look up from hash table. |
+| `lookup_hashmap_time_cost_sec` | time cost of embedding lookup **on embedding server**, mainly spent on looking up from hash table. |
 | `num_pending_batches` | number of batches that are already sent to embedding worker but still waiting for NN worker to trigger lookup. The pending batches are stored in forward buffer, whose capacity is configurable by [`global_config.yaml`](https://github.com/PersiaML/tutorials/blob/docs/monitoring/src/configuring/index.md#embedding_worker_config). Once the buffer is full, the embedding worker may not accept new batches.|
-| `lookup_preprocess_time_cost_sec` | preprocess for embedding lookup time cost **on embedding worker**. Include ID hashing, dividing id accroding feature groups and embedding servers.|
-| `lookup_rpc_time_cost_sec` | lookup embedding time cost **on embedding worker** for a batch, include lookup on embedding server(`lookup_hashmap_time_cost_sec`) and network transmission. |
-| `lookup_postprocess_time_cost_sec` | lookup postprocess time cost **on embedding worker**, mainly is embedding summation. |
+| `lookup_preprocess_time_cost_sec` | time cost of preprocess for embedding lookup **on embedding worker**. Include ID hashing, dividing id accroding feature groups and embedding servers.|
+| `lookup_rpc_time_cost_sec` | time cost of embedding lookup **on embedding worker** for a batch, include lookup on embedding server (`lookup_hashmap_time_cost_sec`) and network transmission. |
+| `lookup_postprocess_time_cost_sec` | lookup postprocess time cost **on embedding worker**, mainly embedding summation. |
 | `lookup_total_time_cost_sec` | total time cost of lookup, preprocess and postprocess **on embedding worker**. `lookup_total_time_cost_sec = lookup_preprocess_time_cost_sec + lookup_rpc_time_cost_sec + lookup_postprocess_time_cost_sec` |
 | `update_gradient_time_cost_sec` | update gradient time cost **on embedding worker** for a batch. |
 
