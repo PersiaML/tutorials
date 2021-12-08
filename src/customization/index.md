@@ -234,7 +234,7 @@ with DataCtx() as ctx:
 Model definition includes the following three parts.
 <!-- Customize the `forward` function in `torch.nn.Module`, select the embedding optimizer and customize the `persia.ctx.TrainCtx`. -->
 
-### Define DNN model
+### Define DNN Model
 
 You can define the DNN model structure any way you want. Only note that the signature of the `forward` function should be the same as shown below.
 
@@ -330,7 +330,7 @@ embedding_parameter_server_config:
 _more advanced features: See [Configuration](../configuration/index.md#global-configuration)_
 
 
-## Launcher configuration
+## Launcher Configuration
 
 There are several launchers to help you launch a PERSIA training task.
 
@@ -445,7 +445,7 @@ PERSIA_GLOBAL_CONFIG=/workspace/config/global_config.yml.yml
 LOG_LEVEL=info
 ```
 
-**Configuring docker-compose File**
+**Configuring Docker-Compose File**
 
 You can add multiple `data_loader`, `embedding_worker` and `embedding_parameter_server` services by the following configuration.
 
