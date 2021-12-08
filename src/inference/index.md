@@ -9,6 +9,7 @@ When a TorchServe inference server receives requests, it first looks up embeddin
 
 In the following sections, we first introduce how to [create a custom handler for TorchServe](#create-persia-handler-for-torchserve) to query embeddings during inference. Next, we introduce how to [save models](#save-and-load-persia-model) during training and load models during inference. Then, we introduce how to [deploy various services for inference](#deploy-persia-services-and-torchserve). Finally, we introduce how to [query the inference service](#query-inference-result-with-grpc) to get the inference result. In addition, we also introduce how to keep the model for inference [up to date](#model-update).
 
+<!-- toc -->
 ## Create PERSIA Handler for TorchServe
 
 With TorchServe, customized operations (like preprocess or postprocess) can be done with simple Python scripts, called [custom handler].

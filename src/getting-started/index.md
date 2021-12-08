@@ -1,14 +1,13 @@
 # Getting Started
 
+<!-- toc -->
 
-- [Run on Kubernetes with PERSIA Operator (Recommended)](#run-on-kubernetes-with-persia-operator)
+<!-- - [Run on Kubernetes with PERSIA Operator (Recommended)](#run-on-kubernetes-with-persia-operator)
 - [Run Manually](#run-manually)
     - [Docker Compose](#using-docker-compose)
-    - [Python Package](#using-python-package)
+    - [Python Package](#using-python-package) -->
 
-
-
-## Run on Kubernetes with PERSIA Operator
+## Run on Kubernetes with PERSIA Operator (Recommended)
 
 By taking advantage of PERSIA K8s operator's automation, you can start a PERSIA training task with a few instructions.
 

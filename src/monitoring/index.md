@@ -5,6 +5,7 @@ Monitoring and alerting is crucial for a distributed system. PERSIA provides int
 
 Services in PERSIA push their metrics to a [PushGateway], and the gateway then exposes these metrics to Prometheus.
 
+<!-- toc -->
 ## Step to Enable Metrics in PERSIA
 
 ### Enable Metrics in Configuration

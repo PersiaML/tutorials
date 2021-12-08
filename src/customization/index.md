@@ -1,6 +1,4 @@
-
 # Customization
-
 
 Before we introduce how to customize a PERSIA training task, let's take a look at how PERSIA's different components work together.
 The training process can be summarized by the following figure:

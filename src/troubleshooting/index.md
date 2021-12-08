@@ -3,6 +3,8 @@
 Debugging running task in distributed training can be difficult. We provide
 some general suggestions in this page.
 
+<!-- toc -->
+
 ## Debug Log
 
 You can set the logging verbosity with `LOG_LEVEL` environment variable when

@@ -6,13 +6,14 @@ You can use `PersiaBatch` to declare a batch of data in various types, shapes an
 
 <img src="./img/persia_batch_description.svg" width="100%">
 
-- [Processing ID Type Features](#processing-id-type-feature)
+<!-- - [Processing ID Type Features](#processing-id-type-feature)
     - [ID Type Feature with Variable Length](#id-type-feature-with-variable-length)
     - [ID Type Feature with Single ID](#id-type-feature-with-single-id)
 - [Processing Non-ID Type Feature and Label](#non-id-type-feature-and-label)
 - [Processing Meta Data](#processing-meta-data)
-- [PersiaBatch Processing Complete Example](#persiabatch-processing-complete-example)
+- [PersiaBatch Processing Complete Example](#persiabatch-processing-complete-example) -->
 
+<!-- toc -->
 ## Processing ID Type Feature
 
 An ID type feature is a sparse matrix that contains variable length of discrete values. PERSIA converts these discrete valuess to embeddings by looking up from `embedding-worker`. The conversion rules are different for different `id_type_feature`, see [embedding config](#../configuration/index.md#embedding-config) for more details.
