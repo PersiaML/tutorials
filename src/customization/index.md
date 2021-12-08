@@ -19,7 +19,7 @@ The training process can be summarized by the following figure:
 
 6. When the iteration of synchronous updating is finished, the NN worker will send the gradients of the embedding (F<sup>emb'</sup><sub>$\xi$</sub>) back to the embedding worker (also along with the sample ID $\xi$).
 
-7. The embedding worker will query the buffered ID type feature x<sup>ID</sup><sub>$\xi$</sub> according to the sample ID $\xi$, compute gradients F<sup>emb'</sup><sub>$\xi$</sub> of the embedding parameters and send the gradients to the embedding PS. Finally the embedding PS will compute the updates to the embedding parameters using the gradients and update the embedding parameters.
+7. The embedding worker will query the buffered ID type feature x<sup>ID</sup><sub>$\xi$</sub> according to the sample ID $\xi$, compute gradients F<sup>emb'</sup><sub>$\xi$</sub> of the embedding parameters and send the gradients to the embedding PS. Finally, the embedding PS will compute the updates to the embedding parameters using the gradients and update the embedding parameters.
 
 There are a few files you can customize in PERSIA:
 
