@@ -1,86 +1,57 @@
-Run Persia on Kubernetes
+Kubernetes Integration
 ===
 
-We assume that you already have a k8s cluster with [NATS Operator](https://github.com/nats-io/nats-operator#installing) installed, you can use Persia Operator or Schedule Server to deploy persia to k8s cluster. Command `persia_k8s_uitls` can be installed by `pip install persia`.
+PERSIA is integrated to Kubernetes as a `PersiaJob` [custom resource](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/). You can define your distributed PERSIA task by a [CustomResourceDefinition](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/) (CRD). We have learned the basic structure of a PERSIA CRD in the [Customize a PERSIA Job](../customization/index.md#K8s-launcher) section. In this section, we will introduce more details about running PERSIA on a K8s cluster.
 
-## Persia Operator
+## PERSIA Job Name
 
-The Persia Operator is a Kubernetes [custom resource definitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/).
-
-1. Apply Custom Resource Definitions
-
-You can generate `jobs.persia.com.yaml` file and apply it to k8s cluster by following command.
-
-```bash
-$ persia_k8s_uitls gencrd
-$ sudo kubectl apply -f jobs.persia.com.yaml
-```
-
-2. Run Persia Operator
-
-```bash
-$ export KUBECONFIG=/your/kubeconfig/path/k8s.yaml
-$ persia_k8s_uitls operator
-```
-
-3. Deploy Persia Job
-
-You can define a Persia Job by following yaml.
+In a PERSIA CRD, the job name is a unique identifier of the current PERSIA training task. It is important to keep job names different between different PERSIA jobs.
 
 ```yaml
 apiVersion: persia.com/v1
 kind: PersiaJob
 metadata:
-  name: adult-income  # persia job name, need to be globally unique
-  namespace: default  # k8s namespace to deploy to this job
+  name: you-job-name
+  namespace: default
+...
+```
+
+## Configuring Environment Variables
+
+You can set environment variables for all pods or for a PERSIA module. In the following example, the environment variable `GLOBAL_ENV` is set for all pods in this job, while the `MODULE_RNV` is only set on NN workers.
+
+```yaml
+...
 spec:
-  # the following path are the path inside the container
-  globalConfigPath: /workspace/config/global_config_train.yml
-  embeddingConfigPath: /workspace/config/embedding_config.yml
-  trainerPyEntryPath: /workspace/train.py
-  dataLoaderPyEntryPath: /workspace/data_compose.py
-  # k8s volumes, see https://kubernetes.io/docs/concepts/storage/volumes/
-  volumes:
-    - name: data
-      hostPath:
-        path: /nfs/general/data/adult_income/
-        type: Directory
-    - name: workspace
-      hostPath:
-        path: /nfs/general/PersiaML/e2e/adult_income/
-        type: Directory
-  # global env, it will apply to all containers.
+  globalConfigPath: /workspace/global_config.yml
+  embeddingConfigPath: /workspace/embedding_config.yml
+  ...
   env:
-    - name: EVAL_CHECKPOINT_DIR
-      value: /workspace/eval_checkpoint/
-    - name: INFER_CHECKPOINT_DIR
-      value: /workspace/infer_checkpoint/
-    - name: RESULT_FILE_PATH
-      value: /workspace/result.json
-    - name: PERSIA_NATS_IP
-      value: nats://persia-nats-service:4222
+    - name: GLOBAL_ENV
+      value: "I will take effect on all pods"
 
-  embeddingServer:
+  nnWorker:
     replicas: 1
-    resources:
-      limits:
-        memory: "24Gi"
-        cpu: "4"
-    volumeMounts:
-      - name: workspace
-        mountPath: /workspace/
+    nprocPerNode: 1
+    ...
+    env:
+      - name: MODULE_RNV
+        value: "I will take effect on NN worker pods only"
+...
+```
 
-  middlewareServer:
-    replicas: 1
-    resources:
-      limits:
-        memory: "24Gi"
-        cpu: "4"
-    volumeMounts:
-      - name: workspace
-        mountPath: /workspace/
+## Configuring Resources
 
-  trainer:
+When you specify a PERSIA module, you can optionally specify how much of each resource a container of this module needs. The most common resources to specify are CPU, memory and GPUs. Refer to [K8s doc](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for more details.
+
+```yaml
+...
+spec:
+  globalConfigPath: /workspace/global_config.yml
+  embeddingConfigPath: /workspace/embedding_config.yml
+  ...
+
+  nnWorker:
     replicas: 1
     nprocPerNode: 1
     resources:
@@ -88,31 +59,58 @@ spec:
         memory: "24Gi"
         cpu: "12"
         nvidia.com/gpu: "1"
-    volumeMounts:
-      - name: workspace
-        mountPath: /workspace/
-      - name: data
-        mountPath: /data/
-        read_only: true
-    env:
-      - name: CUBLAS_WORKSPACE_CONFIG
-        value: :4096:8
+...
+```
 
-  dataloader:
+## Mounting Volumes
+
+Kubernetes supports many types of volumes (see [K8s doc](https://kubernetes.io/docs/concepts/storage/volumes/)). You can mount these volumes to your containers in a PERSIA job. Here is an example:
+
+```yaml
+...
+spec:
+  globalConfigPath: /workspace/global_config.yml
+  embeddingConfigPath: /workspace/embedding_config.yml
+  ...
+  volumes:
+    - name: data
+      hostPath:
+        path: /nfs/general/data/
+        type: Directory
+
+  nnWorker:
     replicas: 1
-    resources:
-      limits:
-        memory: "8Gi"
-        cpu: "1"
+    nprocPerNode: 1
     volumeMounts:
-      - name: workspace
-        mountPath: /workspace/
       - name: data
         mountPath: /data/
         read_only: true
+...
+```
 
----
+## Configuring PERSIA Image
 
+You can also specify a docker image for a PERSIA module. Here is an example:
+
+```yaml
+...
+spec:
+  globalConfigPath: /workspace/global_config.yml
+  embeddingConfigPath: /workspace/embedding_config.yml
+  ...
+
+  nnWorker:
+    replicas: 1
+    nprocPerNode: 1
+    image: persiaml/persia-cuda-runtime:dev
+...
+```
+
+## Configuring Nats Operator
+
+While starting a PERSIA training task, we usually need to start a nats service, which can be achieved through [nats-operator](https://github.com/nats-io/nats-operator). PERSIA transmits ID type feature through nats, so you need to ensure that its `maxPayload` is large enough. Please note that global environment variable `PERSIA_NATS_URL` should be set to `nats://your-nats-operator-name:4222`, e.g. `nats://persia-nats-service:4222` for the following example.
+
+```yaml
 apiVersion: "nats.io/v1alpha2"
 kind: "NatsCluster"
 metadata:
@@ -124,24 +122,5 @@ spec:
   resources:
     limits:
       memory: "8Gi"
-      cpu: "2" 
+      cpu: "2"
 ```
-
-Then You can apply it to k8s cluster by following command.
-
-```bash
-$ sudo kubectl apply -f k8s.train.yaml
-```
-
-
-## Persia Schedule Server
-
-You can also deploy Persia to k8s cluster through Persia Schedule Server. It is a http server with several k8s related apis, you can deploy Persia without knowing k8s.
-
-1. Run Schedule Server
-
-```bash
-$ export KUBECONFIG=/your/kubeconfig/path/k8s.yaml
-$ persia_k8s_uitls server
-```
-

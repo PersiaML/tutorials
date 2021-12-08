@@ -1,203 +1,163 @@
 # Getting Started
 
-According to DLRM example to make you construct machine learning application based on Persia swiftly
 
-## Setup
+- [Run on Kubernetes with PERSIA Operator (Recommended)](#run-on-kubernetes-with-persia-operator)
+- [Run Manually](#run-manually)
+    - [Docker Compose](#using-docker-compose)
+    - [Python Package](#using-python-package)
 
-1. Download the Kaggle Display Advertising Challenge dataset for DLRM example
-    ```bash
-    cd examples/DLRM/data  
-    curl -L -o data.tar.gz https://ndownloader.figshare.com/files/10082655
-    # wget https://ndownloader.figshare.com/files/10082655 -o data.tar.gz
-    tar -zxvf data.tar.gz && rm -rf data.tar.gz
-    ```
-2. Prepare for runtime docker image
-    ```bash
-    docker pull persiaml/persia-cuda-runtime:latest
-    ```
 
-## Process training data
-Kaggle Display Advertising Challenge dataset contain two parts of data that calls `dense` and `sparse`.  `Dense data` is represent by a 1D vector that come from a set of statistics data or extract by `DNN model` extract from image, video, audio or etc. Dense data should have same dimension for each sample. `Sparse data` also represents by a 1D vector but the dimension could be various for each sample. `Sparse data` is a list of category data, for example age, gender, user_id, book_id or etc.PerisaML framework converted `sparse data` to fixed size `dense tensor(1d or 2d)` by the process called `embedding lookup`. 
 
-### Data preprocess
-Process Kaggle Display Advertising Challenge raw dataset to `numpy.ndarray` by `numpy`
+## Run on Kubernetes with PERSIA Operator
 
-```python
-import numpy as np
+By taking advantage of PERSIA K8s operator's automation, you can start a PERSIA training task with a few instructions.
 
-"""
-sample of train.txt
-0       1       1       5       0       1382    4       15      2       181     1       2               2       68fd1e64      80e26c9b        fb936136        7b4723c4        25c83c98        7e0ccccf        de7995b8        1f89b562     a73ee510 a8cd5504        b2cb9c98        37c9c164        2824a5f6        1adce6ef        8ba8b39a        891b62e7     e5ba7672 f54016b9        21ddcdc9        b1252a9d        07b5194c                3a171ecb        c5c50484        e8b83407        9727dd16
+**Requirements**
 
-"""
-source_data = "train.txt"
-batch_size = 5
-batch_data = []
+* `kubectl` command-line tool
+* valid `kubeconfig` file (by efault located at `~/.kube/config`)
 
-with open(source_data, "r") as file:
-    for line in file:
-        splitter = denseline.split("\t")
-        target = np.int32(line[0])
-        dense_sample = np.array(splitter[1:14], dtype=np.float32)
-        sparse_sample = np.array(
-            list(map(lambda x: int(x, 16), line[14:])), dtype=np.uint64
-        ) 
-        batch_data.append((dense_sample, sample_sample, target))
-        if len(batch_data) == batch_size:
-            # process the below
-            ...
-```
-
-### Persia data structure to store training data
-PersiaML provide specific data structure for sparse training scence. The structure can add multiple dense, sparse and target data. 
-```python
-from persia.prelude import PyPersiaBatchData
-
-persia_batch_data = PyPersiaBatchData()
-batch_dense_data, batch_all_sparse_data, batch_target_data = zip(*batch_data)
-```
-
-### Add dense data
-`PyPersiaBatchData` provide the `add_dense` function to add a list of 2d float32 numpy array. It also provide some specific functions to add dense data in various datatype such as `add_dense_f32`, `add_dense_i32`, `add_dense_f64`, `add_dense_i64`. 
-```python
-persia_batch_data = PyPersiaBatchData()
-batch_dense_data = np.stack(batch_dense_data)
-
-persia_batch_data.add_dense_f32(batch_dense_data)
-```
-
-### Add sparse data
-Add multiple categories sparse data into `PyPersiaBatchData`, each category data should have the same batch size and a unique namespace to share feature space. 
-```python
-"""
-    In Kaggle Display Advertising Challenge dataset, every categories only lookup one sparse id in each sample. 
-    sample below:
-
-    batch_size = 5
-    sparse_feature1 = [
-        np.array([0]),
-        np.array([1]),
-        np.array([2]),
-        np.array([3])
-        np.array([5])
-    ]
-
-    sparse_feature2 = [
-        np.array([2]),
-        np.array([3]),
-        np.array([4]),
-        np.array([2])
-        np.array([6])
-    ]
-"""
-batch_sparse_category_data = []
-for (idx, batch_sparse_data) in enumerate(batch_all_sparse_data):
-    category_name = f"sparse_feature{idx}"
-    sparse_array = []
-    for i in range(batch_size):
-        sparse_array.append(batch_sparse_data[i:i+1])
-    batch_sparse_category_data.append((category_name, sparse_array))
-persia_batch_data.add_sparse(batch_sparse_category_data)
-```
-
-### Add target data
-Target data (ground truth) is define as a 2d float32 numpy array, user can add multiple target data into `PyPersiaBatchData` for multi-task Learning.
-```python
-batch_target_data = np.array(batch_target_data, dtype=np.float32)
-batch_target_data = np.stack([batch_target_data[i] for i in range(batch_size)]) 
-persia_batch_data.add_target(batch_target_data) # can invoke multiple times for multi task training
-```
-
-### Data transfer 
-Init the `persia_backend` to transfer the `persia batch data` to the persia-middleware and persia-trainer. 
-```python
-from persia.ctx import DataCtx
-
-with DataCtx():
-    ctx.send_data(persia_batch_data) # register sparse data and transfer remain part to trainer service
-```
-
-_review DLRM datacompose codebase at examples/DLRM/data_compose.py_
-
-## Define DNN model
-Construct the DLRM model after finished the data definition. The Model forward entry receive dense tensors and sparse tensors.
-```python
-from typing import List
-
-import torch
-
-class DLRM(nn.Module):
-    def __init__(self, ln, sigmoid_layer):
-        ...
-
-    def forward(self, dense: torch.Tensor, sparse: List[torch.Tensor]):
-        ...
-
-model = DLRM()
-```
-_review DLRM model codebase at examples/DLRM/model.py_
-
-## Define optimizer
-Define optimizer in sparse training is as simple as normal torch training. Dense optimizer is define for update the `DNN model`.Sparse optimizer is define for update the sparse sparse embedding.`perisa.sparse.optim` provide common optimizer for different training scences.
-```python
-from torch.optim import SGD
-
-from persia.sparse.optim import Adagrad
-
-# DENSE parameters optimizer
-dense_optimizer = SGD(model.parameters(), lr=0.1)
-# Sparse embedding optimizer
-sparse_optimizer = Adagrad(lr=1e-3)
-```
-
-## Create training context
-Finally step is create the training context to acquire dataloder and sparse embedding process
-```python
-from torch import nn
-
-from persia.ctx import TrainCtx
-from persia.data import StreamDataset, Dataloader
-from persia.env import get_local_rank
-
-prefetch_size = 10
-dataset = StreamDataset(prefetch_size)
-
-local_rank = get_local_rank()
-
-use_cuda = True
-if use_cuda:
-    device_id = get_local_rank()
-    torch.cuda.set_device(device_id)
-    model.cuda(device_id)
-    mixed_precision = True
-else:
-    mixed_precision = False
-    device_id = None
-
-loss_fn = nn.BCELoss()
-
-with TrainCtx(
-    model=model,
-    sparse_optimizer=sparse_optimizer,
-    dense_optimizer=dense_optimizer,
-    device_id=device_id,
-    mixed_precision=mixed_precision
-) as ctx:
-
-    train_data_loader = Dataloader(dataset)
-    for (batch_idx, data) in enumerate(loader):
-        output, target = ctx.forward(data)
-        loss= loss_fn(output, target)
-        scaled_loss = ctx.backward(loss)
-        logger.info(f"current idx: {batch_idx} loss: {loss}")
-
-```
-_review DLRM model codebase at examples/DLRM/train.py_
-
-## Start training
+**Installation**
 
 ```bash
-cd examples/DLRM/ && make run 
-# run make stop to remove docker stack job
-# make stop
+kubectl apply -f https://github.com/nats-io/nats-operator/releases/latest/download/00-prereqs.yaml
+kubectl apply -f https://github.com/nats-io/nats-operator/releases/latest/download/10-deployment.yaml
+kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/resources/jobs.persia.com.yaml
+kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/resources/operator.persia.com.yaml
 ```
+
+> **NOTE:** It can take a few minutes to start the `operator` due to container image pulling.
+
+**Run**
+
+To run a simple example training task ([adult income prediction](https://archive.ics.uci.edu/ml/datasets/census+income)), apply the following Kubernetes PERSIA task definition file:
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/PersiaML/PERSIA/main/k8s/example/adult-income-prediction.train.yml
+```
+
+This runs the adult income prediction training task defined by `adult-income-prediction.train.yml`. This file defines system configuration (e.g. resources limit, volume mounts) and environment variables (with paths to embedding, model and data configuration files) of a PERSIA training task.
+
+To run a customized training task on your own dataset and models, you can edit the following configuration files (see [customization](../customization/index.md) for more details):
+
+- **Embedding configuration file:** A file defining the embedding configurations (e.g. embedding dimension, and sum pooling). This file is named as `embedding_config.yaml` by default. For more details see [embedding config](../configuration/index.md#embedding-config).
+- **Embedding PS configuration file:** Configuration of embedding parameter servers, e.g. max capacity of embedding parameter servers. This file is named as `global_config.yaml` by default. For more details see [global config](../configuration/index.md#global-configuration).
+- **Model definition configuration file:** A file that defines the neural network (NN) using PyTorch. This file is named as `train.py` by default. For more details see [model definition](../customization/index.md#model-definition).
+- **Data preprocessing configuration file:** A file that defines the data preprocessing. This file is named as `data_loader.py` by default. For more details see [training data](../customization/index.md#training-data).
+
+The location of these files can be specified using the environment variables `PERSIA_EMBEDDING_CONFIG`, `PERSIA_GLOBAL_CONFIG`, `PERSIA_NN_WORKER_ENTRY`, `PERSIA_DATALOADER_ENTRY` respectively. For more
+details on how to customize these environment variables, see
+[launcher configuration](../customization/index.md#launcher-configuration).
+
+## Run Manually
+
+<!-- The data of adult income should be downloaded and preprocessed before you get started to run the example PERSIA training task: -->
+
+To launch the PERSIA adult income prediction training task manually, the first step is to download the corresponding dataset and preprocess the train data and test data. We have prepared the script to help you to finish this step.
+
+```bash
+git clone https://github.com/PersiaML/PERSIA.git
+cd PERSIA/examples/src/adult-income/data && ./prepare_data.sh
+```
+
+<!-- After downloading the adult income dataset. You can choose from the following two methods to start your first PERSIA task. -->
+
+Now you can start your first PERSIA training task with one of the following methods.
+
+### Using Docker-Compose
+
+[Docker-compose](https://docs.docker.com/compose/) is a tool for defining and running multi-container docker applications. By modifying the `docker-compose.yml` file, you can customize the PERSIA training task (such as `image`, `replicas`). See PERSIA docker-compose [configuration](../customization/index.md#docker-compose-launcher) for more details.
+
+**Requirements**
+
+* [docker](https://docs.docker.com/engine/install/ubuntu/)
+* [docker-compose](https://docs.docker.com/compose/)
+
+**Run**
+
+<!-- We already provide the `docker-compose.yml` and `.docker.env` for adult income example.  -->
+Use the following instructions to start your PERSIA training task after installing the requirements.
+
+```bash
+cd examples/src/adult-income && make run
+```
+
+### Using Python Package
+
+You are free to modify PERSIA source code and build your customized PERSIA Python package.
+
+**Requirements**
+
+* [PERSIA Python package](https://pypi.org/project/persia/)
+* [nats-server](https://docs.nats.io/running-a-nats-service/introduction/installation)
+
+**Acquiring PERSIA Python package**
+
+There are methods to acquire a PERSIA Python package.
+
+- **Using Pre-compiled Wheels**
+
+Wheels (precompiled binary packages) are available for Linux (x86_64). Package names are different depending on your CUDA Toolkit version (CUDA Toolkit version is shown in` nvcc --version`). All of these precompiled binary packages need Python greater than 3.6.
+
+|CUDA Toolkit version|Installation command|
+|-|-|
+|None (CPU version) |`pip3 install persia`|
+|>= v10.2|`pip3 install persia-cuda102`|
+|>= v11.1|`pip3 install persia-cuda111`|
+|>= v11.3|`pip3 install persia-cuda113`|
+
+- **From Source**
+
+Use following instructions to build PERSIA Python packages from source (Ubuntu 20.04 & Windows 10. It should be similar on other OSes).
+
+> **Note**: You need to set environment variable `USE_CUDA=1` to add CUDA support (for GPU training). In this case, the CUDA runtime path should be already present in `LD_LIBRARY_PATH`.
+
+**<center>Ubuntu 20.04</center>**
+
+```bash
+apt update && apt-get install -y curl build-essential git python3 python3-dev python3-pip
+
+export RUSTUP_HOME=/rust
+export CARGO_HOME=/cargo
+export PATH=/cargo/bin:/rust/bin:$PATH
+curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly -y --profile default --no-modify-path
+
+git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA
+
+# To install CUDA version
+USE_CUDA=1 NATIVE=1 pip3 install .
+
+# To install CPU version
+NATIVE=1 pip3 install .
+```
+
+
+**<center>Windows 10</center>**
+
+
+[Python3](https://www.python.org/downloads/windows/), [Perl](https://strawberryperl.com/) and [Rust](https://www.rust-lang.org/tools/install) are required.
+
+```bash
+git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA
+
+# To install CUDA version
+USE_CUDA=1 NATIVE=1 pip3 install .
+
+# To install CPU version
+NATIVE=1 pip3 install .
+```
+
+**Run**
+
+After installing the PERSIA Python package locally, you are able to launch the example adult income prediction training task with:
+
+```bash
+cd examples/src/adult-income
+honcho start -e .honcho.env
+```
+
+For more configuration options see [Customization](../customization/index.md#honcho-launcher).
+
+## Deploy Trained Model for Inference
+
+See [Inference](../inference/index.md).

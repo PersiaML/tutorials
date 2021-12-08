@@ -1,35 +1,35 @@
-Configuration
+Configuration File References
 ======
 
-In order to achieve the best performance on various training and inference jobs, PersiaML servers provide a handful of configuration options via two config files, a global configuration file usually named as `global_config.yaml`, and an embedding configuration file usually named as `embedding_config.yaml`. The global configuration allows one to define job type and general behaviors of servers, whereas embedding configuration provides definition of embedding details for individual sparse features.
+In order to achieve the best performance on various training and inference jobs, PERSIA servers provide a handful of configuration options via two config files, a global configuration file usually named as `global_config.yaml`, and an embedding configuration file usually named as `embedding_config.yaml`. The global configuration allows one to define job type and general behaviors of servers, whereas embedding configuration provides definition of embedding details for individual sparse features.
 
 
 
 ## Global Configuration
 
-Global configuration specifies the configuration of the current PersiaML job. The path to the global configuration file should be parsed as argument `--global-config` when launching PersiaML servers or middleware.
+Global configuration specifies the configuration of the current PERSIA job. The path to the global configuration file should be parsed as argument `--global-config` when launching embedding PS or embedding worker.
 
 Here is an example for `global_config.yaml`.
 
 ```yaml
 common_config:
-  checkpointing_config:
-    num_workers: 8
   metrics_config:
     enable_metrics: true
     push_interval_sec: 10
   job_type: Train
-embedding_server_config:
+  checkpointing_config:
+    num_workers: 8
+embedding_parameter_server_config:
   capacity: 1000000
   num_hashmap_internal_shards: 1
   enable_incremental_update: false
   incremental_buffer_size: 5000000
   incremental_channel_capacity: 1000
-middleware_config:
+embedding_worker_config:
   forward_buffer_size: 1000
 ```
 
-Depending on the scope, `global_config` was divided into three major sections, namely `common_config`, `embedding_server_config` and `middleware_config`. `common_config` configures the job type (`job_type`) and metrics server. `embedding_server_config` configures the PersiaML embedding server, and `middleware_config` provides configurations for the PersiaML middleware. The following is a detailed description of each configuration.
+Depending on the scope, `global_config` was divided into three major sections, namely `common_config`, `embedding_parameter_server_config` and `embedding_worker_config`. `common_config` configures the job type (`job_type`) and metrics server. `embedding_parameter_server_config` configures the embedding parameter server, and `embedding_worker_config` provides configurations for the embedding worker. The following is a detailed description of each configuration.
 
 ### common_config
 
@@ -65,8 +65,8 @@ common_config:
 * `job_name(str, default=persia_defalut_job_name)`: A name to distinguish your job from others.
 
 
-### embedding_server_config
-`embedding_server_config` specifies the configuration for the embedding server.
+### embedding_parameter_server_config
+`embedding_parameter_server_config` specifies the configuration for the embedding parameter server.
 * `capacity(int, default=1,000,000,000)`: The capacity of each embedding server. Once the number of indices of an embedding server exceeds the capacity, it will evict embeddings according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies.
 * `num_hashmap_internal_shards(int, default=100)`: The number of internal shard of an embedding server. Embeddings are saved in a HashMap which contains multiple shards (sub-hashmaps). Since the CRUD operations need to acquire the lock of a hashmap, acquiring the lock of the sub-hashmap instead of the whole hashmap will be more conducive to concurrency between CRUD operations.
 * `full_amount_manager_buffer_size(int, default=1000)`: The buffer size of full amount manager. In order to achieve better performance, the embedding server does not traverse the hashmap directly during full dump. Instead, Embedding is submitted asynchronously through full amount manager.
@@ -74,13 +74,13 @@ common_config:
 * `incremental_buffer_size(int, default=1,000,000)`: Buffer size for incremental update. Embeddings will be inserted into this buffer after each gradient update, and will only be dumped when the buffer is full. Only valid when `enable_incremental_update=true`.
 * `incremental_dir(str, default=/workspace/incremental_dir/)`: The directory for incremental update files to be dumped or loaded.
 
-### middleware_configs
+### embedding_worker_config
 
 * `forward_buffer_size(int, default=1000)`: Buffer size for prefoard batch data from data loader.
 
 ## Embedding Config
 
-In addition to `global_config`, detailed settings related to sparse feature embeddings are provided in a separate embedding configuration file usually named `embedding_config.yaml`. The path to the embedding config file should be parsed as argument `--embedding-config` when running PersiaML servers.
+In addition to `global_config`, detailed settings related to sparse feature embeddings are provided in a separate embedding configuration file usually named `embedding_config.yaml`. The path to the embedding config file should be parsed as argument `--embedding-config` when running PERSIA servers.
 
 Here is an example for `embedding_config.yaml`.
 
@@ -124,7 +124,7 @@ feature_groups:
 
 The following is a detailed description of each configuration. `required` means there are no default values.
 
- * `feature_index_prefix_bit(int, default=8)`: Number of bits occupied by each feature group. To avoid hash collisions between different features, the first `n(n=feature_index_prefix_bit)` bits of an index(u64) are taken as the feature bits, and the last `64-n` bits are taken as the index bits. The original id will be processed before inserted into the hash table, following `ID = original_ID % 0~2^(64-n) + index_prefix << (64-n)`. Slots in the same feature group share the same `index_prefix`, which is automatically generated by Persia according to the `feature_groups`.
+ * `feature_index_prefix_bit(int, default=8)`: Number of bits occupied by each feature group. To avoid hash collisions between different features, the first `n(n=feature_index_prefix_bit)` bits of an index(u64) are taken as the feature bits, and the last `64-n` bits are taken as the index bits. The original id will be processed before inserted into the hash table, following `ID = original_ID % 0~2^(64-n) + index_prefix << (64-n)`. Slots in the same feature group share the same `index_prefix`, which is automatically generated by PERSIA according to the `feature_groups`.
 
  * `slots_config(map, required)`: `slots_config` contains all the definitions of Embedding. The key of the map is the feature name, and the value of the map is a struct named `SlotConfig`. The following is a detailed description of configuration in a `SlotConfig`.
     * `dim(int, required)`: dim of embedding.
