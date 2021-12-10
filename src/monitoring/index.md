@@ -5,9 +5,10 @@ Monitoring and alerting is crucial for a distributed system. PERSIA provides int
 
 Services in PERSIA push their metrics to a [PushGateway], and the gateway then exposes these metrics to Prometheus.
 
-## Step to enable metrics in PERSIA
+<!-- toc -->
+## Step to Enable Metrics in PERSIA
 
-1. Enable metrics in configuration
+### Enable Metrics in Configuration
 
 Add the following configurations in [`global_config.yaml`](../configuration/index.md).
 
@@ -19,7 +20,7 @@ PersiaMetricsConfig:
   job_name: your_job_name
 ```
 
-2. Deploy PushGateway
+### Deploy PushGateway
 
 See [official documentation](https://github.com/prometheus/pushgateway) for details. Here is an example for deploying gateway by [docker-compose].
 
@@ -75,7 +76,7 @@ in a service container.
 
 By configuring the `GF_PATHS_PROVISIONING` environment variable, you can specify the [grafana provisioning](https://grafana.com/docs/grafana/latest/administration/provisioning/) directory to access our preset grafana panels.
 
-3. Collecting metrics
+### Collecting Metrics
 
 To collect metrics from the gateway, you need a prometheus service to do that for you.
 
@@ -83,7 +84,7 @@ Details of how to setup a prometheus service in various environments can be foun
 
 ## Metrics in PERSIA
 
-1. Accuracy related
+### Accuracy related
 
 |  Key   | Description  |
 |  ----  | ----  |
@@ -96,7 +97,7 @@ Details of how to setup a prometheus service in various environments can be foun
 | `nan_grad_skipped` | nan gradient count caused by dense part. |
 
 
-2. Efficiency related
+### Efficiency related
 
 |  Key   | Description  |
 |  ----  | ----  |

@@ -7,6 +7,7 @@ recommendation workflows. Comparing to SOTA recommender systems, PERSIA
 provides significant boost to end-to-end training time, provide high training
 throughput and scale out well up to trillion-parameter scale models.
 
+<!-- toc -->
 ## Setup
 
 ### Benchmark Dataset

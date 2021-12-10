@@ -7,9 +7,10 @@ When a TorchServe inference server receives requests, it first looks up embeddin
 
 [TorchServe] is a flexible framework for serving PyTorch models. In this page, we will introduce how to deploy a PERSIA model with it.
 
-In the following sections, we first introduce how to create a custom handler for TorchServe to query embeddings during inference. Next, we introduce how to save models during training and load models during inference. Then, we introduce how to deploy various services for inference. Finally, we introduce how to query the inference service to get the inference result.
+In the following sections, we first introduce how to [create a custom handler for TorchServe](#create-persia-handler-for-torchserve) to query embeddings during inference. Next, we introduce how to [save models](#save-and-load-persia-model) during training and load models during inference. Then, we introduce how to [deploy various services for inference](#deploy-persia-services-and-torchserve). Finally, we introduce how to [query the inference service](#query-inference-result-with-grpc) to get the inference result. In addition, we also introduce how to keep the model for inference [up to date](#model-update).
 
-## 1. Create PERSIA handler for TorchServe
+<!-- toc -->
+## Create PERSIA Handler for TorchServe
 
 With TorchServe, customized operations (like preprocess or postprocess) can be done with simple Python scripts, called [custom handler].
 
@@ -55,7 +56,7 @@ class PersiaHandler(BaseHandler, ABC):
         return [data]
 ```
 
-## 2. Save and load PERSIA model
+## Save and Load PERSIA Model
 
 The sparse part and the dense part of a PERSIA model should be saved separately when doing inference.
 
@@ -74,7 +75,7 @@ torch-model-archiver --model-name your_dense_model_name --version 1.0 --serializ
 
 Sparse model can be saved and loaded with PERSIA Python API, see [Model Checkpointing](../model-checkpointing/index.md) for details.
 
-## 3. Deploy PERSIA services and TorchServe
+## Deploy PERSIA Services and TorchServe
 
 TorchServe can be launched with:
 
@@ -93,7 +94,7 @@ common_config:
     initial_sparse_checkpoint: /your/sparse/model/dir
 ```
 
-## 4. Query inference result with gRPC
+## Query Inference Result with gRPC
 
 There are ways to [get predictions from a model] with TorchServe. One of them is using [gRPC API](https://github.com/pytorch/serve#using-grpc-apis-through-python-client) through a [gRPC client](https://github.com/pytorch/serve/blob/master/ts_scripts/torchserve_grpc_client.py).
 
@@ -171,9 +172,9 @@ if __name__ == "__main__":
 
 ```
 
-## 5. Model update
+## Model Update
 
-### Sparse model: PERSIA Incremental update
+### Sparse Model: PERSIA Incremental Update
 
 Generally, online prediction services need to continuously load the latest model to keep the model for inference up to date, while for huge sparse models, dumping full amount of the model in a short interval always means a huge overhead for systems. Incremental update can fill this gap by dumping a small part of the model which updated recently. so that online prediction services only receives model differences during training to update the online model for inference. This dramatically reduces the model latency between training and inference.
 
@@ -182,7 +183,7 @@ During training, an incremental update file will be dumped periodically. During 
 Relavant configurations in [`global_config.yaml`](https://github.com/PersiaML/tutorials/blob/docs/monitoring/src/configuring/index.md#global-config) are `enable_incremental_update`, `incremental_buffer_size` and `incremental_dir`.
 
 
-### Dense model: TorchServe Management API
+### Dense Model: TorchServe Management API
 
 Update of the dense part of the model can be achieved using torchserve through its [management api]. First generate the `.mar` file for the updated model following the steps described above, then register its path to torchserve with [grpc client](https://github.com/pytorch/serve/blob/master/ts_scripts/torchserve_grpc_client.py), and finally deregister the old model.
 

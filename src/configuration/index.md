@@ -3,7 +3,7 @@ Configuration File References
 
 In order to achieve the best performance on various training and inference jobs, PERSIA servers provide a handful of configuration options via two config files, a global configuration file usually named as `global_config.yaml`, and an embedding configuration file usually named as `embedding_config.yaml`. The global configuration allows one to define job type and general behaviors of servers, whereas embedding configuration provides definition of embedding details for individual sparse features.
 
-
+<!-- toc -->
 
 ## Global Configuration
 
@@ -31,13 +31,13 @@ embedding_worker_config:
 
 Depending on the scope, `global_config` was divided into three major sections, namely `common_config`, `embedding_parameter_server_config` and `embedding_worker_config`. `common_config` configures the job type (`job_type`) and metrics server. `embedding_parameter_server_config` configures the embedding parameter server, and `embedding_worker_config` provides configurations for the embedding worker. The following is a detailed description of each configuration.
 
-### common_config
+### `common_config`
 
-#### checkpointing_config
+#### `checkpointing_config`
 
 * `num_workers(int, default=4)`: The concurrency of embedding dumping, loading and incremental update.
 
-#### job_type
+#### `job_type`
 
 The job_type of PresiaML can be either `Train` or `Infer`.
 
@@ -56,7 +56,7 @@ common_config:
 * `initial_sparse_checkpoint(str, required)`: Embedding server will load this ckpt when start.
 
 
-#### metrics_config
+#### `metrics_config`
 `metrics_config` defines a set of configuration options for monitoring. See [Monitoring](../monitoring/index.md) for details.
 
 
@@ -65,7 +65,7 @@ common_config:
 * `job_name(str, default=persia_defalut_job_name)`: A name to distinguish your job from others.
 
 
-### embedding_parameter_server_config
+### `embedding_parameter_server_config`
 `embedding_parameter_server_config` specifies the configuration for the embedding parameter server.
 * `capacity(int, default=1,000,000,000)`: The capacity of each embedding server. Once the number of indices of an embedding server exceeds the capacity, it will evict embeddings according to [LRU](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)) policies.
 * `num_hashmap_internal_shards(int, default=100)`: The number of internal shard of an embedding server. Embeddings are saved in a HashMap which contains multiple shards (sub-hashmaps). Since the CRUD operations need to acquire the lock of a hashmap, acquiring the lock of the sub-hashmap instead of the whole hashmap will be more conducive to concurrency between CRUD operations.
@@ -74,7 +74,7 @@ common_config:
 * `incremental_buffer_size(int, default=1,000,000)`: Buffer size for incremental update. Embeddings will be inserted into this buffer after each gradient update, and will only be dumped when the buffer is full. Only valid when `enable_incremental_update=true`.
 * `incremental_dir(str, default=/workspace/incremental_dir/)`: The directory for incremental update files to be dumped or loaded.
 
-### embedding_worker_config
+### `embedding_worker_config`
 
 * `forward_buffer_size(int, default=1000)`: Buffer size for prefoard batch data from data loader.
 

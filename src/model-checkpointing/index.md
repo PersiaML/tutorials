@@ -3,6 +3,8 @@ Model Checkpointing
 
 A PERSIA model contains two parts: the dense part and the sparse part (embeddings). When it comes to saving and loading the model, whether you want to save the dense part and sparse part together or separately, PERSIA model checkpointing API provides handy solutions for both situations.
 
+<!-- toc -->
+
 ## Checkpointing Together
 
 You can call `load_checkpoint` or `dump_checkpoint` in a PERSIA context. Both the dense part and the sparse part will be saved into `checkpoint_dir`. By default, the model will be saved to the local path. When the path start with `hdfs://`, the model will be saved to hdfs path.
