@@ -121,7 +121,7 @@ export CARGO_HOME=/cargo
 export PATH=/cargo/bin:/rust/bin:$PATH
 curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly -y --profile default --no-modify-path
 
-git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA
+git clone --recurse-submodules https://github.com/PersiaML/PERSIA.git && cd PERSIA
 
 # To install CUDA version
 USE_CUDA=1 NATIVE=1 pip3 install .
@@ -137,7 +137,7 @@ NATIVE=1 pip3 install .
 [Python3](https://www.python.org/downloads/windows/), [Perl](https://strawberryperl.com/) and [Rust](https://www.rust-lang.org/tools/install) are required.
 
 ```bash
-git clone https://github.com/PersiaML/PERSIA.git && cd PERSIA
+git clone --recurse-submodules https://github.com/PersiaML/PERSIA.git && cd PERSIA
 
 # To install CUDA version
 USE_CUDA=1 NATIVE=1 pip3 install .
@@ -151,8 +151,8 @@ NATIVE=1 pip3 install .
 After installing the PERSIA Python package locally, you are able to launch the example adult income prediction training task with:
 
 ```bash
-cd examples/src/adult-income
-honcho start -e .honcho.env
+cd examples/src/adult-income/data/ && sh prepare_data.sh
+cd .. && honcho start -e .honcho.env
 ```
 
 For more configuration options see [Customization](../customization/index.md#honcho-launcher).
